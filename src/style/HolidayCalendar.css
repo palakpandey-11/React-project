@@ -1,0 +1,83 @@
+.holiday-container {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 1000px;
+  margin: 20px auto;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.table-wrapper {
+  max-height: 300px;
+  overflow-y: auto;
+  border-radius: 5px;
+}
+
+.holiday-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.holiday-table thead {
+  background-color: #007bff;
+  color: white;
+}
+
+.holiday-table th,
+.holiday-table td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  align-items: center;
+  /* flex-wrap: wrap; */
+  gap: 10px;
+}
+
+.location-dropdown {
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.location-dropdown select {
+  padding: 8px;
+  border-radius: 4px;
+  /* margin-left: 5px; */
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.export-btn {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.close-btn {
+  background-color: #dc3545;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}

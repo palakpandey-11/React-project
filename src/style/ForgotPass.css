@@ -1,0 +1,67 @@
+.forgot-pass-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  /* background-image: url('https://img.freepik.com/free-vector/abstract-banner-with-low-poly-plexus-network-communications-design_1048-12914.jpg?ga=GA1.1.528369950.1749014755&semt=ais_items_boosted&w=740');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover; */
+}
+
+.forgot-pass-form {
+  background-color: #f7f2f2b7;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 90%;
+  max-width: 300px; /* Limit size on large screens */
+}
+
+.forgot-pass-form h3 {
+  margin: 0 0 20px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 23px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 16px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #172c41;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: rgb(131, 131, 215);
+}
+
+/* ✅ Mobile responsive adjustments */
+@media (max-width: 480px) {
+  .forgot-pass-form {
+    padding: 1.5rem 1rem;
+  }
+
+  .forgot-pass-form h3 {
+    font-size: 20px;
+  }
+
+  .submit-btn {
+    font-size: 18px;
+    padding: 10px;
+  }
+}

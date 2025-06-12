@@ -1,0 +1,198 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: url('https://img.freepik.com/premium-vector/abstract-blue-background-with-wavy-lines-halftone-dot-effect-abstract-banner-modern-background_720029-3105.jpg?ga=GA1.1.528369950.1749014755&semt=ais_hybrid&w=740') no-repeat center center fixed;
+  background-size: cover;
+}
+
+.dashboard-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  padding: 30px;
+  justify-items: center;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 220px;
+  height: 160px;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* .card:hover {
+  transform: translateY(-5px);
+} */
+
+.card img {
+  width: 100%;
+  height: 100px;
+  object-fit:cover;
+}
+
+.card .title {
+  padding: 10px;
+  font-weight: bold;
+  font-size: 16px;
+  
+}
+
+/* Desktop/laptop: 4 columns */
+@media (min-width: 1024px) {
+  .dashboard-container {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .card {
+    max-width: 300px;
+    height: 180px;
+  }
+
+  .card .title {
+    padding: 8px 10px;
+  font-weight: bold;
+    font-size: 16px;
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+
+  .card img {
+     width: 100%;
+  height: 140px;
+  object-fit: cover;
+  }
+}
+
+/* Tablet: 3 columns */
+@media (max-width: 1023px) and (min-width: 600px) {
+  .dashboard-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .card {
+    max-width: 190px;
+    height: 140px;
+  }
+
+  .card .title {
+    font-size: 14px;
+  }
+}
+
+/* Mobile: 2 columns */
+@media (max-width: 599px) {
+  .dashboard-container {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 20px;
+    gap: 15px;
+  }
+
+  .card {
+    max-width: 140px;
+    height: 120px;
+  }
+
+  .card .title {
+    font-size: 10px;
+    
+  }
+
+  .card img {
+    width: 100%;
+  height: 90px;
+  object-fit: cover;
+  }
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-size: 18px;
+}
+
+.logo-name {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.role {
+  font-size: 16px;
+}
+
+.logout-icon {
+  font-size: 20px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.logout-icon:hover {
+  color: #ff5c5c;
+}
+
+.img {
+    border-radius:50%;
+    border: 2px solid white;
+    border-radius: 50%;
+    display: inline-block;
+    background-color: #ccc;
+    width:40px;
+    height:40px;
+}
+
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  position: relative;
+  max-width: 80%;
+  max-height: 80%;
+}
+
+.modal-content img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.close-button {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 28px;
+  background: white;
+  color: black;
+  border-radius: 50%;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3);
+}

@@ -1,0 +1,136 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: url('https://img.freepik.com/free-vector/abstract-banner-with-low-poly-plexus-network-communications-design_1048-12914.jpg?ga=GA1.1.528369950.1749014755&semt=ais_items_boosted&w=740') no-repeat center center fixed;
+  background-size: cover;
+}
+
+.signup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.form-box {
+  position: relative;
+  background-color: rgba(235, 232, 232, 0.75);
+  padding: 30px 40px;
+  padding-top: 60px;
+  border-radius: 10px;
+  text-align: center;
+  width: 300px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.form-box h2 {
+  margin-bottom: 20px;
+   font-size: 30px;
+}
+
+.password-field {
+  position: relative;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.cancel {
+  background-color: #ccc;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.submit {
+  background-color: #00bcd4;
+  border: none;
+  padding: 10px 20px;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.reset-link {
+  margin-top: 15px;
+}
+
+.reset-link a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.toggle-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #666;
+  cursor: pointer;
+  margin-right:5px;
+}
+
+.logo {
+  width: 200px;
+  height: 80px;
+  background-color: #0d2e52;
+  color:white;
+  font-size: 23px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  position: absolute;
+  top: -50px; 
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid white; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    
+}
+
+.custom-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 14px 22px;
+  background-color: #4caf50; /* green */
+  color: white;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  font-size: 16px;
+  z-index: 9999;
+  animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s forwards;
+}
+
+.custom-toast.error {
+  background-color: #f44336;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
