@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.css": "/static/css/main.4dd1b39f.css",
+    "main.js": "/static/js/main.76353ee2.js",
+    "static/js/453.a2811cb2.chunk.js": "/static/js/453.a2811cb2.chunk.js",
+    "static/media/time.png": "/static/media/time.646a9a4c74d0e9c44ad0.png",
+    "static/media/more.png": "/static/media/more.4b0a562ad12d4c4dbe75.png",
+    "static/media/Empdash.png": "/static/media/Empdash.38638a6a59ee84b07745.png",
+    "static/media/reports.png": "/static/media/reports.55ce0b11d3acff86c042.png",
+    "static/media/testimonials.png": "/static/media/testimonials.ee6ae97c0b24afa9c7ac.png",
+    "static/media/doc.png": "/static/media/doc.28f2ec0994cb5fb33b38.png",
+    "static/media/learn.png": "/static/media/learn.6c815858ce3389949284.png",
+    "static/media/careers.png": "/static/media/careers.45b4e71d59f311112751.png",
+    "static/media/People.jpg": "/static/media/People.40434f799afcdf7dfc24.jpg",
+    "static/media/feed.png": "/static/media/feed.e0f7e32a907374559e49.png",
+    "static/media/palak.jpeg": "/static/media/palak.182930c6744af5f709df.jpeg",
+    "static/media/about.jpg": "/static/media/about.24bb0b7acc978d6e5c84.jpg",
+    "static/media/workflow.jpg": "/static/media/workflow.e1fd8cc4176668ed3d56.jpg",
+    "index.html": "/index.html",
+    "static/media/Taskname": "/static/media/Taskname.17a1dd43685e9508bb56",
+    "main.4dd1b39f.css.map": "/static/css/main.4dd1b39f.css.map",
+    "main.76353ee2.js.map": "/static/js/main.76353ee2.js.map",
+    "453.a2811cb2.chunk.js.map": "/static/js/453.a2811cb2.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4dd1b39f.css",
+    "static/js/main.76353ee2.js"
+  ]
+}
