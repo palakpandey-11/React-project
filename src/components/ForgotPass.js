@@ -2,35 +2,29 @@ import React, { Component } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Box, TextField , Snackbar, Alert} from "@mui/material";
 import "./../style/ForgotPass.css";
+import axios from 'axios';
 
 class ForgotPass extends Component {
 
  state = {
     showError: false,
   };
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
- const email = this.emailInput?.value;
+    const email = this.emailInput?.value;
     if (!email || !email.includes("@")) {
       this.setState({ showError: true });
       setTimeout(() => {
         this.setState({ showError: false });
       }, 3000);
-
-    return;
-  }
- if (email === "palak@example.com") {
-    localStorage.setItem("resetUser", JSON.stringify({ empId: "emp003" }));
-  } else if (email === "pranali@example.com") {
-    localStorage.setItem("resetUser", JSON.stringify({ empId: "emp002" }));
-  } else if (email === "pankaj@example.com") {
-    localStorage.setItem("resetUser", JSON.stringify({ empId: "emp001" }));
-  } else {
-    this.setState({ showError: true });
-    return;
-  }
-this.props.navigate("/reset");
-
+      return;
+    }
+    try {
+      await axios.post('http://localhost:8080/api/auth/reset-password', { email });
+      this.props.navigate("/reset");
+    } catch (error) {
+      this.setState({ showError: true });
+    }
   };
   render() {
     return (

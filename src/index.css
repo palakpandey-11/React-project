@@ -11,3 +11,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/* .MuiDataGrid-columnHeaders {
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  border-bottom: 1px solid white;
+}
+
+
+.MuiDataGrid-columnHeaderTitle {
+  color: white !important;
+  font-weight: bold;
+} */

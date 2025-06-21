@@ -18,117 +18,17 @@
 }
 
 .customButton {
-   width: 150px;
+   width: 120px;
   font-size: 18px;
   height: 40px;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.85);
-  background-color: #1d3e61;
-  background-color: #353638;
+  background-color: #4484c8;
   color: white;
-  border: none;
   border-radius: 4px;
   cursor: pointer;
+  border: 2px solid white;
 }
 
-.title {
-  text-align: center;
-  font-family: Georgia;
-  font-size: 30px;
-  color: rgb(248, 240, 240);
-  padding-top: -3%;
-  padding-bottom: 0;
-  padding-right: 10%;
-  margin-top: 0;
-}
-
-.header {
-  text-align: 'center';
-  font-family: 'Arial';
-  font-size: '14px';
-  height: '15px';
-  color: 'white'
-}
-
-.firstcolumn {
-  width: '45px';
-  text-align: 'center';
-  font-family: 'Arial';
-  font-size: '14px';
-  height: '15px';
-  color: 'white'
-}
-
-;
-
-
-.custom-modal {
-  background-color: rgba(0, 0, 0, 0);
-}
-
-
-.custom-modal-box {
-  background-color: white;
-}
-.wrapper {
-  position: relative;
-  transition: filter 0.5s ease;
-  padding-left: 80px;
-  margin-top: 50px;
-}
-
-.blur {
-  filter: blur(5px);
-}
-
-
-.spinner-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.overflow-visible {
-  overflow-y: visible !important;
-  overflow-x: hidden !important;
-}
-/* }body {
-  background-image: url("C:/React/forgotpass/image.png"); 
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-attachment: fixed;
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-} */
-
-
-.buttonContainer {
-  display: flex;
-  justify-content: center;
-  margin-top: 30px;
-  gap: 20px;
-}
-
-.customButton {
-   width: 150px;
-  font-size: 18px;
-  height: 40px;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.85);
-  background-color: #1d3e61;
-  background-color: #353638;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
 
 .title {
   text-align: center;
@@ -199,36 +99,21 @@
   overflow-x: hidden !important;
 }
 
-/* Responsive tweaks */
-/* @media only screen and (max-width: 768px) {
-  .wrapper {
-    padding-left: 20px;
-    margin-top: 20px;
-  }
+.sidebar-button {
+  height: 43px !important;
+  width: 160px  !important; 
+  border-radius: 7px !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  background-color: #ece7e7!important;  /* light grey fill */
+  border: 2px solid #000!important;
+  color: #000!important;            
+  text-transform: none !important;  
+  margin-bottom: 12px !important;     /* space between buttons */
+  
+}
 
-  .title {
-    font-size: 20px;
-    padding-right: 0;
-  }
-
-  .MuiTableCell-root {
-    padding: 4px;
-    font-size: 10px !important;
-  }
-
-  .MuiTextField-root input {
-    font-size: 10px;
-    padding: 4px !important;
-  }
-
-  .MuiGrid-item {
-    flex-direction: column;
-  }
-
-  .buttonContainer {
-    flex-direction: column;
-    align-items: center;
-  }
-} */
-
-
+.sidebar-button:hover {
+  background-color: #a09b9b !important;    /* darker grey on hover */
+  border-color:    #000 !important;
+}

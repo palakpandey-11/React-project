@@ -1,7 +1,8 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: url('https://img.freepik.com/free-vector/abstract-banner-with-low-poly-plexus-network-communications-design_1048-12914.jpg?ga=GA1.1.528369950.1749014755&semt=ais_items_boosted&w=740') no-repeat center center fixed;
+  background-image: url("C:\Users\AJAY PANDEY\Downloads\background_img.png");
+  /* background: url('https://img.freepik.com/free-vector/abstract-banner-with-low-poly-plexus-network-communications-design_1048-12914.jpg?ga=GA1.1.528369950.1749014755&semt=ais_items_boosted&w=740') no-repeat center center fixed; */
   background-size: cover;
 }
 
@@ -14,7 +15,7 @@ body {
 
 .form-box {
   position: relative;
-  background-color: rgba(235, 232, 232, 0.75);
+  background-color: rgba(235, 232, 232, 0.7);
   padding: 30px 40px;
   padding-top: 60px;
   border-radius: 10px;

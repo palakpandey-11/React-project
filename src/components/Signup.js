@@ -7,44 +7,37 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Box from '@mui/material/Box';
 import palak from '../image/palak.jpeg';
+import axios from 'axios';
 
 
 function Signin () {
 
-  const [empId, setEmpId] = useState("");
+  const [employeeId, setEmployeeId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [toastState, setToastState] = useState({ show: false, message: "", type: "" });
   const navigate = useNavigate();
 
- const defaultEmployees= [
-    { empId: "emp001", password: "pass001", name: "Pankaj Sir"   },
-    { empId: "emp002", password: "pass002", name: "Pranali Bagul"  },
-    { empId: "emp003", password: "pass003", name: "Palak Pandey",  image: palak },
-  ];
-
-  if (!localStorage.getItem("employees")) {
-  localStorage.setItem("employees", JSON.stringify(defaultEmployees));
-}
-
-const employees = JSON.parse(localStorage.getItem("employees"));
-
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    const user = employees.find(emp => emp.empId === empId );
-    
-  if (!user) {
-    triggerToast("Employee ID not found", "error");
-  } else if (user.password !== password) {
-    triggerToast("Incorrect password", "error");
-  } else {
-    localStorage.setItem("user", JSON.stringify(user));
-    triggerToast("Signed in successfully!", "success");
-    setTimeout(() => {
-      navigate("/dashboard");
-    }, 1500);
-  }
-};
+    try {
+      const response = await axios.post('http://localhost:8080/api/auth/login', {
+        employeeId,
+        password,
+      });
+      // Assuming backend returns user data and a token
+      const { user, token } = response.data;
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('token', token);
+      triggerToast("Signed in successfully!", "success");
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1500);
+    } catch (error) {
+      const message = error.response?.data?.message || "Login failed";
+      triggerToast(message, "error");
+    }
+  };
 
   const triggerToast = (message, type) => {
     setToastState({ show: true, message, type });
@@ -66,8 +59,8 @@ const employees = JSON.parse(localStorage.getItem("employees"));
                 required
                 label="Employee ID"
                 variant="outlined"
-                value={empId}
-                onChange={(e) => setEmpId(e.target.value)}
+                value={employeeId}
+                onChange={(e) => setEmployeeId(e.target.value)}
               />
             </Box>
           <Box mb={3}>

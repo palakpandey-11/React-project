@@ -1,22 +1,33 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import Grid from '@mui/material/Grid';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box, TextField, IconButton } from '@mui/material';
-import { useTheme, createTheme } from '@mui/material/styles';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import './../style/Timesheet.css';
+import React, { useState, useEffect, useMemo } from "react";
+import Grid from "@mui/material/Grid";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  Box,
+  TextField,
+} from "@mui/material";
+import { useTheme, createTheme } from "@mui/material/styles";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import "./../style/Timesheet.css";
 // import Navbar from './Navbar';
-import axios from 'axios';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
-import CircularProgress from '@mui/material/CircularProgress';
-import Taskname from './Taskname';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import { useNavigate } from 'react-router-dom';
-
-
+import axios from "axios";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress";
+import Taskname from "./Taskname";
+import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import IconButton from "@mui/material/IconButton";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 const TimesheetTable = ({ empID, projectId }) => {
   const navigate = useNavigate();
@@ -34,16 +45,24 @@ const TimesheetTable = ({ empID, projectId }) => {
   const [misValues, setMisValues] = useState([0, 0, 0, 0, 0, 0, 0]);
   const [totalValues, setTotalValues] = useState([0, 0, 0, 0, 0, 0, 0]);
 
-  const [warningMessage, setWarningMessage] = useState('');
+  const [warningMessage, setWarningMessage] = useState("");
   const [weekOffset, setWeekOffset] = useState(0);
   const [enteredValues, setEnteredValues] = useState([]);
   const [taskId, setTaskId] = useState(null);
   const [results, setResults] = useState([]);
   const [editedValues, setEditedValues] = useState(Array(7).fill(false));
-  const [editedTestingValues, setEditedTestingValues] = useState(Array(7).fill(false));
-  const [editedDevopsValues, setEditedDevopsValues] = useState(Array(7).fill(false));
-  const [editedMeetingValues, setEditedMeetingValues] = useState(Array(7).fill(false));
-  const [editedDataValues, setEditedDataValues] = useState(Array(7).fill(false));
+  const [editedTestingValues, setEditedTestingValues] = useState(
+    Array(7).fill(false)
+  );
+  const [editedDevopsValues, setEditedDevopsValues] = useState(
+    Array(7).fill(false)
+  );
+  const [editedMeetingValues, setEditedMeetingValues] = useState(
+    Array(7).fill(false)
+  );
+  const [editedDataValues, setEditedDataValues] = useState(
+    Array(7).fill(false)
+  );
   const [editedTaValues, setEditedTaValues] = useState(Array(7).fill(false));
   const [editedTdValues, setEditedTdValues] = useState(Array(7).fill(false));
   const [editedEeValues, setEditedEeValues] = useState(Array(7).fill(false));
@@ -51,26 +70,28 @@ const TimesheetTable = ({ empID, projectId }) => {
   const [editedCbValues, setEditedCbValues] = useState(Array(7).fill(false));
   const [editedAcValues, setEditedAcValues] = useState(Array(7).fill(false));
   const [editedMisValues, setEditedMisValues] = useState(Array(7).fill(false));
-  const [workStatusValues, setWorkStatusValues] = useState(Array(7).fill('WFO'));
+  const [workStatusValues, setWorkStatusValues] = useState(
+    Array(7).fill("WFO")
+  );
   const [open, setOpen] = React.useState(false);
   const [successSnackbarOpen, setSuccessSnackbarOpen] = React.useState(false);
-  const daysOfWeek = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+  const daysOfWeek = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
   const [data1, setData1] = useState([]);
   const [formData, setFormData] = useState([]);
   const [result1, setResult1] = useState();
   const [dates, setDates] = useState({
-    mon: '',
-    tue: '',
-    wed: '',
-    thu: '',
-    fri: '',
-    sat: '',
-    sun: '',
+    mon: "",
+    tue: "",
+    wed: "",
+    thu: "",
+    fri: "",
+    sat: "",
+    sun: "",
   });
-  const [effort, setEffort] = useState(' ');
-  const [effortDate, setEffortDate] = useState('');
-  const [employeeId, setEmployeeId] = useState('');
-  const [effort_task_description, setEffort_task_description] = useState('');
+  const [effort, setEffort] = useState(" ");
+  const [effortDate, setEffortDate] = useState("");
+  const [employeeId, setEmployeeId] = useState("");
+  const [effort_task_description, setEffort_task_description] = useState("");
   const [loading, setLoading] = useState(false);
   const [blurScreen, setBlurScreen] = useState(false);
 
@@ -78,66 +99,68 @@ const TimesheetTable = ({ empID, projectId }) => {
     const fetchData = async () => {
       try {
         if (projectId === Taskname.humanResourceProjectId) {
-          document.body.classList.add('overflow-visible');
+          document.body.classList.add("overflow-visible");
         } else {
-          document.body.classList.remove('overflow-visible');
+          document.body.classList.remove("overflow-visible");
         }
-        console.log('Project ID:', projectId);
+        console.log("Project ID:", projectId);
         const today = new Date();
         const startOfWeek = new Date(today);
-        startOfWeek.setDate(today.getDate() - today.getDay() + 1 + 7 * weekOffset);
+        startOfWeek.setDate(
+          today.getDate() - today.getDay() + 1 + 7 * weekOffset
+        );
         const endOfWeek = new Date(startOfWeek);
         endOfWeek.setDate(endOfWeek.getDate() + 6);
         const formattedStartDate = getFormattedDate(startOfWeek);
         const formattedEndDate = getFormattedDate(endOfWeek);
 
-        const timeManagementResponse = await axios.get(`/stubium/employee/${empID}/effortDateRange`, {
-          params: {
-            startDate: formattedStartDate,
-            endDate: formattedEndDate,
-          },
-        });
+        const timeManagementResponse = await axios.get(
+          `/stubium/employee/${empID}/effortDateRange`,
+          {
+            params: {
+              startDate: formattedStartDate,
+              endDate: formattedEndDate,
+            },
+          }
+        );
 
-        console.log('Time Management Response Data:', timeManagementResponse.data);
-        const results = timeManagementResponse.data
-        console.log('Results:', results);
+        console.log(
+          "Time Management Response Data:",
+          timeManagementResponse.data
+        );
+        const results = timeManagementResponse.data;
+        console.log("Results:", results);
         setResults(results);
-
-
       } catch (error) {
-        console.error('Error fetching employee data:', error);
+        console.error("Error fetching employee data:", error);
       }
     };
     fetchData();
     setDatesForWeek(weekOffset);
   }, [weekOffset, empID, totalValues, projectId]);
 
-
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
 
-
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     setOpen(false);
   };
 
   const getFormattedDate = (date) => {
-    const formatter = new Intl.DateTimeFormat('en', {
-      year: '2-digit',
-      month: '2-digit',
-      day: '2-digit',
+    const formatter = new Intl.DateTimeFormat("en", {
+      year: "2-digit",
+      month: "2-digit",
+      day: "2-digit",
     });
 
-
-    const formattedDate = formatter.format(date); 
-    const parts = formattedDate.split('/');
+    const formattedDate = formatter.format(date);
+    const parts = formattedDate.split("/");
     return `${parts[1]}-${parts[0]}-${parts[2]}`;
   };
-
 
   const setDatesForWeek = (offset) => {
     const today = new Date();
@@ -224,68 +247,70 @@ const TimesheetTable = ({ empID, projectId }) => {
         setEditedAcValues(Array(7).fill(false));
         setEditedMisValues(Array(7).fill(false));
         setCodingValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 1) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 1) || 0
           )
         );
         setTestingValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 2) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 2) || 0
           )
         );
 
         setDevopsValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 3) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 3) || 0
           )
         );
         setMeetingValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 4) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 4) || 0
           )
         );
         setDataValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 5) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 5) || 0
           )
         );
         setTaValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 6) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 6) || 0
           )
         );
         setTdValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 8) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 8) || 0
           )
         );
         setEeValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 9) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 9) || 0
           )
         );
         setPmValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 10) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 10) || 0
           )
         );
         setCbValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 11) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 11) || 0
           )
         );
         setAcValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 12) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 12) || 0
           )
         );
         setMisValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 7) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 7) || 0
           )
         );
         setTotalValues((prevValues) =>
-          prevValues.map((_, index) => handleEffort(dates[daysOfWeek[index]], 0) || 0)
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 0) || 0
+          )
         );
         setEditedValues(Array(7).fill(false));
         setEditedTestingValues(Array(7).fill(false));
@@ -306,7 +331,6 @@ const TimesheetTable = ({ empID, projectId }) => {
   };
 
   const handleArrowLeftClick = () => {
-
     if (weekOffset > -2) {
       setBlurScreen(true);
       setLoading(true);
@@ -327,68 +351,70 @@ const TimesheetTable = ({ empID, projectId }) => {
         setEditedMisValues(Array(7).fill(false));
 
         setCodingValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 1) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 1) || 0
           )
         );
         setTestingValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 2) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 2) || 0
           )
         );
         setDevopsValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 3) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 3) || 0
           )
         );
         setMeetingValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 4) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 4) || 0
           )
         );
         setDataValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 5) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 5) || 0
           )
         );
         setTaValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 6) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 6) || 0
           )
         );
         setTdValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 8) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 8) || 0
           )
         );
         setEeValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 9) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 9) || 0
           )
         );
         setPmValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 10) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 10) || 0
           )
         );
         setCbValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 11) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 11) || 0
           )
         );
         setAcValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 12) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 12) || 0
           )
         );
         setMisValues((prevValues) =>
-          prevValues.map((_, index) =>
-            handleEffort(dates[daysOfWeek[index]], 7) || 0
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 7) || 0
           )
         );
 
         setTotalValues((prevValues) =>
-          prevValues.map((_, index) => handleEffort(dates[daysOfWeek[index]], 0) || 0)
+          prevValues.map(
+            (_, index) => handleEffort(dates[daysOfWeek[index]], 0) || 0
+          )
         );
 
         setEditedValues(Array(7).fill(false));
@@ -411,13 +437,15 @@ const TimesheetTable = ({ empID, projectId }) => {
 
   const isFutureDay = (dayOfWeek) => {
     const today = new Date();
-    const currentWeekOffset = new Date().getDay() === 0 ? weekOffset - 1 : weekOffset;
-    const offsetDate = new Date(today.setDate(today.getDate() + 7 * currentWeekOffset));
+    const currentWeekOffset =
+      new Date().getDay() === 0 ? weekOffset - 1 : weekOffset;
+    const offsetDate = new Date(
+      today.setDate(today.getDate() + 7 * currentWeekOffset)
+    );
     const currentDay = today.getDay();
     if (currentWeekOffset >= -2 && currentWeekOffset <= 0) {
       return currentWeekOffset === 0 ? dayOfWeek > currentDay : false;
-    }
-    else {
+    } else {
       return true;
     }
   };
@@ -428,18 +456,20 @@ const TimesheetTable = ({ empID, projectId }) => {
       const newCodingValues = [...codingValues];
       newCodingValues[index] = value;
       setCodingValues(newCodingValues);
-      updateTotalValues(index, value, 'coding');
+      updateTotalValues(index, value, "coding");
       setEnteredValues((prevEnteredValues) => {
         const currentWeekEnteredValues = prevEnteredValues[weekOffset] || {};
         return {
           ...prevEnteredValues,
-          [weekOffset]: { ...currentWeekEnteredValues, coding: newCodingValues },
+          [weekOffset]: {
+            ...currentWeekEnteredValues,
+            coding: newCodingValues,
+          },
         };
       });
     } else {
       setOpen(true);
     }
-
   };
 
   const handleTestingChange = (index, value) => {
@@ -448,17 +478,19 @@ const TimesheetTable = ({ empID, projectId }) => {
       const newTestingValues = [...testingValues];
       newTestingValues[index] = value;
       setTestingValues(newTestingValues);
-      updateTotalValues(index, value, 'testing');
-      setWarningMessage('');
+      updateTotalValues(index, value, "testing");
+      setWarningMessage("");
       setEnteredValues((prevEnteredValues) => {
         const currentWeekEnteredValues = prevEnteredValues[weekOffset] || {};
         return {
           ...prevEnteredValues,
-          [weekOffset]: { ...currentWeekEnteredValues, testing: newTestingValues },
+          [weekOffset]: {
+            ...currentWeekEnteredValues,
+            testing: newTestingValues,
+          },
         };
       });
-    }
-    else {
+    } else {
       setOpen(true);
     }
   };
@@ -469,16 +501,18 @@ const TimesheetTable = ({ empID, projectId }) => {
       const newDevopsValues = [...devopsValues];
       newDevopsValues[index] = value;
       setDevopsValues(newDevopsValues);
-      updateTotalValues(index, value, 'devops');
+      updateTotalValues(index, value, "devops");
       setEnteredValues((prevEnteredValues) => {
         const currentWeekEnteredValues = prevEnteredValues[weekOffset] || {};
         return {
           ...prevEnteredValues,
-          [weekOffset]: { ...currentWeekEnteredValues, devops: newDevopsValues },
+          [weekOffset]: {
+            ...currentWeekEnteredValues,
+            devops: newDevopsValues,
+          },
         };
       });
-    }
-    else {
+    } else {
       setOpen(true);
     }
   };
@@ -489,16 +523,18 @@ const TimesheetTable = ({ empID, projectId }) => {
       const newMeetingValues = [...meetingValues];
       newMeetingValues[index] = value;
       setMeetingValues(newMeetingValues);
-      updateTotalValues(index, value, 'meeting');
+      updateTotalValues(index, value, "meeting");
       setEnteredValues((prevEnteredValues) => {
         const currentWeekEnteredValues = prevEnteredValues[weekOffset] || {};
         return {
           ...prevEnteredValues,
-          [weekOffset]: { ...currentWeekEnteredValues, meeting: newMeetingValues },
+          [weekOffset]: {
+            ...currentWeekEnteredValues,
+            meeting: newMeetingValues,
+          },
         };
       });
-    }
-    else {
+    } else {
       setOpen(true);
     }
   };
@@ -509,7 +545,7 @@ const TimesheetTable = ({ empID, projectId }) => {
       const newDataValues = [...dataValues];
       newDataValues[index] = value;
       setDataValues(newDataValues);
-      updateTotalValues(index, value, 'data');
+      updateTotalValues(index, value, "data");
       setEnteredValues((prevEnteredValues) => {
         const currentWeekEnteredValues = prevEnteredValues[weekOffset] || {};
         return {
@@ -517,8 +553,7 @@ const TimesheetTable = ({ empID, projectId }) => {
           [weekOffset]: { ...currentWeekEnteredValues, data: newDataValues },
         };
       });
-    }
-    else {
+    } else {
       setOpen(true);
     }
   };
@@ -529,7 +564,7 @@ const TimesheetTable = ({ empID, projectId }) => {
       const newTaValues = [...taValues];
       newTaValues[index] = value;
       setTaValues(newTaValues);
-      updateTotalValues(index, value, 'ta');
+      updateTotalValues(index, value, "ta");
       setEnteredValues((prevEnteredValues) => {
         const currentWeekEnteredValues = prevEnteredValues[weekOffset] || {};
         return {
@@ -537,21 +572,19 @@ const TimesheetTable = ({ empID, projectId }) => {
           [weekOffset]: { ...currentWeekEnteredValues, ta: newTaValues },
         };
       });
-    }
-    else {
+    } else {
       setOpen(true);
     }
   };
-
 
   const handleTdChange = (index, value) => {
     setTaskId(8);
     if (value >= 0 && value <= 24 && !isNaN(value)) {
       const newTdValues = [...tdValues];
       newTdValues[index] = value;
-      console.log('New TD Values:', newTdValues); // Add this line
+      console.log("New TD Values:", newTdValues); // Add this line
       setTdValues(newTdValues);
-      updateTotalValues(index, value, 'td');
+      updateTotalValues(index, value, "td");
       setEnteredValues((prevEnteredValues) => {
         const currentWeekEnteredValues = prevEnteredValues[weekOffset] || {};
         return {
@@ -564,14 +597,13 @@ const TimesheetTable = ({ empID, projectId }) => {
     }
   };
 
-
   const handleEeChange = (index, value) => {
     setTaskId(9);
     if (value >= 0 && value <= 24 && !isNaN(value)) {
       const newEeValues = [...eeValues];
       newEeValues[index] = value;
       setEeValues(newEeValues);
-      updateTotalValues(index, value, 'ee');
+      updateTotalValues(index, value, "ee");
       setEnteredValues((prevEnteredValues) => {
         const currentWeekEnteredValues = prevEnteredValues[weekOffset] || {};
         return {
@@ -584,14 +616,13 @@ const TimesheetTable = ({ empID, projectId }) => {
     }
   };
 
-
   const handlePmChange = (index, value) => {
     setTaskId(10);
     if (value >= 0 && value <= 24 && !isNaN(value)) {
       const newPmValues = [...pmValues];
       newPmValues[index] = value;
       setPmValues(newPmValues);
-      updateTotalValues(index, value, 'pm');
+      updateTotalValues(index, value, "pm");
       setEnteredValues((prevEnteredValues) => {
         const currentWeekEnteredValues = prevEnteredValues[weekOffset] || {};
         return {
@@ -604,14 +635,13 @@ const TimesheetTable = ({ empID, projectId }) => {
     }
   };
 
-
   const handleCbChange = (index, value) => {
     setTaskId(11);
     if (value >= 0 && value <= 24 && !isNaN(value)) {
       const newCbValues = [...cbValues];
       newCbValues[index] = value;
       setCbValues(newCbValues);
-      updateTotalValues(index, value, 'cb');
+      updateTotalValues(index, value, "cb");
       setEnteredValues((prevEnteredValues) => {
         const currentWeekEnteredValues = prevEnteredValues[weekOffset] || {};
         return {
@@ -630,7 +660,7 @@ const TimesheetTable = ({ empID, projectId }) => {
       const newAcValues = [...acValues];
       newAcValues[index] = value;
       setAcValues(newAcValues);
-      updateTotalValues(index, value, 'ac');
+      updateTotalValues(index, value, "ac");
       setEnteredValues((prevEnteredValues) => {
         const currentWeekEnteredValues = prevEnteredValues[weekOffset] || {};
         return {
@@ -648,7 +678,7 @@ const TimesheetTable = ({ empID, projectId }) => {
       const newMisValues = [...misValues];
       newMisValues[index] = value;
       setMisValues(newMisValues);
-      updateTotalValues(index, value, 'mis');
+      updateTotalValues(index, value, "mis");
       setEnteredValues((prevEnteredValues) => {
         const currentWeekEnteredValues = prevEnteredValues[weekOffset] || {};
         return {
@@ -660,127 +690,272 @@ const TimesheetTable = ({ empID, projectId }) => {
       setOpen(true);
     }
   };
-const handleWorkStatusChange = (index, value) => {
-  const newStatus = [...workStatusValues];
-  newStatus[index] = value;
-  setWorkStatusValues(newStatus);
-};
+  const handleWorkStatusChange = (index, value) => {
+    const newStatus = [...workStatusValues];
+    newStatus[index] = value;
+    setWorkStatusValues(newStatus);
+  };
 
   const updateTotalValues = (index, value, type) => {
     const newTotalValues = [...totalValues];
     let total = 0;
 
-    if (type === 'coding') {
-      total = value + testingValues[index] + devopsValues[index] + meetingValues[index] + dataValues[index] + taValues[index] + tdValues[index] + eeValues[index] + pmValues[index] + cbValues[index] + acValues[index] + misValues[index];
-    } else if (type === 'testing') {
-      total = codingValues[index] + value + devopsValues[index] + meetingValues[index] + dataValues[index] + taValues[index] + tdValues[index] + eeValues[index] + pmValues[index] + cbValues[index] + acValues[index] + misValues[index];
-    } else if (type === 'devops') {
-      total = codingValues[index] + testingValues[index] + value + meetingValues[index] + dataValues[index] + taValues[index] + tdValues[index] + eeValues[index] + pmValues[index] + cbValues[index] + acValues[index] + misValues[index];
-    } else if (type === 'meeting') {
-      total = codingValues[index] + testingValues[index] + devopsValues[index] + value + dataValues[index] + taValues[index] + tdValues[index] + eeValues[index] + pmValues[index] + cbValues[index] + acValues[index] + misValues[index];
-    } else if (type === 'data') {
-      total = codingValues[index] + testingValues[index] + devopsValues[index] + meetingValues[index] + value + taValues[index] + tdValues[index] + eeValues[index] + pmValues[index] + cbValues[index] + acValues[index] + misValues[index];
-    } else if (type === 'ta') {
-      total = codingValues[index] + testingValues[index] + devopsValues[index] + meetingValues[index] + dataValues[index] + value + tdValues[index] + eeValues[index] + pmValues[index] + cbValues[index] + acValues[index] + misValues[index];
-    } else if (type === 'td') {
-      total = codingValues[index] + testingValues[index] + devopsValues[index] + meetingValues[index] + dataValues[index] + taValues[index] + value + eeValues[index] + pmValues[index] + cbValues[index] + acValues[index] + misValues[index];
-    }
-    else if (type === 'ee') {
-      total = codingValues[index] + testingValues[index] + devopsValues[index] + meetingValues[index] + dataValues[index] + taValues[index] + tdValues[index] + value + pmValues[index] + cbValues[index] + acValues[index] + misValues[index];
-    }
-    else if (type === 'pm') {
-      total = codingValues[index] + testingValues[index] + devopsValues[index] + meetingValues[index] + dataValues[index] + taValues[index] + tdValues[index] + eeValues[index] + value + cbValues[index] + acValues[index] + misValues[index];
-    }
-    else if (type === 'cb') {
-      total = codingValues[index] + testingValues[index] + devopsValues[index] + meetingValues[index] + dataValues[index] + taValues[index] + tdValues[index] + eeValues[index] + pmValues[index] + value + acValues[index] + misValues[index];
-    }
-    else if (type === 'ac') {
-      total = codingValues[index] + testingValues[index] + devopsValues[index] + meetingValues[index] + dataValues[index] + taValues[index] + tdValues[index] + eeValues[index] + pmValues[index] + cbValues[index] + value + acValues[index] + misValues[index];
-    }
-    else if (type === 'mis') {
-      total = codingValues[index] + testingValues[index] + devopsValues[index] + meetingValues[index] + dataValues[index] + taValues[index] + tdValues[index] + eeValues[index] + pmValues[index] + cbValues[index] + acValues[index] + value;
+    if (type === "coding") {
+      total =
+        value +
+        testingValues[index] +
+        devopsValues[index] +
+        meetingValues[index] +
+        dataValues[index] +
+        taValues[index] +
+        tdValues[index] +
+        eeValues[index] +
+        pmValues[index] +
+        cbValues[index] +
+        acValues[index] +
+        misValues[index];
+    } else if (type === "testing") {
+      total =
+        codingValues[index] +
+        value +
+        devopsValues[index] +
+        meetingValues[index] +
+        dataValues[index] +
+        taValues[index] +
+        tdValues[index] +
+        eeValues[index] +
+        pmValues[index] +
+        cbValues[index] +
+        acValues[index] +
+        misValues[index];
+    } else if (type === "devops") {
+      total =
+        codingValues[index] +
+        testingValues[index] +
+        value +
+        meetingValues[index] +
+        dataValues[index] +
+        taValues[index] +
+        tdValues[index] +
+        eeValues[index] +
+        pmValues[index] +
+        cbValues[index] +
+        acValues[index] +
+        misValues[index];
+    } else if (type === "meeting") {
+      total =
+        codingValues[index] +
+        testingValues[index] +
+        devopsValues[index] +
+        value +
+        dataValues[index] +
+        taValues[index] +
+        tdValues[index] +
+        eeValues[index] +
+        pmValues[index] +
+        cbValues[index] +
+        acValues[index] +
+        misValues[index];
+    } else if (type === "data") {
+      total =
+        codingValues[index] +
+        testingValues[index] +
+        devopsValues[index] +
+        meetingValues[index] +
+        value +
+        taValues[index] +
+        tdValues[index] +
+        eeValues[index] +
+        pmValues[index] +
+        cbValues[index] +
+        acValues[index] +
+        misValues[index];
+    } else if (type === "ta") {
+      total =
+        codingValues[index] +
+        testingValues[index] +
+        devopsValues[index] +
+        meetingValues[index] +
+        dataValues[index] +
+        value +
+        tdValues[index] +
+        eeValues[index] +
+        pmValues[index] +
+        cbValues[index] +
+        acValues[index] +
+        misValues[index];
+    } else if (type === "td") {
+      total =
+        codingValues[index] +
+        testingValues[index] +
+        devopsValues[index] +
+        meetingValues[index] +
+        dataValues[index] +
+        taValues[index] +
+        value +
+        eeValues[index] +
+        pmValues[index] +
+        cbValues[index] +
+        acValues[index] +
+        misValues[index];
+    } else if (type === "ee") {
+      total =
+        codingValues[index] +
+        testingValues[index] +
+        devopsValues[index] +
+        meetingValues[index] +
+        dataValues[index] +
+        taValues[index] +
+        tdValues[index] +
+        value +
+        pmValues[index] +
+        cbValues[index] +
+        acValues[index] +
+        misValues[index];
+    } else if (type === "pm") {
+      total =
+        codingValues[index] +
+        testingValues[index] +
+        devopsValues[index] +
+        meetingValues[index] +
+        dataValues[index] +
+        taValues[index] +
+        tdValues[index] +
+        eeValues[index] +
+        value +
+        cbValues[index] +
+        acValues[index] +
+        misValues[index];
+    } else if (type === "cb") {
+      total =
+        codingValues[index] +
+        testingValues[index] +
+        devopsValues[index] +
+        meetingValues[index] +
+        dataValues[index] +
+        taValues[index] +
+        tdValues[index] +
+        eeValues[index] +
+        pmValues[index] +
+        value +
+        acValues[index] +
+        misValues[index];
+    } else if (type === "ac") {
+      total =
+        codingValues[index] +
+        testingValues[index] +
+        devopsValues[index] +
+        meetingValues[index] +
+        dataValues[index] +
+        taValues[index] +
+        tdValues[index] +
+        eeValues[index] +
+        pmValues[index] +
+        cbValues[index] +
+        value +
+        acValues[index] +
+        misValues[index];
+    } else if (type === "mis") {
+      total =
+        codingValues[index] +
+        testingValues[index] +
+        devopsValues[index] +
+        meetingValues[index] +
+        dataValues[index] +
+        taValues[index] +
+        tdValues[index] +
+        eeValues[index] +
+        pmValues[index] +
+        cbValues[index] +
+        acValues[index] +
+        value;
     }
 
     newTotalValues[index] = total;
-    console.log('Total Values:', totalValues);
+    console.log("Total Values:", totalValues);
     setTotalValues(newTotalValues);
   };
 
-
   const handleCancel = () => {
-
     setCodingValues((prevValues) =>
-      prevValues.map((_, index) =>
-        handleEffort(dates[daysOfWeek[index]], 1) || 0
+      prevValues.map(
+        (_, index) => handleEffort(dates[daysOfWeek[index]], 1) || 0
       )
     );
     setTestingValues((prevValues) =>
-      prevValues.map((_, index) =>
-        handleEffort(dates[daysOfWeek[index]], 2) || 0
+      prevValues.map(
+        (_, index) => handleEffort(dates[daysOfWeek[index]], 2) || 0
       )
     );
     setDevopsValues((prevValues) =>
-      prevValues.map((_, index) =>
-        handleEffort(dates[daysOfWeek[index]], 3) || 0
+      prevValues.map(
+        (_, index) => handleEffort(dates[daysOfWeek[index]], 3) || 0
       )
     );
     setMeetingValues((prevValues) =>
-      prevValues.map((_, index) =>
-        handleEffort(dates[daysOfWeek[index]], 4) || 0
+      prevValues.map(
+        (_, index) => handleEffort(dates[daysOfWeek[index]], 4) || 0
       )
     );
     setDataValues((prevValues) =>
-      prevValues.map((_, index) =>
-        handleEffort(dates[daysOfWeek[index]], 5) || 0
+      prevValues.map(
+        (_, index) => handleEffort(dates[daysOfWeek[index]], 5) || 0
       )
     );
     setTaValues((prevValues) =>
-      prevValues.map((_, index) =>
-        handleEffort(dates[daysOfWeek[index]], 6) || 0
+      prevValues.map(
+        (_, index) => handleEffort(dates[daysOfWeek[index]], 6) || 0
       )
     );
     setTdValues((prevValues) =>
-      prevValues.map((_, index) =>
-        handleEffort(dates[daysOfWeek[index]], 8) || 0
+      prevValues.map(
+        (_, index) => handleEffort(dates[daysOfWeek[index]], 8) || 0
       )
     );
     setEeValues((prevValues) =>
-      prevValues.map((_, index) =>
-        handleEffort(dates[daysOfWeek[index]], 9) || 0
+      prevValues.map(
+        (_, index) => handleEffort(dates[daysOfWeek[index]], 9) || 0
       )
     );
     setPmValues((prevValues) =>
-      prevValues.map((_, index) =>
-        handleEffort(dates[daysOfWeek[index]], 10) || 0
+      prevValues.map(
+        (_, index) => handleEffort(dates[daysOfWeek[index]], 10) || 0
       )
     );
     setCbValues((prevValues) =>
-      prevValues.map((_, index) =>
-        handleEffort(dates[daysOfWeek[index]], 11) || 0
+      prevValues.map(
+        (_, index) => handleEffort(dates[daysOfWeek[index]], 11) || 0
       )
     );
     setAcValues((prevValues) =>
-      prevValues.map((_, index) =>
-        handleEffort(dates[daysOfWeek[index]], 12) || 0
+      prevValues.map(
+        (_, index) => handleEffort(dates[daysOfWeek[index]], 12) || 0
       )
     );
     setMisValues((prevValues) =>
-      prevValues.map((_, index) =>
-        handleEffort(dates[daysOfWeek[index]], 7) || 0
+      prevValues.map(
+        (_, index) => handleEffort(dates[daysOfWeek[index]], 7) || 0
       )
     );
     setTotalValues((prevValues) =>
-      prevValues.map((_, index) => handleEffort(dates[daysOfWeek[index]], 0) || 0)
+      prevValues.map(
+        (_, index) => handleEffort(dates[daysOfWeek[index]], 0) || 0
+      )
     );
   };
 
   const handleTotal = (date1, intValue1, empID) => {
-    const totalEntry = results.find(entry => entry.effortDate === date1 && entry.taskId === intValue1 && entry.employeeId === empID);
+    const totalEntry = results.find(
+      (entry) =>
+        entry.effortDate === date1 &&
+        entry.taskId === intValue1 &&
+        entry.employeeId === empID
+    );
     if (totalEntry) {
       return totalEntry.effort;
     }
     return 0;
-  }
+  };
 
   const handleSum1 = (index) => {
     let ele1 = document.getElementById(`coding_${index}`);
@@ -811,25 +986,25 @@ const handleWorkStatusChange = (index, value) => {
     return sum;
   };
 
-
   const theme = useTheme();
 
   const theme1 = createTheme({
     palette: {
       primary: {
-        main: '#585858',
+        main: "#585858",
       },
     },
   });
 
   const handleEffort = (date, intValue, index) => {
-    const matchingEntry = results.find(entry => entry.effortDate === date && entry.taskId === intValue);
+    const matchingEntry = results.find(
+      (entry) => entry.effortDate === date && entry.taskId === intValue
+    );
     if (matchingEntry) {
-      console.log('Effort Date:', date);
-      console.log('Task Id:', intValue);
-      console.log('Matching Effort:', matchingEntry.effort);
+      console.log("Effort Date:", date);
+      console.log("Task Id:", intValue);
+      console.log("Matching Effort:", matchingEntry.effort);
       return matchingEntry.effort;
-
     }
     return 0;
   };
@@ -843,13 +1018,13 @@ const handleWorkStatusChange = (index, value) => {
       effort: typedValue,
       employeeId: empID,
       project_id: projectId,
-      effort_task_description: getTaskDescription(taskId)
+      effort_task_description: getTaskDescription(taskId),
     };
-    setFormData(prevData => [...prevData, newData]);
+    setFormData((prevData) => [...prevData, newData]);
   };
 
   const convertDateFormat = (oldFormat) => {
-    const [dd, mm, yy] = oldFormat.split('-');
+    const [dd, mm, yy] = oldFormat.split("-");
     const convertedDate = `20${yy}-${mm}-${dd}`;
     return convertedDate;
   };
@@ -871,54 +1046,52 @@ const handleWorkStatusChange = (index, value) => {
       case 7:
         return "Miscellaneous";
       case 8:
-        return "Training and Development"
+        return "Training and Development";
       case 9:
-        return "Employee Engagement"
+        return "Employee Engagement";
       case 10:
-        return "Performance Management"
+        return "Performance Management";
       case 11:
-        return "Compensation and Benefits"
+        return "Compensation and Benefits";
       default:
-        return "Audits and Compilance"
+        return "Audits and Compilance";
     }
   };
 
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/stibium/recordwork', {
-        method: 'POST',
+      const response = await fetch("/stibium/recordwork", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
-        console.log('API call successful');
+        console.log("API call successful");
         setFormData([]);
         setSuccessSnackbarOpen(true);
-      }
-      else {
-        console.error('API call failed');
+      } else {
+        console.error("API call failed");
       }
     } catch (error) {
-      console.error('Error during API call:', error);
+      console.error("Error during API call:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleSuccessSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     setSuccessSnackbarOpen(false);
   };
 
-
   const handleKeyDown = (event, index) => {
-    if (event.key === 'Backspace') {
+    if (event.key === "Backspace") {
       setEditedValues((prevEditedValues) => {
         const newEditedValues = [...prevEditedValues];
         let shouldResetValue = false;
@@ -938,7 +1111,7 @@ const handleWorkStatusChange = (index, value) => {
   };
 
   const handleKeyDown1 = (event, index) => {
-    if (event.key === 'Backspace') {
+    if (event.key === "Backspace") {
       setEditedValues((prevEditedValues) => {
         const newEditedValues = [...prevEditedValues];
         let shouldResetValue = false;
@@ -958,7 +1131,7 @@ const handleWorkStatusChange = (index, value) => {
   };
 
   const handleKeyDown2 = (event, index) => {
-    if (event.key === 'Backspace') {
+    if (event.key === "Backspace") {
       setEditedValues((prevEditedValues) => {
         const newEditedValues = [...prevEditedValues];
         let shouldResetValue = false;
@@ -978,7 +1151,7 @@ const handleWorkStatusChange = (index, value) => {
   };
 
   const handleKeyDown3 = (event, index) => {
-    if (event.key === 'Backspace') {
+    if (event.key === "Backspace") {
       setEditedValues((prevEditedValues) => {
         const newEditedValues = [...prevEditedValues];
         let shouldResetValue = false;
@@ -998,7 +1171,7 @@ const handleWorkStatusChange = (index, value) => {
   };
 
   const handleKeyDown4 = (event, index) => {
-    if (event.key === 'Backspace') {
+    if (event.key === "Backspace") {
       setEditedValues((prevEditedValues) => {
         const newEditedValues = [...prevEditedValues];
         let shouldResetValue = false;
@@ -1018,7 +1191,7 @@ const handleWorkStatusChange = (index, value) => {
   };
 
   const handleKeyDown5 = (event, index) => {
-    if (event.key === 'Backspace') {
+    if (event.key === "Backspace") {
       setEditedValues((prevEditedValues) => {
         const newEditedValues = [...prevEditedValues];
         let shouldResetValue = false;
@@ -1038,7 +1211,7 @@ const handleWorkStatusChange = (index, value) => {
   };
 
   const handleKeyDown6 = (event, index) => {
-    if (event.key === 'Backspace') {
+    if (event.key === "Backspace") {
       setEditedValues((prevEditedValues) => {
         const newEditedValues = [...prevEditedValues];
         let shouldResetValue = false;
@@ -1058,7 +1231,7 @@ const handleWorkStatusChange = (index, value) => {
   };
 
   const handleKeyDown7 = (event, index) => {
-    if (event.key === 'Backspace') {
+    if (event.key === "Backspace") {
       setEditedValues((prevEditedValues) => {
         const newEditedValues = [...prevEditedValues];
         let shouldResetValue = false;
@@ -1078,7 +1251,7 @@ const handleWorkStatusChange = (index, value) => {
   };
 
   const handleKeyDown8 = (event, index) => {
-    if (event.key === 'Backspace') {
+    if (event.key === "Backspace") {
       setEditedValues((prevEditedValues) => {
         const newEditedValues = [...prevEditedValues];
         let shouldResetValue = false;
@@ -1098,7 +1271,7 @@ const handleWorkStatusChange = (index, value) => {
   };
 
   const handleKeyDown9 = (event, index) => {
-    if (event.key === 'Backspace') {
+    if (event.key === "Backspace") {
       setEditedValues((prevEditedValues) => {
         const newEditedValues = [...prevEditedValues];
         let shouldResetValue = false;
@@ -1118,7 +1291,7 @@ const handleWorkStatusChange = (index, value) => {
   };
 
   const handleKeyDown10 = (event, index) => {
-    if (event.key === 'Backspace') {
+    if (event.key === "Backspace") {
       setEditedValues((prevEditedValues) => {
         const newEditedValues = [...prevEditedValues];
         let shouldResetValue = false;
@@ -1138,7 +1311,7 @@ const handleWorkStatusChange = (index, value) => {
   };
 
   const handleKeyDown11 = (event, index) => {
-    if (event.key === 'Backspace') {
+    if (event.key === "Backspace") {
       setEditedValues((prevEditedValues) => {
         const newEditedValues = [...prevEditedValues];
         let shouldResetValue = false;
@@ -1157,75 +1330,271 @@ const handleWorkStatusChange = (index, value) => {
     }
   };
 
-
   return (
+    <Grid container direction="row" style={{ minHeight: "100vh" }}>
+      {/* 👉 Sidebar with buttons */}
+      <Grid
+        item
+        xs={4}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          justifyContent: "center",
+          gap: 2,
+          p: 2,
+          pl: 6, //ad extra padding to shift right
+        }}
+      >
+        <IconButton
+          onClick={() => navigate("/dashboard")}
+          sx={{
+            color: "common.white",
+            top: 13,
+            left: 16,
+            position: "absolute",
+          }}
+        >
+          <ArrowBackIosIcon fontSize="30" />
+        </IconButton>
 
-    <Grid container direction="row" style={{ minHeight: '100vh' }}>
-    {/* 👉 Sidebar with buttons */}
-    <Grid
-      item
-      xs={4}
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 5,
-        padding: 2
-      }}
-    >  <Button variant="contained" fullWidth>APPROVALS</Button>
-      <Button variant="contained" fullWidth>LEAVE RECONCILIATION</Button>
-      <Button variant="contained" fullWidth>LEAVE</Button>
-      <Button variant="contained" fullWidth onClick={() => navigate('/holidaycalendar')}>HOLIDAY CALENDAR</Button>
-    </Grid>
-
+        <Button
+          variant="outlined"
+          className="sidebar-button"
+          sx={{
+            height: 50, // fixed pixel height
+            lineHeight: "50px", // center text vertically
+          }}
+        >
+          APPROVALS
+        </Button>
+        <Button variant="outlined" className="sidebar-button">
+          LEAVE RECONCILIATION
+        </Button>
+        <Button
+        onClick={() => navigate("/leave")}
+          variant="outlined"
+          className="sidebar-button"
+          sx={{
+            height: 50, // fixed pixel height
+            lineHeight: "50px", // center text vertically
+          }}
+        >
+          LEAVE
+        </Button>
+        <Button
+          variant="outlined"
+          className="sidebar-button"
+          onClick={() => navigate("/holidaycalendar")}
+        >
+          HOLIDAY CALENDAR
+        </Button>
+      </Grid>
 
       {loading && (
         <div className="spinner-overlay">
-          <CircularProgress style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }} />
+          <CircularProgress
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          />
         </div>
       )}
-    
-      <Grid item xs={10} className={`wrapper ${blurScreen ? 'blur' : ''}`}>
-        <Box sx={{ position: 'absolute', top: '10px', left: '10px', zIndex: 999 }}>
-    <ArrowBackIosIcon
-      style={{ cursor: "pointer", color: "white" }}
-      onClick={() => navigate('/dashboard')}
-    />
-  </Box>
-        <h1 className="title">Time Sheet Table</h1>
-        <p style={{ display: 'none' }}>Project ID: {projectId}</p>
+      <Grid item xs={10} className={`wrapper ${blurScreen ? "blur" : ""}`}>
+        <h1 className="title">Worksheet Tracker</h1>
+        <p style={{ display: "none" }}>Project ID: {projectId}</p>
         {results.map((item, index) => (
-          <p style={{ display: 'none' }} key={index}>Effort Date: {item.effortDate}, Task ID: {item.taskId}</p>
+          <p style={{ display: "none" }} key={index}>
+            Effort Date: {item.effortDate}, Task ID: {item.taskId}
+          </p>
         ))}
-        <TableContainer component={Paper} sx={{ width: '110%', marginTop: '3%' }}>
+        <TableContainer
+          component={Paper}
+          sx={{ width: "110%", marginTop: "3%" }}
+        >
           <Table sx={{ minWidth: 800 }} aria-label="simple table">
-            <TableHead style={{ maxHeight: '50px' }} >
-              <TableRow style={{ backgroundColor: theme.palette.primary.main, marginTop: '0px', marginBottom: '0px' }}>
-                <TableCell style={{ width: '35px', textAlign: 'center', fontFamily: 'Arial', fontSize: '20px', fontWeight: 'bold' , height: '10px', color: 'white', backgroundColor:'#1d3e61' }}>Task</TableCell>
-                <TableCell style={{ width: '90px', fontFamily: 'Arial', fontSize: '12px', height: '10px', color: 'white',backgroundColor:'#1d3e61' }}>
-                  <div style={{ maxWidth: '120px', display: 'flex', alignItems: 'left', justifyContent: weekOffset > -2 ? 'left' : 'flex-end', gap: '4px', cursor: 'pointer', marginLeft: '-22% ' }}>
-                    <IconButton onClick={handleArrowLeftClick} style={{ color: 'white', padding: '0', marginLeft: '4px', display: weekOffset > -2 ? 'block' : 'none' }}>
-                      <KeyboardArrowLeftIcon style={{ fontSize: '35px' }} />
+            <TableHead style={{ maxHeight: "50px" }}>
+              <TableRow
+                style={{
+                  backgroundColor: theme.palette.primary.main,
+                  marginTop: "0px",
+                  marginBottom: "0px",
+                }}
+              >
+                <TableCell
+                  style={{
+                    width: "35px",
+                    textAlign: "center",
+                    fontFamily: "Arial",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                    height: "10px",
+                    color: "white",
+                    backgroundColor: "#1d3e61",
+                  }}
+                >
+                  Task
+                </TableCell>
+                <TableCell
+                  style={{
+                    width: "90px",
+                    fontFamily: "Arial",
+                    fontSize: "12px",
+                    height: "10px",
+                    color: "white",
+                    backgroundColor: "#1d3e61",
+                  }}
+                >
+                  <div
+                    style={{
+                      maxWidth: "120px",
+                      display: "flex",
+                      alignItems: "left",
+                      justifyContent: weekOffset > -2 ? "left" : "flex-end",
+                      gap: "4px",
+                      cursor: "pointer",
+                      marginLeft: "-22% ",
+                    }}
+                  >
+                    <IconButton
+                      onClick={handleArrowLeftClick}
+                      style={{
+                        color: "white",
+                        padding: "0",
+                        marginLeft: "4px",
+                        display: weekOffset > -2 ? "block" : "none",
+                      }}
+                    >
+                      <KeyboardArrowLeftIcon style={{ fontSize: "35px" }} />
                     </IconButton>
-                    <div style={{ textAlign: 'center', fontSize:'14px',backgroundColor:'#1d3e61' }}>
-                      Mon<br />{dates.mon}
+                    <div
+                      style={{
+                        textAlign: "center",
+                        fontSize: "14px",
+                        backgroundColor: "#1d3e61",
+                      }}
+                    >
+                      Mon
+                      <br />
+                      {dates.mon}
                     </div>
                   </div>
                 </TableCell>
-                <TableCell style={{ width: '90px', textAlign: 'center', fontFamily: 'Arial', fontSize: '14px', height: '10px', color: 'white',backgroundColor:'#1d3e61' }}>Tue<br /> {dates.tue} </TableCell>
-                <TableCell style={{ width: '90px', textAlign: 'center', fontFamily: 'Arial', fontSize: '14px', height: '10px', color: 'white',backgroundColor:'#1d3e61' }}>Wed<br />{dates.wed} </TableCell>
-                <TableCell style={{ width: '90px', textAlign: 'center', fontFamily: 'Arial', fontSize: '14px', height: '10px', color: 'white', backgroundColor:'#1d3e61' }}>Thu<br />{dates.thu} </TableCell>
-                <TableCell style={{ width: '90px', textAlign: 'center', fontFamily: 'Arial', fontSize: '14px', height: '10px', color: 'white', backgroundColor:'#1d3e61' }}>Fri<br />{dates.fri} </TableCell>
-                <TableCell style={{ width: '90px', textAlign: 'center', fontFamily: 'Arial', fontSize: '14px', height: '10px', color: 'white', backgroundColor:'#1d3e61'}}>Sat<br />{dates.sat} </TableCell>
-                <TableCell style={{ width: '90px', fontFamily: 'Arial', fontSize: '14px', height: '10px', color: 'white',backgroundColor:'#1d3e61' }}>
-                  <div style={{ width: '90px', display: 'flex', alignItems: 'left', justifyContent: 'left', gap: '0px', cursor: 'pointer', marginLeft: '15%' }}>
-                    <div style={{ textAlign: 'center' }}>
-                      Sun<br />{dates.sun}
+                <TableCell
+                  style={{
+                    width: "90px",
+                    textAlign: "center",
+                    fontFamily: "Arial",
+                    fontSize: "14px",
+                    height: "10px",
+                    color: "white",
+                    backgroundColor: "#1d3e61",
+                  }}
+                >
+                  Tue
+                  <br /> {dates.tue}{" "}
+                </TableCell>
+                <TableCell
+                  style={{
+                    width: "90px",
+                    textAlign: "center",
+                    fontFamily: "Arial",
+                    fontSize: "14px",
+                    height: "10px",
+                    color: "white",
+                    backgroundColor: "#1d3e61",
+                  }}
+                >
+                  Wed
+                  <br />
+                  {dates.wed}{" "}
+                </TableCell>
+                <TableCell
+                  style={{
+                    width: "90px",
+                    textAlign: "center",
+                    fontFamily: "Arial",
+                    fontSize: "14px",
+                    height: "10px",
+                    color: "white",
+                    backgroundColor: "#1d3e61",
+                  }}
+                >
+                  Thu
+                  <br />
+                  {dates.thu}{" "}
+                </TableCell>
+                <TableCell
+                  style={{
+                    width: "90px",
+                    textAlign: "center",
+                    fontFamily: "Arial",
+                    fontSize: "14px",
+                    height: "10px",
+                    color: "white",
+                    backgroundColor: "#1d3e61",
+                  }}
+                >
+                  Fri
+                  <br />
+                  {dates.fri}{" "}
+                </TableCell>
+                <TableCell
+                  style={{
+                    width: "90px",
+                    textAlign: "center",
+                    fontFamily: "Arial",
+                    fontSize: "14px",
+                    height: "10px",
+                    color: "white",
+                    backgroundColor: "#1d3e61",
+                  }}
+                >
+                  Sat
+                  <br />
+                  {dates.sat}{" "}
+                </TableCell>
+                <TableCell
+                  style={{
+                    width: "90px",
+                    fontFamily: "Arial",
+                    fontSize: "14px",
+                    height: "10px",
+                    color: "white",
+                    backgroundColor: "#1d3e61",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "90px",
+                      display: "flex",
+                      alignItems: "left",
+                      justifyContent: "left",
+                      gap: "0px",
+                      cursor: "pointer",
+                      marginLeft: "15%",
+                    }}
+                  >
+                    <div style={{ textAlign: "center" }}>
+                      Sun
+                      <br />
+                      {dates.sun}
                     </div>
-                    <div style={{ display: weekOffset === 0 ? 'none' : 'block' }}>
-                      <IconButton onClick={handleArrowRightClick} style={{ color: 'white', padding: '0', marginLeft: '1%' }}>
-                        <KeyboardArrowRightIcon style={{ fontSize: '35px' }} />
+                    <div
+                      style={{ display: weekOffset === 0 ? "none" : "block" }}
+                    >
+                      <IconButton
+                        onClick={handleArrowRightClick}
+                        style={{
+                          color: "white",
+                          padding: "0",
+                          marginLeft: "1%",
+                        }}
+                      >
+                        <KeyboardArrowRightIcon style={{ fontSize: "35px" }} />
                       </IconButton>
                     </div>
                   </div>
@@ -1233,13 +1602,33 @@ const handleWorkStatusChange = (index, value) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {projectId != 'HR123' && (
-                <TableRow >
-                  <TableCell style={{ backgroundColor: '#676c71', fontFamily: 'Arial', fontSize: '14px', color: 'white', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+              {projectId !== Taskname.humanResourceProjectId && (
+                <TableRow>
+                  <TableCell
+                    style={{
+                      backgroundColor: "#676c71",
+                      fontFamily: "Arial",
+                      fontSize: "14px",
+                      color: "white",
+                      textAlign: "center",
+                      paddingTop: "1px",
+                      paddingBottom: "1px",
+                    }}
+                  >
                     Coding
                   </TableCell>
                   {codingValues.map((value, index) => (
-                    <TableCell key={index} style={{ backgroundColor: 'white', fontFamily: 'Arial', fontSize: '12px', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+                    <TableCell
+                      key={index}
+                      style={{
+                        backgroundColor: "white",
+                        fontFamily: "Arial",
+                        fontSize: "12px",
+                        textAlign: "center",
+                        paddingTop: "1px",
+                        paddingBottom: "1px",
+                      }}
+                    >
                       <TextField
                         type="text"
                         id={`coding_${index}`}
@@ -1251,8 +1640,14 @@ const handleWorkStatusChange = (index, value) => {
                             : handleEffort(dates[daysOfWeek[index]], 1)
                         }
                         onChange={(event) => {
-                          const inputValue = event.target.value.replace(/\D/g, '');
-                          handleCodingChange(index, inputValue === '' ? 0 : parseInt(inputValue, 10));
+                          const inputValue = event.target.value.replace(
+                            /\D/g,
+                            ""
+                          );
+                          handleCodingChange(
+                            index,
+                            inputValue === "" ? 0 : parseInt(inputValue, 10)
+                          );
                           setEditedValues((prevEditedValues) => {
                             const newEditedValues = [...prevEditedValues];
                             newEditedValues[index] = true;
@@ -1261,19 +1656,23 @@ const handleWorkStatusChange = (index, value) => {
                         }}
                         onBlur={(event) => {
                           setTaskId(1);
-                          handleBlurEvent(1, dates[daysOfWeek[index]], event.target.value);
+                          handleBlurEvent(
+                            1,
+                            dates[daysOfWeek[index]],
+                            event.target.value
+                          );
                         }}
                         onKeyDown={handleKeyDown}
                         onWheel={(e) => e.target.blur()}
                         InputProps={{
                           inputProps: {
-                            inputMode: 'numeric',
-                            pattern: '[0-9]*',
+                            inputMode: "numeric",
+                            pattern: "[0-9]*",
                             style: {
-                              textAlign: 'center',
-                              padding: '10px 0px',
-                              fontSize: '13px',
-                              height: '16px',
+                              textAlign: "center",
+                              padding: "10px 0px",
+                              fontSize: "13px",
+                              height: "16px",
                             },
                           },
                           disableUnderline: true,
@@ -1285,13 +1684,32 @@ const handleWorkStatusChange = (index, value) => {
                 </TableRow>
               )}
 
-              {projectId !== 'HR123' && (
-                <TableRow >
-                  <TableCell style={{ backgroundColor: '#676c71', fontFamily: 'Arial', color: 'white', fontSize: '14px', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+              {projectId !== Taskname.humanResourceProjectId && (
+                <TableRow>
+                  <TableCell
+                    style={{
+                      backgroundColor: "#676c71",
+                      fontFamily: "Arial",
+                      color: "white",
+                      fontSize: "14px",
+                      textAlign: "center",
+                      paddingTop: "1px",
+                      paddingBottom: "1px",
+                    }}
+                  >
                     Testing
                   </TableCell>
                   {testingValues.map((value, index) => (
-                    <TableCell key={index} style={{ backgroundColor: 'white', fontFamily: 'Arial', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+                    <TableCell
+                      key={index}
+                      style={{
+                        backgroundColor: "white",
+                        fontFamily: "Arial",
+                        textAlign: "center",
+                        paddingTop: "1px",
+                        paddingBottom: "1px",
+                      }}
+                    >
                       <TextField
                         type="text"
                         id={`testing_${index}`}
@@ -1303,8 +1721,14 @@ const handleWorkStatusChange = (index, value) => {
                             : handleEffort(dates[daysOfWeek[index]], 2)
                         }
                         onChange={(event) => {
-                          const inputValue = event.target.value.replace(/\D/g, '');
-                          handleTestingChange(index, inputValue === '' ? 0 : parseInt(inputValue, 10));
+                          const inputValue = event.target.value.replace(
+                            /\D/g,
+                            ""
+                          );
+                          handleTestingChange(
+                            index,
+                            inputValue === "" ? 0 : parseInt(inputValue, 10)
+                          );
                           setEditedTestingValues((prevEditedValues) => {
                             const newEditedValues = [...prevEditedValues];
                             newEditedValues[index] = true;
@@ -1313,19 +1737,23 @@ const handleWorkStatusChange = (index, value) => {
                         }}
                         onBlur={(event) => {
                           setTaskId(2);
-                          handleBlurEvent(2, dates[daysOfWeek[index]], event.target.value);
+                          handleBlurEvent(
+                            2,
+                            dates[daysOfWeek[index]],
+                            event.target.value
+                          );
                         }}
                         onKeyDown={handleKeyDown1}
                         onWheel={(e) => e.target.blur()}
                         InputProps={{
                           inputProps: {
-                            inputMode: 'numeric',
-                            pattern: '[0-9]*',
+                            inputMode: "numeric",
+                            pattern: "[0-9]*",
                             style: {
-                              textAlign: 'center',
-                              padding: '10px 0px',
-                              fontSize: '13px',
-                              height: '16px',
+                              textAlign: "center",
+                              padding: "10px 0px",
+                              fontSize: "13px",
+                              height: "16px",
                             },
                           },
                           disableUnderline: true,
@@ -1337,13 +1765,32 @@ const handleWorkStatusChange = (index, value) => {
                 </TableRow>
               )}
 
-              {projectId !== 'HR123' && (
-                <TableRow >
-                  <TableCell style={{ backgroundColor: '#676c71', fontFamily: 'Arial', fontSize: '14px', color: 'white', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+              {projectId !== Taskname.humanResourceProjectId && (
+                <TableRow>
+                  <TableCell
+                    style={{
+                      backgroundColor: "#676c71",
+                      fontFamily: "Arial",
+                      fontSize: "14px",
+                      color: "white",
+                      textAlign: "center",
+                      paddingTop: "1px",
+                      paddingBottom: "1px",
+                    }}
+                  >
                     DevOps
                   </TableCell>
                   {devopsValues.map((value, index) => (
-                    <TableCell key={index} style={{ backgroundColor: 'white', fontFamily: 'Arial', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+                    <TableCell
+                      key={index}
+                      style={{
+                        backgroundColor: "white",
+                        fontFamily: "Arial",
+                        textAlign: "center",
+                        paddingTop: "1px",
+                        paddingBottom: "1px",
+                      }}
+                    >
                       <TextField
                         type="text"
                         id={`devops_${index}`}
@@ -1355,8 +1802,14 @@ const handleWorkStatusChange = (index, value) => {
                             : handleEffort(dates[daysOfWeek[index]], 3)
                         }
                         onChange={(event) => {
-                          const inputValue = event.target.value.replace(/\D/g, '');
-                          handleDevopsChange(index, inputValue === '' ? 0 : parseInt(inputValue, 10));
+                          const inputValue = event.target.value.replace(
+                            /\D/g,
+                            ""
+                          );
+                          handleDevopsChange(
+                            index,
+                            inputValue === "" ? 0 : parseInt(inputValue, 10)
+                          );
                           setEditedDevopsValues((prevEditedValues) => {
                             const newEditedValues = [...prevEditedValues];
                             newEditedValues[index] = true;
@@ -1365,19 +1818,23 @@ const handleWorkStatusChange = (index, value) => {
                         }}
                         onBlur={(event) => {
                           setTaskId(3);
-                          handleBlurEvent(3, dates[daysOfWeek[index]], event.target.value);
+                          handleBlurEvent(
+                            3,
+                            dates[daysOfWeek[index]],
+                            event.target.value
+                          );
                         }}
                         onKeyDown={handleKeyDown2}
                         onWheel={(e) => e.target.blur()}
                         InputProps={{
                           inputProps: {
-                            inputMode: 'numeric',
-                            pattern: '[0-9]*',
+                            inputMode: "numeric",
+                            pattern: "[0-9]*",
                             style: {
-                              textAlign: 'center',
-                              padding: '10px 0px',
-                              fontSize: '13px',
-                              height: '16px',
+                              textAlign: "center",
+                              padding: "10px 0px",
+                              fontSize: "13px",
+                              height: "16px",
                             },
                           },
                           disableUnderline: true,
@@ -1389,12 +1846,31 @@ const handleWorkStatusChange = (index, value) => {
                 </TableRow>
               )}
 
-              <TableRow >
-                <TableCell style={{ backgroundColor: '#676c71', fontFamily: 'Arial', fontSize: '14px', color: 'white', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+              <TableRow>
+                <TableCell
+                  style={{
+                    backgroundColor: "#676c71",
+                    fontFamily: "Arial",
+                    fontSize: "14px",
+                    color: "white",
+                    textAlign: "center",
+                    paddingTop: "1px",
+                    paddingBottom: "1px",
+                  }}
+                >
                   Meeting
                 </TableCell>
                 {meetingValues.map((value, index) => (
-                  <TableCell key={index} style={{ backgroundColor: 'white', fontFamily: 'Arial', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+                  <TableCell
+                    key={index}
+                    style={{
+                      backgroundColor: "white",
+                      fontFamily: "Arial",
+                      textAlign: "center",
+                      paddingTop: "1px",
+                      paddingBottom: "1px",
+                    }}
+                  >
                     <TextField
                       type="text"
                       id={`meeting_${index}`}
@@ -1406,8 +1882,14 @@ const handleWorkStatusChange = (index, value) => {
                           : handleEffort(dates[daysOfWeek[index]], 4)
                       }
                       onChange={(event) => {
-                        const inputValue = event.target.value.replace(/\D/g, '');
-                        handleMeetingChange(index, inputValue === '' ? 0 : parseInt(inputValue, 10));
+                        const inputValue = event.target.value.replace(
+                          /\D/g,
+                          ""
+                        );
+                        handleMeetingChange(
+                          index,
+                          inputValue === "" ? 0 : parseInt(inputValue, 10)
+                        );
                         setEditedMeetingValues((prevEditedValues) => {
                           const newEditedValues = [...prevEditedValues];
                           newEditedValues[index] = true;
@@ -1416,19 +1898,23 @@ const handleWorkStatusChange = (index, value) => {
                       }}
                       onBlur={(event) => {
                         setTaskId(4);
-                        handleBlurEvent(4, dates[daysOfWeek[index]], event.target.value);
+                        handleBlurEvent(
+                          4,
+                          dates[daysOfWeek[index]],
+                          event.target.value
+                        );
                       }}
                       onKeyDown={handleKeyDown3}
                       onWheel={(e) => e.target.blur()}
                       InputProps={{
                         inputProps: {
-                          inputMode: 'numeric',
-                          pattern: '[0-9]*',
+                          inputMode: "numeric",
+                          pattern: "[0-9]*",
                           style: {
-                            textAlign: 'center',
-                            padding: '10px 0px',
-                            fontSize: '13px',
-                            height: '16px',
+                            textAlign: "center",
+                            padding: "10px 0px",
+                            fontSize: "13px",
+                            height: "16px",
                           },
                         },
                         disableUnderline: true,
@@ -1439,13 +1925,32 @@ const handleWorkStatusChange = (index, value) => {
                 ))}
               </TableRow>
 
-              {projectId !== 'HR123' && (
-                <TableRow >
-                  <TableCell style={{ backgroundColor: '#676c71', fontFamily: 'Arial', fontSize: '14px', color: 'white', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+              {projectId !== Taskname.humanResourceProjectId && (
+                <TableRow>
+                  <TableCell
+                    style={{
+                      backgroundColor: "#676c71",
+                      fontFamily: "Arial",
+                      fontSize: "14px",
+                      color: "white",
+                      textAlign: "center",
+                      paddingTop: "1px",
+                      paddingBottom: "1px",
+                    }}
+                  >
                     Database
                   </TableCell>
                   {dataValues.map((value, index) => (
-                    <TableCell key={index} style={{ backgroundColor: 'white', fontFamily: 'Arial', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+                    <TableCell
+                      key={index}
+                      style={{
+                        backgroundColor: "white",
+                        fontFamily: "Arial",
+                        textAlign: "center",
+                        paddingTop: "1px",
+                        paddingBottom: "1px",
+                      }}
+                    >
                       <TextField
                         type="text"
                         id={`data_${index}`}
@@ -1457,8 +1962,14 @@ const handleWorkStatusChange = (index, value) => {
                             : handleEffort(dates[daysOfWeek[index]], 5)
                         }
                         onChange={(event) => {
-                          const inputValue = event.target.value.replace(/\D/g, '');
-                          handleDataChange(index, inputValue === '' ? 0 : parseInt(inputValue, 10));
+                          const inputValue = event.target.value.replace(
+                            /\D/g,
+                            ""
+                          );
+                          handleDataChange(
+                            index,
+                            inputValue === "" ? 0 : parseInt(inputValue, 10)
+                          );
                           setEditedDataValues((prevEditedValues) => {
                             const newEditedValues = [...prevEditedValues];
                             newEditedValues[index] = true;
@@ -1467,19 +1978,23 @@ const handleWorkStatusChange = (index, value) => {
                         }}
                         onBlur={(event) => {
                           setTaskId(5);
-                          handleBlurEvent(5, dates[daysOfWeek[index]], event.target.value);
+                          handleBlurEvent(
+                            5,
+                            dates[daysOfWeek[index]],
+                            event.target.value
+                          );
                         }}
                         onKeyDown={handleKeyDown4}
                         onWheel={(e) => e.target.blur()}
                         InputProps={{
                           inputProps: {
-                            inputMode: 'numeric',
-                            pattern: '[0-9]*',
+                            inputMode: "numeric",
+                            pattern: "[0-9]*",
                             style: {
-                              textAlign: 'center',
-                              padding: '10px 0px',
-                              fontSize: '13px',
-                              height: '16px',
+                              textAlign: "center",
+                              padding: "10px 0px",
+                              fontSize: "13px",
+                              height: "16px",
                             },
                           },
                           disableUnderline: true,
@@ -1491,16 +2006,42 @@ const handleWorkStatusChange = (index, value) => {
                 </TableRow>
               )}
 
-              {projectId !== Taskname.stibiumProjectId && projectId !== Taskname.aomaDeliveryProjectId && projectId !== Taskname.aomaPromoProjectId
-                && projectId !== Taskname.grpsProjectId && projectId !== Taskname.starProjectId && projectId !== Taskname.samisProjectId
-                && projectId !== Taskname.eomProjectId && projectId !== Taskname.devopsProjectId && projectId !== Taskname.scubaProjectId
-                && projectId !== Taskname.carmaProjectId && projectId !== Taskname.radarProjectId && (
-                  <TableRow >
-                    <TableCell style={{ backgroundColor: theme.palette.primary.main, fontFamily: 'Arial', fontSize: '14px', color: 'white', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+              {projectId !== Taskname.stibiumProjectId &&
+                projectId !== Taskname.aomaDeliveryProjectId &&
+                projectId !== Taskname.aomaPromoProjectId &&
+                projectId !== Taskname.grpsProjectId &&
+                projectId !== Taskname.starProjectId &&
+                projectId !== Taskname.samisProjectId &&
+                projectId !== Taskname.eomProjectId &&
+                projectId !== Taskname.devopsProjectId &&
+                projectId !== Taskname.scubaProjectId &&
+                projectId !== Taskname.carmaProjectId &&
+                projectId !== Taskname.radarProjectId && (
+                  <TableRow>
+                    <TableCell
+                      style={{
+                        backgroundColor: theme.palette.primary.main,
+                        fontFamily: "Arial",
+                        fontSize: "14px",
+                        color: "white",
+                        textAlign: "center",
+                        paddingTop: "1px",
+                        paddingBottom: "1px",
+                      }}
+                    >
                       Talent Acquisition
                     </TableCell>
                     {taValues.map((value, index) => (
-                      <TableCell key={index} style={{ backgroundColor: 'white', fontFamily: 'Arial', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+                      <TableCell
+                        key={index}
+                        style={{
+                          backgroundColor: "white",
+                          fontFamily: "Arial",
+                          textAlign: "center",
+                          paddingTop: "1px",
+                          paddingBottom: "1px",
+                        }}
+                      >
                         <TextField
                           type="text"
                           id={`ta_${index}`}
@@ -1512,8 +2053,14 @@ const handleWorkStatusChange = (index, value) => {
                               : handleEffort(dates[daysOfWeek[index]], 6)
                           }
                           onChange={(event) => {
-                            const inputValue = event.target.value.replace(/\D/g, '');
-                            handleTaChange(index, inputValue === '' ? 0 : parseInt(inputValue, 10));
+                            const inputValue = event.target.value.replace(
+                              /\D/g,
+                              ""
+                            );
+                            handleTaChange(
+                              index,
+                              inputValue === "" ? 0 : parseInt(inputValue, 10)
+                            );
                             setEditedTaValues((prevEditedValues) => {
                               const newEditedValues = [...prevEditedValues];
                               newEditedValues[index] = true;
@@ -1522,41 +2069,70 @@ const handleWorkStatusChange = (index, value) => {
                           }}
                           onBlur={(event) => {
                             setTaskId(6);
-                            handleBlurEvent(6, dates[daysOfWeek[index]], event.target.value);
+                            handleBlurEvent(
+                              6,
+                              dates[daysOfWeek[index]],
+                              event.target.value
+                            );
                           }}
                           onKeyDown={handleKeyDown5}
                           onWheel={(e) => e.target.blur()}
                           InputProps={{
                             inputProps: {
-                              inputMode: 'numeric',
-                              pattern: '[0-9]*',
+                              inputMode: "numeric",
+                              pattern: "[0-9]*",
                               style: {
-                                textAlign: 'center',
-                                padding: '10px 0px',
-                                fontSize: '13px',
-                                height: '16px',
+                                textAlign: "center",
+                                padding: "10px 0px",
+                                fontSize: "13px",
+                                height: "16px",
                               },
                             },
                             disableUnderline: true,
                             disabled: isFutureDay(index + 1),
                           }}
                         />
-
                       </TableCell>
                     ))}
                   </TableRow>
                 )}
 
-              {projectId !== Taskname.stibiumProjectId && projectId !== Taskname.aomaDeliveryProjectId && projectId !== Taskname.aomaPromoProjectId
-                && projectId !== Taskname.grpsProjectId && projectId !== Taskname.starProjectId && projectId !== Taskname.samisProjectId
-                && projectId !== Taskname.eomProjectId && projectId !== Taskname.devopsProjectId && projectId !== Taskname.scubaProjectId
-                && projectId !== Taskname.carmaProjectId && projectId !== Taskname.radarProjectId && (
-                  <TableRow >
-                    <TableCell style={{ backgroundColor: theme.palette.primary.main, fontFamily: 'Arial', fontSize: '14px', color: 'white', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+              {projectId !== Taskname.stibiumProjectId &&
+                projectId !== Taskname.aomaDeliveryProjectId &&
+                projectId !== Taskname.aomaPromoProjectId &&
+                projectId !== Taskname.grpsProjectId &&
+                projectId !== Taskname.starProjectId &&
+                projectId !== Taskname.samisProjectId &&
+                projectId !== Taskname.eomProjectId &&
+                projectId !== Taskname.devopsProjectId &&
+                projectId !== Taskname.scubaProjectId &&
+                projectId !== Taskname.carmaProjectId &&
+                projectId !== Taskname.radarProjectId && (
+                  <TableRow>
+                    <TableCell
+                      style={{
+                        backgroundColor: theme.palette.primary.main,
+                        fontFamily: "Arial",
+                        fontSize: "14px",
+                        color: "white",
+                        textAlign: "center",
+                        paddingTop: "1px",
+                        paddingBottom: "1px",
+                      }}
+                    >
                       Training and Development
                     </TableCell>
                     {tdValues.map((value, index) => (
-                      <TableCell key={index} style={{ backgroundColor: 'white', fontFamily: 'Arial', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+                      <TableCell
+                        key={index}
+                        style={{
+                          backgroundColor: "white",
+                          fontFamily: "Arial",
+                          textAlign: "center",
+                          paddingTop: "1px",
+                          paddingBottom: "1px",
+                        }}
+                      >
                         <TextField
                           type="text"
                           id={`td_${index}`}
@@ -1568,8 +2144,14 @@ const handleWorkStatusChange = (index, value) => {
                               : handleEffort(dates[daysOfWeek[index]], 8)
                           }
                           onChange={(event) => {
-                            const inputValue = event.target.value.replace(/\D/g, '');
-                            handleTdChange(index, inputValue === '' ? 0 : parseInt(inputValue, 10));
+                            const inputValue = event.target.value.replace(
+                              /\D/g,
+                              ""
+                            );
+                            handleTdChange(
+                              index,
+                              inputValue === "" ? 0 : parseInt(inputValue, 10)
+                            );
                             setEditedTdValues((prevEditedValues) => {
                               const newEditedValues = [...prevEditedValues];
                               newEditedValues[index] = true;
@@ -1578,19 +2160,23 @@ const handleWorkStatusChange = (index, value) => {
                           }}
                           onBlur={(event) => {
                             setTaskId(8);
-                            handleBlurEvent(8, dates[daysOfWeek[index]], event.target.value);
+                            handleBlurEvent(
+                              8,
+                              dates[daysOfWeek[index]],
+                              event.target.value
+                            );
                           }}
                           onKeyDown={handleKeyDown7}
                           onWheel={(e) => e.target.blur()}
                           InputProps={{
                             inputProps: {
-                              inputMode: 'numeric',
-                              pattern: '[0-9]*',
+                              inputMode: "numeric",
+                              pattern: "[0-9]*",
                               style: {
-                                textAlign: 'center',
-                                padding: '10px 0px',
-                                fontSize: '13px',
-                                height: '16px',
+                                textAlign: "center",
+                                padding: "10px 0px",
+                                fontSize: "13px",
+                                height: "16px",
                               },
                             },
                             disableUnderline: true,
@@ -1602,16 +2188,42 @@ const handleWorkStatusChange = (index, value) => {
                   </TableRow>
                 )}
 
-              {projectId !== Taskname.stibiumProjectId && projectId !== Taskname.aomaDeliveryProjectId && projectId !== Taskname.aomaPromoProjectId
-                && projectId !== Taskname.grpsProjectId && projectId !== Taskname.starProjectId && projectId !== Taskname.samisProjectId
-                && projectId !== Taskname.eomProjectId && projectId !== Taskname.devopsProjectId && projectId !== Taskname.scubaProjectId
-                && projectId !== Taskname.carmaProjectId && projectId !== Taskname.radarProjectId && (
-                  <TableRow >
-                    <TableCell style={{ backgroundColor: theme.palette.primary.main, fontFamily: 'Arial', fontSize: '14px', color: 'white', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+              {projectId !== Taskname.stibiumProjectId &&
+                projectId !== Taskname.aomaDeliveryProjectId &&
+                projectId !== Taskname.aomaPromoProjectId &&
+                projectId !== Taskname.grpsProjectId &&
+                projectId !== Taskname.starProjectId &&
+                projectId !== Taskname.samisProjectId &&
+                projectId !== Taskname.eomProjectId &&
+                projectId !== Taskname.devopsProjectId &&
+                projectId !== Taskname.scubaProjectId &&
+                projectId !== Taskname.carmaProjectId &&
+                projectId !== Taskname.radarProjectId && (
+                  <TableRow>
+                    <TableCell
+                      style={{
+                        backgroundColor: theme.palette.primary.main,
+                        fontFamily: "Arial",
+                        fontSize: "14px",
+                        color: "white",
+                        textAlign: "center",
+                        paddingTop: "1px",
+                        paddingBottom: "1px",
+                      }}
+                    >
                       Employee Engagement
                     </TableCell>
                     {eeValues.map((value, index) => (
-                      <TableCell key={index} style={{ backgroundColor: 'white', fontFamily: 'Arial', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+                      <TableCell
+                        key={index}
+                        style={{
+                          backgroundColor: "white",
+                          fontFamily: "Arial",
+                          textAlign: "center",
+                          paddingTop: "1px",
+                          paddingBottom: "1px",
+                        }}
+                      >
                         <TextField
                           type="text"
                           id={`ee_${index}`}
@@ -1623,8 +2235,14 @@ const handleWorkStatusChange = (index, value) => {
                               : handleEffort(dates[daysOfWeek[index]], 9)
                           }
                           onChange={(event) => {
-                            const inputValue = event.target.value.replace(/\D/g, '');
-                            handleEeChange(index, inputValue === '' ? 0 : parseInt(inputValue, 10));
+                            const inputValue = event.target.value.replace(
+                              /\D/g,
+                              ""
+                            );
+                            handleEeChange(
+                              index,
+                              inputValue === "" ? 0 : parseInt(inputValue, 10)
+                            );
                             setEditedEeValues((prevEditedValues) => {
                               const newEditedValues = [...prevEditedValues];
                               newEditedValues[index] = true;
@@ -1633,19 +2251,23 @@ const handleWorkStatusChange = (index, value) => {
                           }}
                           onBlur={(event) => {
                             setTaskId(9);
-                            handleBlurEvent(9, dates[daysOfWeek[index]], event.target.value);
+                            handleBlurEvent(
+                              9,
+                              dates[daysOfWeek[index]],
+                              event.target.value
+                            );
                           }}
                           onKeyDown={handleKeyDown8}
                           onWheel={(e) => e.target.blur()}
                           InputProps={{
                             inputProps: {
-                              inputMode: 'numeric',
-                              pattern: '[0-9]*',
+                              inputMode: "numeric",
+                              pattern: "[0-9]*",
                               style: {
-                                textAlign: 'center',
-                                padding: '10px 0px',
-                                fontSize: '13px',
-                                height: '16px',
+                                textAlign: "center",
+                                padding: "10px 0px",
+                                fontSize: "13px",
+                                height: "16px",
                               },
                             },
                             disableUnderline: true,
@@ -1657,16 +2279,42 @@ const handleWorkStatusChange = (index, value) => {
                   </TableRow>
                 )}
 
-              {projectId !== Taskname.stibiumProjectId && projectId !== Taskname.aomaDeliveryProjectId && projectId !== Taskname.aomaPromoProjectId
-                && projectId !== Taskname.grpsProjectId && projectId !== Taskname.starProjectId && projectId !== Taskname.samisProjectId
-                && projectId !== Taskname.eomProjectId && projectId !== Taskname.devopsProjectId && projectId !== Taskname.scubaProjectId
-                && projectId !== Taskname.carmaProjectId && projectId !== Taskname.radarProjectId && (
-                  <TableRow >
-                    <TableCell style={{ backgroundColor: theme.palette.primary.main, fontFamily: 'Arial', fontSize: '14px', color: 'white', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+              {projectId !== Taskname.stibiumProjectId &&
+                projectId !== Taskname.aomaDeliveryProjectId &&
+                projectId !== Taskname.aomaPromoProjectId &&
+                projectId !== Taskname.grpsProjectId &&
+                projectId !== Taskname.starProjectId &&
+                projectId !== Taskname.samisProjectId &&
+                projectId !== Taskname.eomProjectId &&
+                projectId !== Taskname.devopsProjectId &&
+                projectId !== Taskname.scubaProjectId &&
+                projectId !== Taskname.carmaProjectId &&
+                projectId !== Taskname.radarProjectId && (
+                  <TableRow>
+                    <TableCell
+                      style={{
+                        backgroundColor: theme.palette.primary.main,
+                        fontFamily: "Arial",
+                        fontSize: "14px",
+                        color: "white",
+                        textAlign: "center",
+                        paddingTop: "1px",
+                        paddingBottom: "1px",
+                      }}
+                    >
                       Performance Management
                     </TableCell>
                     {pmValues.map((value, index) => (
-                      <TableCell key={index} style={{ backgroundColor: 'white', fontFamily: 'Arial', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+                      <TableCell
+                        key={index}
+                        style={{
+                          backgroundColor: "white",
+                          fontFamily: "Arial",
+                          textAlign: "center",
+                          paddingTop: "1px",
+                          paddingBottom: "1px",
+                        }}
+                      >
                         <TextField
                           type="text"
                           id={`pm_${index}`}
@@ -1678,8 +2326,14 @@ const handleWorkStatusChange = (index, value) => {
                               : handleEffort(dates[daysOfWeek[index]], 10)
                           }
                           onChange={(event) => {
-                            const inputValue = event.target.value.replace(/\D/g, '');
-                            handlePmChange(index, inputValue === '' ? 0 : parseInt(inputValue, 10));
+                            const inputValue = event.target.value.replace(
+                              /\D/g,
+                              ""
+                            );
+                            handlePmChange(
+                              index,
+                              inputValue === "" ? 0 : parseInt(inputValue, 10)
+                            );
                             setEditedPmValues((prevEditedValues) => {
                               const newEditedValues = [...prevEditedValues];
                               newEditedValues[index] = true;
@@ -1688,41 +2342,70 @@ const handleWorkStatusChange = (index, value) => {
                           }}
                           onBlur={(event) => {
                             setTaskId(10);
-                            handleBlurEvent(10, dates[daysOfWeek[index]], event.target.value);
+                            handleBlurEvent(
+                              10,
+                              dates[daysOfWeek[index]],
+                              event.target.value
+                            );
                           }}
                           onKeyDown={handleKeyDown9}
                           onWheel={(e) => e.target.blur()}
                           InputProps={{
                             inputProps: {
-                              inputMode: 'numeric',
-                              pattern: '[0-9]*',
+                              inputMode: "numeric",
+                              pattern: "[0-9]*",
                               style: {
-                                textAlign: 'center',
-                                padding: '10px 0px',
-                                fontSize: '13px',
-                                height: '16px',
+                                textAlign: "center",
+                                padding: "10px 0px",
+                                fontSize: "13px",
+                                height: "16px",
                               },
                             },
                             disableUnderline: true,
                             disabled: isFutureDay(index + 1),
                           }}
                         />
-
                       </TableCell>
                     ))}
                   </TableRow>
                 )}
 
-              {projectId !== Taskname.stibiumProjectId && projectId !== Taskname.aomaDeliveryProjectId && projectId !== Taskname.aomaPromoProjectId
-                && projectId !== Taskname.grpsProjectId && projectId !== Taskname.starProjectId && projectId !== Taskname.samisProjectId
-                && projectId !== Taskname.eomProjectId && projectId !== Taskname.devopsProjectId && projectId !== Taskname.scubaProjectId
-                && projectId !== Taskname.carmaProjectId && projectId !== Taskname.radarProjectId && (
-                  <TableRow >
-                    <TableCell style={{ backgroundColor: theme.palette.primary.main, fontFamily: 'Arial', fontSize: '12px', color: 'white', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+              {projectId !== Taskname.stibiumProjectId &&
+                projectId !== Taskname.aomaDeliveryProjectId &&
+                projectId !== Taskname.aomaPromoProjectId &&
+                projectId !== Taskname.grpsProjectId &&
+                projectId !== Taskname.starProjectId &&
+                projectId !== Taskname.samisProjectId &&
+                projectId !== Taskname.eomProjectId &&
+                projectId !== Taskname.devopsProjectId &&
+                projectId !== Taskname.scubaProjectId &&
+                projectId !== Taskname.carmaProjectId &&
+                projectId !== Taskname.radarProjectId && (
+                  <TableRow>
+                    <TableCell
+                      style={{
+                        backgroundColor: theme.palette.primary.main,
+                        fontFamily: "Arial",
+                        fontSize: "12px",
+                        color: "white",
+                        textAlign: "center",
+                        paddingTop: "1px",
+                        paddingBottom: "1px",
+                      }}
+                    >
                       Compensation and Benefits
                     </TableCell>
                     {cbValues.map((value, index) => (
-                      <TableCell key={index} style={{ backgroundColor: 'white', fontFamily: 'Arial', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+                      <TableCell
+                        key={index}
+                        style={{
+                          backgroundColor: "white",
+                          fontFamily: "Arial",
+                          textAlign: "center",
+                          paddingTop: "1px",
+                          paddingBottom: "1px",
+                        }}
+                      >
                         <TextField
                           type="text"
                           id={`cb_${index}`}
@@ -1734,8 +2417,14 @@ const handleWorkStatusChange = (index, value) => {
                               : handleEffort(dates[daysOfWeek[index]], 11)
                           }
                           onChange={(event) => {
-                            const inputValue = event.target.value.replace(/\D/g, '');
-                            handleCbChange(index, inputValue === '' ? 0 : parseInt(inputValue, 10));
+                            const inputValue = event.target.value.replace(
+                              /\D/g,
+                              ""
+                            );
+                            handleCbChange(
+                              index,
+                              inputValue === "" ? 0 : parseInt(inputValue, 10)
+                            );
                             setEditedCbValues((prevEditedValues) => {
                               const newEditedValues = [...prevEditedValues];
                               newEditedValues[index] = true;
@@ -1744,19 +2433,23 @@ const handleWorkStatusChange = (index, value) => {
                           }}
                           onBlur={(event) => {
                             setTaskId(11);
-                            handleBlurEvent(11, dates[daysOfWeek[index]], event.target.value);
+                            handleBlurEvent(
+                              11,
+                              dates[daysOfWeek[index]],
+                              event.target.value
+                            );
                           }}
                           onKeyDown={handleKeyDown10}
                           onWheel={(e) => e.target.blur()}
                           InputProps={{
                             inputProps: {
-                              inputMode: 'numeric',
-                              pattern: '[0-9]*',
+                              inputMode: "numeric",
+                              pattern: "[0-9]*",
                               style: {
-                                textAlign: 'center',
-                                padding: '10px 0px',
-                                fontSize: '13px',
-                                height: '16px',
+                                textAlign: "center",
+                                padding: "10px 0px",
+                                fontSize: "13px",
+                                height: "16px",
                               },
                             },
                             disableUnderline: true,
@@ -1768,16 +2461,42 @@ const handleWorkStatusChange = (index, value) => {
                   </TableRow>
                 )}
 
-              {projectId !== Taskname.stibiumProjectId && projectId !== Taskname.aomaDeliveryProjectId && projectId !== Taskname.aomaPromoProjectId
-                && projectId !== Taskname.grpsProjectId && projectId !== Taskname.starProjectId && projectId !== Taskname.samisProjectId
-                && projectId !== Taskname.eomProjectId && projectId !== Taskname.devopsProjectId && projectId !== Taskname.scubaProjectId
-                && projectId !== Taskname.carmaProjectId && projectId !== Taskname.radarProjectId && (
-                  <TableRow >
-                    <TableCell style={{ backgroundColor: theme.palette.primary.main, fontFamily: 'Arial', fontSize: '12px', color: 'white', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+              {projectId !== Taskname.stibiumProjectId &&
+                projectId !== Taskname.aomaDeliveryProjectId &&
+                projectId !== Taskname.aomaPromoProjectId &&
+                projectId !== Taskname.grpsProjectId &&
+                projectId !== Taskname.starProjectId &&
+                projectId !== Taskname.samisProjectId &&
+                projectId !== Taskname.eomProjectId &&
+                projectId !== Taskname.devopsProjectId &&
+                projectId !== Taskname.scubaProjectId &&
+                projectId !== Taskname.carmaProjectId &&
+                projectId !== Taskname.radarProjectId && (
+                  <TableRow>
+                    <TableCell
+                      style={{
+                        backgroundColor: theme.palette.primary.main,
+                        fontFamily: "Arial",
+                        fontSize: "12px",
+                        color: "white",
+                        textAlign: "center",
+                        paddingTop: "1px",
+                        paddingBottom: "1px",
+                      }}
+                    >
                       Audits and Compilance
                     </TableCell>
                     {acValues.map((value, index) => (
-                      <TableCell key={index} style={{ backgroundColor: 'white', fontFamily: 'Arial', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+                      <TableCell
+                        key={index}
+                        style={{
+                          backgroundColor: "white",
+                          fontFamily: "Arial",
+                          textAlign: "center",
+                          paddingTop: "1px",
+                          paddingBottom: "1px",
+                        }}
+                      >
                         <TextField
                           type="text"
                           id={`ac_${index}`}
@@ -1789,8 +2508,14 @@ const handleWorkStatusChange = (index, value) => {
                               : handleEffort(dates[daysOfWeek[index]], 12)
                           }
                           onChange={(event) => {
-                            const inputValue = event.target.value.replace(/\D/g, '');
-                            handleAcChange(index, inputValue === '' ? 0 : parseInt(inputValue, 10));
+                            const inputValue = event.target.value.replace(
+                              /\D/g,
+                              ""
+                            );
+                            handleAcChange(
+                              index,
+                              inputValue === "" ? 0 : parseInt(inputValue, 10)
+                            );
                             setEditedAcValues((prevEditedValues) => {
                               const newEditedValues = [...prevEditedValues];
                               newEditedValues[index] = true;
@@ -1799,19 +2524,23 @@ const handleWorkStatusChange = (index, value) => {
                           }}
                           onBlur={(event) => {
                             setTaskId(12);
-                            handleBlurEvent(12, dates[daysOfWeek[index]], event.target.value);
+                            handleBlurEvent(
+                              12,
+                              dates[daysOfWeek[index]],
+                              event.target.value
+                            );
                           }}
                           onKeyDown={handleKeyDown11}
                           onWheel={(e) => e.target.blur()}
                           InputProps={{
                             inputProps: {
-                              inputMode: 'numeric',
-                              pattern: '[0-9]*',
+                              inputMode: "numeric",
+                              pattern: "[0-9]*",
                               style: {
-                                textAlign: 'center',
-                                padding: '10px 0px',
-                                fontSize: '13px',
-                                height: '16px',
+                                textAlign: "center",
+                                padding: "10px 0px",
+                                fontSize: "13px",
+                                height: "16px",
                               },
                             },
                             disableUnderline: true,
@@ -1823,12 +2552,31 @@ const handleWorkStatusChange = (index, value) => {
                   </TableRow>
                 )}
 
-              <TableRow >
-                <TableCell style={{ backgroundColor: '#676c71', fontFamily: 'Arial', fontSize: '14px', color: 'white', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+              <TableRow>
+                <TableCell
+                  style={{
+                    backgroundColor: "#676c71",
+                    fontFamily: "Arial",
+                    fontSize: "14px",
+                    color: "white",
+                    textAlign: "center",
+                    paddingTop: "1px",
+                    paddingBottom: "1px",
+                  }}
+                >
                   Miscellaneous
                 </TableCell>
                 {misValues.map((value, index) => (
-                  <TableCell key={index} style={{ backgroundColor: 'white', fontFamily: 'Arial', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+                  <TableCell
+                    key={index}
+                    style={{
+                      backgroundColor: "white",
+                      fontFamily: "Arial",
+                      textAlign: "center",
+                      paddingTop: "1px",
+                      paddingBottom: "1px",
+                    }}
+                  >
                     <TextField
                       type="text"
                       id={`mis_${index}`}
@@ -1840,8 +2588,14 @@ const handleWorkStatusChange = (index, value) => {
                           : handleEffort(dates[daysOfWeek[index]], 7)
                       }
                       onChange={(event) => {
-                        const inputValue = event.target.value.replace(/\D/g, '');
-                        handleMisChange(index, inputValue === '' ? 0 : parseInt(inputValue, 10));
+                        const inputValue = event.target.value.replace(
+                          /\D/g,
+                          ""
+                        );
+                        handleMisChange(
+                          index,
+                          inputValue === "" ? 0 : parseInt(inputValue, 10)
+                        );
                         setEditedMisValues((prevEditedValues) => {
                           const newEditedValues = [...prevEditedValues];
                           newEditedValues[index] = true;
@@ -1850,19 +2604,23 @@ const handleWorkStatusChange = (index, value) => {
                       }}
                       onBlur={(event) => {
                         setTaskId(7);
-                        handleBlurEvent(7, dates[daysOfWeek[index]], event.target.value);
+                        handleBlurEvent(
+                          7,
+                          dates[daysOfWeek[index]],
+                          event.target.value
+                        );
                       }}
                       onKeyDown={handleKeyDown6}
                       onWheel={(e) => e.target.blur()}
                       InputProps={{
                         inputProps: {
-                          inputMode: 'numeric',
-                          pattern: '[0-9]*',
+                          inputMode: "numeric",
+                          pattern: "[0-9]*",
                           style: {
-                            textAlign: 'center',
-                            padding: '10px 0px',
-                            fontSize: '13px',
-                            height: '16px',
+                            textAlign: "center",
+                            padding: "10px 0px",
+                            fontSize: "13px",
+                            height: "16px",
                           },
                         },
                         disableUnderline: true,
@@ -1874,71 +2632,100 @@ const handleWorkStatusChange = (index, value) => {
               </TableRow>
 
               <TableRow>
-  <TableCell
-    sx={{
-      backgroundColor: '#676c71',
-      color: 'white',
-      fontSize: '14px',
-      textAlign: 'center',
-      fontFamily: 'Arial',
-      paddingY: '2px', // Compact vertical padding
-      paddingX: '6px',
-      lineHeight: '1.2',
+                <TableCell
+                   size="small"  // This reduces default padding
+    sx={{ 
+      backgroundColor: "#676c71", 
+      color: "white", 
+      fontSize: "14px", 
+      textAlign: "center", 
+      fontFamily: "Arial", 
+      height: "20px",
+      lineHeight: "20px",
+      padding: "2px 4px",  // Minimal padding
     }}
-  >
-    Work Status
-  </TableCell>
+                >
+                  Work Status
+                </TableCell>
 
-  {Array(7).fill('').map((_, index) => (
-    <TableCell
-      key={index}
-      align="center"
-      sx={{
-        padding: '2px 8px', //spacinf between dropdowns
-        backgroundColor: 'white',
-      }}
-    >
-      <Select
-        value={workStatusValues[index] || 'WFO'}
-        onChange={(event) => handleWorkStatusChange(index, event.target.value)}
-        variant="filled"
-        size="small"
-        disabled={isFutureDay(index + 1)}
-        sx={{
-          width: '90%',
-          fontSize: '12px',
-          fontFamily: 'Arial',
-          padding: 0,
-          backgroundColor: '#f0f0f0',
-          minHeight: '28px',
-          lineHeight: '1.2',
-        }}
-        MenuProps={{
-          PaperProps: {
-            style: {
-              maxHeight: 150,
-              fontSize: '14px',
-              fontFamily: 'Arial',
-            },
-          },
-        }}
-      >
-        <MenuItem value="WFO"><em>WFO</em></MenuItem>
-        <MenuItem value="WFH">WFH</MenuItem>
-      </Select>
-    </TableCell>
-  ))}
-</TableRow>
+                {Array(7)
+                  .fill("")
+                  .map((_, index) => (
+                    <TableCell
+                      key={index}
+                      align="center"
+                      sx={{
+                        height: "40",
+                        padding: "1px 10px", //spacinf between dropdowns
+                        backgroundColor: "white",
+                      }}
+                    >
+                      <Select
+                        value={workStatusValues[index] || "WFO"}
+                        onChange={(event) =>
+                          handleWorkStatusChange(index, event.target.value)
+                        }
+                        variant="filled"
+                        size="small"
+                        disabled={isFutureDay(index + 1)}
+                        sx={{
+                          width: "90%",
+                          fontSize: "12px",
+                          fontFamily: "Arial",
+                          padding: 0,
 
+                          backgroundColor: "#f0f0f0",
+                          minHeight: "20",
+                          lineHeight: "1",
+                        }}
+                        MenuProps={{
+                          PaperProps: {
+                            style: {
+                              maxHeight: 100,
+                              fontSize: "14px",
+                              fontFamily: "Arial",
+                            },
+                          },
+                        }}
+                      >
+                        <MenuItem value="WFO">
+                          <em>WFO</em>
+                        </MenuItem>
+                        <MenuItem value="WFH">WFH</MenuItem>
+                      </Select>
+                    </TableCell>
+                  ))}
+              </TableRow>
 
-
-
-              <TableRow >
-                <TableCell style={{ backgroundColor:'#353638' , height: '30px', fontFamily: 'Arial', fontSize: '14px', color: 'white', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px' }}>
+              <TableRow>
+                <TableCell
+                  style={{
+                    backgroundColor: "#353638",
+                    height: "30px",
+                    fontFamily: "Arial",
+                    fontSize: "14px",
+                    color: "white",
+                    textAlign: "center",
+                    paddingTop: "1px",
+                    paddingBottom: "1px",
+                  }}
+                >
                   Total hours
                 </TableCell>
                 {totalValues.map((value, index) => (
-                  <TableCell key={index} style={{ backgroundColor:'#353638', fontFamily: 'Arial', fontSize: '12px', color: 'white', textAlign: 'center', paddingTop: '1px', paddingBottom: '1px', paddingLeft: '1.5%' }}>
+                  <TableCell
+                    key={index}
+                    style={{
+                      backgroundColor: "#353638",
+                      fontFamily: "Arial",
+                      fontSize: "12px",
+                      color: "white",
+                      textAlign: "center",
+                      paddingTop: "1px",
+                      paddingBottom: "1px",
+                      paddingLeft: "1.5%",
+                    }}
+                  >
                     {handleSum1(index)}
                   </TableCell>
                 ))}
@@ -1948,37 +2735,72 @@ const handleWorkStatusChange = (index, value) => {
         </TableContainer>
 
         <Box className="buttonContainer">
-          <Button variant="contained" color="primary" onClick={handleSubmit} className="customButton" >
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit}
+            className="customButton"
+            sx={{ border: "2px solid white" }}
+          >
             Submit
           </Button>
-          <Button variant="contained" color="primary" onClick={handleCancel} className="customButton" >
+
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={handleCancel}
+            className="customButton"
+            sx={{
+              backgroundColor: "grey.300",
+              border: "2px solid red",
+
+              "&:hover": {
+                backgroundColor: "grey.400",
+              },
+            }}
+          >
             Cancel
           </Button>
         </Box>
 
-        <Snackbar open={open} autoHideDuration={3000} onClose={handleClose} anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}>
-          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+        <Snackbar
+          open={open}
+          autoHideDuration={3000}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+        >
+          <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
             Please enter a number between 0 and 24
           </Alert>
         </Snackbar>
 
-        <Snackbar open={successSnackbarOpen} autoHideDuration={3000} onClose={handleSuccessSnackbarClose} anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}>
-          <MuiAlert onClose={handleSuccessSnackbarClose} severity="success" sx={{ width: '100%', height: '70%', backgroundColor: '#2e7d32', color: '#ffffff' }}>
+        <Snackbar
+          open={successSnackbarOpen}
+          autoHideDuration={3000}
+          onClose={handleSuccessSnackbarClose}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+        >
+          <MuiAlert
+            onClose={handleSuccessSnackbarClose}
+            severity="success"
+            sx={{
+              width: "100%",
+              height: "70%",
+              backgroundColor: "#2e7d32",
+              color: "#ffffff",
+            }}
+          >
             Details submitted successfully!
           </MuiAlert>
         </Snackbar>
-
       </Grid>
     </Grid>
-
   );
 };
 export default TimesheetTable;
-
-

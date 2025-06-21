@@ -9,6 +9,7 @@ FormControl } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 export class Reset extends Component {
   constructor(props) {
@@ -19,6 +20,7 @@ export class Reset extends Component {
       openSnackbar: false,
       showCurrentPassword: false,
       showNewPassword: false,
+      email: ""
     };
   }
 
@@ -29,42 +31,28 @@ export class Reset extends Component {
     this.setState((s) => ({ showNewPassword: !s.showNewPassword }));
   handleMouseDownPassword = (e) => e.preventDefault();
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
-    const current = this.currentPassword;
+    const email = this.state.email;
     const next = this.newPassword;
-
-    if (!current || !next) {
+    if (!email || !next) {
       this.showAlert("Please fill in all fields", "error");
     } else if (next.length < 6) {
       this.showAlert("Password must be at least 6 characters", "error");
-    } else if (current !== next) {
-      this.showAlert("Passwords do not match", "error");
     } else {
-  // Get current user 
-  const resetUser = JSON.parse(localStorage.getItem("resetUser"));
-if (!resetUser) {
-  this.showAlert("No user found. Please go through Forgot Password first.", "error");
-  return;
-}
-
-  const allEmployees = JSON.parse(localStorage.getItem("employees")) || [];
-
-  // Find and update user password
-  const updatedEmployees = allEmployees.map(emp =>
-    emp.empId === resetUser.empId ? { ...emp, password: next } : emp
-  );
-
-  // Save updated data
-  localStorage.setItem("employees", JSON.stringify(updatedEmployees));
-  localStorage.setItem("user", JSON.stringify({ ...resetUser, password: next }));
-
-  this.showAlert("Password reset successful!", "success");
-  setTimeout(() => {
-    this.props.navigate("/");
-  }, 1500);
-}
-
+      try {
+        await axios.post('http://localhost:8080/api/auth/reset-password', {
+          email,
+          password: next
+        });
+        this.showAlert("Password reset successful!", "success");
+        setTimeout(() => {
+          this.props.navigate("/");
+        }, 1500);
+      } catch (error) {
+        this.showAlert("Password reset failed", "error");
+      }
+    }
   };
 
   showAlert = (message, severity) => {
@@ -93,38 +81,17 @@ if (!resetUser) {
         <form className="forgot-pass-form" onSubmit={this.handleSubmit}>
           <h3>Reset Password</h3>
 
-          {/* Current Password Field */}
+          {/* Email Field */}
           <Box sx={{ width: 600, maxWidth: "100%", mb: 2 }}>
             <FormControl fullWidth variant="outlined">
-              <InputLabel htmlFor="current-password">
-                Current Password
-              </InputLabel>
+              <InputLabel htmlFor="email">Email</InputLabel>
               <OutlinedInput
-                id="current-password"
-                type={showCurrentPassword ? "text" : "password"}
-                autoComplete="current-password"
-                onChange={(e) => (this.currentPassword = e.target.value)}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label={
-                        showCurrentPassword
-                          ? "Hide current password"
-                          : "Show current password"
-                      }
-                      onClick={this.handleClickShowCurrent}
-                      onMouseDown={this.handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {showCurrentPassword ? (
-                        <VisibilityOff />
-                      ) : (
-                        <Visibility />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Current Password"
+                id="email"
+                type="email"
+                autoComplete="email"
+                value={this.state.email}
+                onChange={(e) => this.setState({ email: e.target.value })}
+                label="Email"
               />
             </FormControl>
           </Box>
