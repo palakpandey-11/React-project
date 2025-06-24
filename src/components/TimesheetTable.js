@@ -1361,6 +1361,7 @@ const TimesheetTable = ({ empID, projectId }) => {
         <Button
           variant="outlined"
           className="sidebar-button"
+          onClick={() => navigate("approvals")}
           sx={{
             height: 50, // fixed pixel height
             lineHeight: "50px", // center text vertically
@@ -1372,7 +1373,7 @@ const TimesheetTable = ({ empID, projectId }) => {
           LEAVE RECONCILIATION
         </Button>
         <Button
-        onClick={() => navigate("/leave")}
+        onClick={() => navigate("/leavepage")}
           variant="outlined"
           className="sidebar-button"
           sx={{
