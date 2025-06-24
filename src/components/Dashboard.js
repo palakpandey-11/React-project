@@ -15,12 +15,20 @@ import workflow from '../image/workflow.jpg';
 import People from '../image/People.jpg';
 import about from '../image/about.jpg';
 
-
+function safeParseUser() {
+  try {
+    const userStr = localStorage.getItem("user");
+    if (!userStr) return null;
+    return JSON.parse(userStr);
+  } catch {
+    return null;
+  }
+}
 
 function Dashboard() {
   const navigate = useNavigate();
   const [isImageOpen, setIsImageOpen] = useState(false);
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = safeParseUser();
 
 const handleImageClick = () => {
   setIsImageOpen(true);
@@ -56,7 +64,7 @@ const handleLogout = () => {
   <div className="logo-name">WorkNexus</div>
         <div className="user-info">
           <span className="role">
-  {JSON.parse(localStorage.getItem("user"))?.name || "Employee"}
+  {user?.name || "Employee"}
 </span>
           <span className="img"onClick={handleImageClick}  style={{
         backgroundImage: `url(${user?.image})`,

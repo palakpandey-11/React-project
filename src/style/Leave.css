@@ -68,7 +68,7 @@
 margin-left: 100px; */
  display: flex;
   flex-direction: column;
-  gap: 10px; /* was 15px */
+  gap: 5px; /* was 15px */
   margin-left: 80px; /* optional tweak */
 }
 
@@ -150,7 +150,7 @@ margin-left: 100px; */
 }
 
 .leave-history-section {
-  background-color: rgba(0, 0, 0, 0.6);
+  
   padding: 20px;
   border-radius: 12px;
   max-width: 900px;

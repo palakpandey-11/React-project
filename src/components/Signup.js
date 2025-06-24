@@ -93,7 +93,11 @@ function Signin () {
             <button type="submit" className="submit">Submit</button>
           </div>
 
-          <p className="reset-link"><a href="/forgotpass">Reset Password?</a></p>
+          <p className="reset-link">
+            <span style={{cursor: 'pointer', color: '#1976d2', textDecoration: 'underline'}} onClick={() => navigate('/forgotpass')}>
+              Reset Password?
+            </span>
+          </p>
         </form>
       </div>
     </div>

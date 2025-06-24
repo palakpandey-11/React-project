@@ -12,6 +12,8 @@ import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import IconButton from '@mui/material/IconButton';
 
 
 const LeavePage = () => {
@@ -76,6 +78,12 @@ const LeavePage = () => {
 
   return (
     <Box className="leave-container">
+      <IconButton
+              onClick={() => navigate('/timesheettable')}
+              sx={{ position: 'absolute', top: 16, left: 16, color: 'white' }}
+            >
+              <ArrowBackIosIcon />
+            </IconButton>
       <Box className="leave-header">
         <Typography variant="h5" className="leave-title">LEAVE</Typography>
 
@@ -94,9 +102,9 @@ const LeavePage = () => {
                     className="leave-type-btn"
                     variant="contained"
                     sx={{
-                      border: '5px solid #6fbcff',
+                      border: '4px solid #6fbcff',
                       color: 'white',
-                      borderRadius: '12px',
+                      borderRadius: '10px',
                       padding: '10px 20px',
                       marginBottom: '10px',
                     }}
@@ -227,7 +235,7 @@ const LeavePage = () => {
                       <MenuItem value="Niranjan Achutharam">Pankaj</MenuItem>
                     </Select>
                     <br /><br />
-                    <Grid container spacing={2} sx={{ justifyContent: 'center' }}>
+                    <Grid container spacing={1} sx={{ justifyContent: 'center' }}>
                       <Grid item xs={6}>
                         <Button fullWidth variant="outlined" color="error" onClick={handleClear}>CLEAR</Button>
                       </Grid>

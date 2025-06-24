@@ -8,6 +8,8 @@ class ForgotPass extends Component {
 
  state = {
     showError: false,
+    showSuccess: false,
+    successMessage: ""
   };
   handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,8 +22,10 @@ class ForgotPass extends Component {
       return;
     }
     try {
-      await axios.post('http://localhost:8080/api/auth/reset-password', { email });
-      this.props.navigate("/reset");
+      await axios.post('http://localhost:8080/api/auth/request-reset', { email });
+      this.setState({ showSuccess: true, successMessage: "Reset link sent! Please check your email." });
+       //Optionally, you can redirect after a delay:
+       setTimeout(() => this.props.navigate("/reset"), 2000);
     } catch (error) {
       this.setState({ showError: true });
     }
@@ -36,6 +40,16 @@ class ForgotPass extends Component {
         >
           <Alert severity="error" variant="filled">
             Please enter a valid email address.
+          </Alert>
+        </Snackbar>
+
+        <Snackbar
+          open={this.state.showSuccess}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          autoHideDuration={3000}
+        >
+          <Alert severity="success" variant="filled">
+            {this.state.successMessage}
           </Alert>
         </Snackbar>
 
