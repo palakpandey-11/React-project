@@ -11,6 +11,7 @@ import HistoryPage from './components/HistoryPage.js';
 import Approvals from './components/Approvals.js';
 import ClosedApprovals from './components/ClosedApprovals.js';
 import ReconcilationApproval from './components/ReconcilationApproval.js';
+import LeaveReconcilation from './components/LeaveReconcilation.js';
 
 function App() {
     return (
@@ -27,6 +28,7 @@ function App() {
         <Route path='/approvals' element={<Approvals />}/>
         <Route path="/approvals/closed" element={<ClosedApprovals />} />
         <Route path='/approvals/reconcilation' element={<ReconcilationApproval/>} />
+        <Route path='/leaveReconcilation' element={<LeaveReconcilation/>} />
       </Routes>
     </Router>
   );
