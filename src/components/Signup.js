@@ -6,7 +6,6 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Box from '@mui/material/Box';
-import palak from '../image/palak.jpeg';
 import axios from 'axios';
 
 

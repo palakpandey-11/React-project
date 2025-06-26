@@ -7,7 +7,12 @@ import ForgotPass from "./components/ForgotPass.js";
 import Reset from "./components/Reset.js";
 import TimesheetTable from "./components/TimesheetTable.js";
 import LeavePage from "./components/LeavePage.js";
-import HistoryPage from './components/HistoryPage';
+import HistoryPage from './components/HistoryPage.js';
+import Approvals from './components/Approvals.js';
+import ClosedApprovals from './components/ClosedApprovals.js';
+import ReconcilationApproval from './components/ReconcilationApproval.js';
+import Reports from './components/Reports.js';
+import Timesheet from './components/Timesheet.js';
 
 function App() {
     return (
@@ -19,8 +24,13 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/timesheettable" element={<TimesheetTable />} />
         <Route path="/holidaycalendar" element={<HolidayCalendar />} />
-        <Route path="/leave" element={<LeavePage />} />
+        <Route path="/leavepage" element={<LeavePage />} />
         <Route path="/history" element={<HistoryPage />} />
+        <Route path='/approvals' element={<Approvals />}/>
+        <Route path="/approvals/closed" element={<ClosedApprovals />} />
+        <Route path='/approvals/reconcilation' element={<ReconcilationApproval/>} />
+        <Route path='/reports' element={<Reports/>} />
+        <Route path='/timesheet' element={<Timesheet />} />
       </Routes>
     </Router>
   );

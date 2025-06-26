@@ -58,19 +58,28 @@ const LeavePage = () => {
   return;
 }
 
-    const newEntry = {
-      empId: "100214",
-      leaveType,
-      startDate: dayjs(startDate).format('DD/MM/YYYY'),
-      endDate: dayjs(endDate).format('DD/MM/YYYY'),
-      reason: "", // Placeholder for now
-      balance: 15,
-      status: "Pending"
-    };
+   const newEntry = {
+    id: Date.now(), // unique ID
+    empId: "100214",
+    name: "Palak P", // 👈 Add employee name
+    leaveType,
+    startDate: dayjs(startDate).format('DD-MM-YYYY'),
+    endDate: dayjs(endDate).format('DD-MM-YYYY'),
+    days: dayjs(endDate).diff(dayjs(startDate), 'day') + 1,
+    appliedOn: dayjs().format('DD-MM-YYYY'),
+    reason: "",
+    balance: 15,
+    status: "Withdraw Pending"
+  };
 
     const updatedHistory = [...history, newEntry];
     setHistory(updatedHistory);
     localStorage.setItem("leaveHistory", JSON.stringify(updatedHistory));
+
+    const approvals = JSON.parse(localStorage.getItem("leaveApprovals") || "[]");
+    approvals.push(newEntry);
+    localStorage.setItem("leaveApprovals", JSON.stringify(approvals));
+
     handleClear();
     toast.success("Leave applied successfully!");
   };

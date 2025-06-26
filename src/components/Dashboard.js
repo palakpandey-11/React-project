@@ -40,7 +40,7 @@ const closeImage = () => {
 
 const cards = [
   { title: 'OptiTime', image: time, route: '/timesheettable' },
-  { title: 'Reports', image: reports },
+  { title: 'Reports', image: reports, route: '/reports' },
   { title: 'Careers', image: careers },
   { title: 'Learning', image: learn },
   { title: 'Employee Dashboard', image: Empdash },
