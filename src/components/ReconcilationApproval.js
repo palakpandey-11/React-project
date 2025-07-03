@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Box,
@@ -19,12 +19,14 @@ import {
 } from '@mui/material'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import SearchIcon from '@mui/icons-material/Search'
+import axios from 'axios';
+
 
 // sample data for Reconciliation tab
 const reconSampleRows = [
-  { id: 100214, name: 'Meharafsha A', reason: 'Forgot to enter time', date: '17-10-2024', status: 'Pending' },
-  { id: 100218, name: 'Nakul K P',     reason: 'fgh',                 date: '16-10-2024', status: 'Pending' },
-  { id: 100146, name: 'Kareemulla Sha',reason: 'okkkk fill',          date: '16-10-2024', status: 'Pending' },
+  { id: 100214, name: 'om', reason: 'Forgot to enter time', date: '17-10-2024', status: 'Pending' },
+  { id: 100218, name: 'palak',     reason: 'fgh',                 date: '16-10-2024', status: 'Pending' },
+  { id: 100146, name: 'pranali',reason: 'okkkk fill',          date: '16-10-2024', status: 'Pending' },
   // …add more as needed…
 ]
 
@@ -36,9 +38,19 @@ export default function ReconciliationApproval() {
   const [selected, setSelected]       = useState([])
   const [page, setPage]               = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
+   // new state for rows coming from your API
+ const [reconRows,  setReconRows]    = useState([])
 
-  // filter by id or name
-  const filteredRows = reconSampleRows.filter(r => {
+ useEffect(() => {
+  axios.get('/api/reconciliations')
+    .then(res => setReconRows(res.data))
+    .catch(console.error);
+}, []);
+
+//merge yoyr static sample+dynamic api rows
+  // filter by id or name 
+ const allRows      = [...reconSampleRows, ...reconRows]
+ const filteredRows = allRows.filter(r => {
     const t = searchTerm.trim().toLowerCase()
     if (!t) return true
     return (
@@ -61,7 +73,7 @@ export default function ReconciliationApproval() {
   return (
     <div style={{ position: 'relative', textAlign: 'center', color: 'white', fontFamily: 'Arial', paddingTop: 16 }}>
       {/* back arrow */}
-      <IconButton onClick={() => navigate('/timesheet')} sx={{ position: 'absolute', top: 16, left: 16, color: 'white' }}>
+      <IconButton onClick={() => navigate('/timesheettable')} sx={{ position: 'absolute', top: 16, left: 16, color: 'white' }}>
         <ArrowBackIosIcon />
       </IconButton>
 

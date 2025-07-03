@@ -30,7 +30,7 @@ const HistoryPage = () => {
 
              <Box className="random2" >
                        <Box className="leave-buttons">
-                         <Button variant= "outlined" color="primary" onClick={() => navigate('/leave')}>APPLY</Button>
+                         <Button variant= "outlined" color="primary" onClick={() => navigate('/leavepage')}>APPLY</Button>
                          <Button variant= "contained" className="history-button">HISTORY</Button>
                        </Box> 
 

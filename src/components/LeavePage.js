@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 import {
   Button, Card, CardContent, MenuItem, Select, Typography, Box, Grid, TextField
 } from '@mui/material';
@@ -23,6 +23,11 @@ const LeavePage = () => {
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [showHistory, setShowHistory] = useState(false);
   // const [selectedRows, setSelectedRows] = useState([]);
+   const userGender='Male';
+ //const [userGender, setUserGender] = useState("");
+  //const user = useSelector(state => state.auth.user);
+//const userGender = user?.gender; // e.g. "male" or "female"
+
 
   const [history, setHistory] = useState(() => {
     const stored = localStorage.getItem("leaveHistory");
@@ -50,6 +55,11 @@ const LeavePage = () => {
       toast.error("Please fill all fields.");
       return;
     }
+
+    if (leaveType === "Maternity Leave" && userGender !== "female") {
+    toast.error("Maternity Leave can only be applied by female employees.");
+    return;
+  }
 
   if (dayjs(endDate).isBefore(dayjs(startDate).startOf('day'))) {
   toast.error("End date cannot be before start date.");
@@ -174,7 +184,12 @@ const LeavePage = () => {
                       <MenuItem value="Restricted Holiday">RH</MenuItem>
                       <MenuItem value="LOP">LOP</MenuItem>
                       <MenuItem value="Privilege Leave">PL</MenuItem>
-                      <MenuItem value="Maternity Leave">ML</MenuItem>
+                       <MenuItem
+   value="Maternity Leave"
+   disabled={userGender !== "female"}
+ >
+   ML
+ </MenuItem>
                       <MenuItem value="Sick Leave">SL</MenuItem>
                     </Select>
 
