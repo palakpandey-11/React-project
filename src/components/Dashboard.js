@@ -43,7 +43,7 @@ const cards = [
   { title: 'Reports', image: reports, route: '/reports' },
   { title: 'Careers', image: careers },
   { title: 'Learning', image: learn },
-  { title: 'Employee Dashboard', image: Empdash },
+  { title: 'Employee Dashboard', image: Empdash, route:'/welcome' },
   { title: 'More Apps', image: more },
   { title: 'Document Center', image: doc },
   { title: 'Testimonials', image: testimonials },
