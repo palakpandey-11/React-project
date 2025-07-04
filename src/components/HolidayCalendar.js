@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  createTheme,
-  ThemeProvider,
-  CssBaseline,
+
   Table, TableHead, TableBody, TableRow, TableCell,
   Paper, TableContainer, Select, MenuItem,
   InputLabel, FormControl, Button, Typography, Box
@@ -161,7 +159,7 @@ function HolidayCalendar() {
   const [year, setYear] = useState('2025');
   const navigate = useNavigate();
 
-  const theme = createTheme();
+  
 
   const handleExport = () => {
     const selected = holidays[year][location];
@@ -181,43 +179,81 @@ function HolidayCalendar() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box sx={{ backgroundColor: 'rgba(255,255,255,0.9)', p: { xs: 2, sm: 3 },margin: " 10px auto", width: { xs: '95%', sm: '80%' }, maxWidth: '1510px', overflow: 'hidden', boxShadow: 4 }}>
-        <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'center', width: '100%', mb: 2 }}>Holiday Calendar {year}</Typography>
+    
+      <Box sx={{
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', // previously rgba(255,255,255,0.9)
+    p: { xs: 2, sm: 3 },
+    margin: '10px auto',
+    width: { xs: '95%', sm: '80%' },
+    maxWidth: '1510px',
+    overflow: 'hidden',
+    boxShadow: 0, // remove shadow
+  }}>
+        <Typography variant="h5"  sx={{
+      fontWeight: 'bold',
+      textAlign: 'center',
+      width: '100%',
+      mb: 2,
+      color: 'white', // adjust as needed for visibility
+    }}>Holiday Calendar {year}</Typography>
 
-        <TableContainer component={Paper} sx={{ maxHeight: 550, minHeight: 550, overflowX: 'auto',width: { xs: '100%', sm: '95%', md: '90%' },mx: 'auto' }}>
+        <TableContainer component={Paper} sx={{
+      backgroundColor: 'transparent',
+      boxShadow: 'none',
+      maxHeight: 550,
+      minHeight: 550,
+      overflowX: 'auto',
+      width: { xs: '100%', sm: '95%', md: '90%' },
+      mx: 'auto',
+      border: '1px solid white',
+      borderCollapse: 'separate',
+    }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ backgroundColor: '#1976d2', color: 'white' }}><strong>Holiday Date</strong></TableCell>
-                <TableCell sx={{ backgroundColor: '#1976d2', color: 'white' }}><strong>Holiday Day</strong></TableCell>
-                <TableCell sx={{ backgroundColor: '#1976d2', color: 'white' }}><strong>Holiday Type</strong></TableCell>
-                <TableCell sx={{ backgroundColor: '#1976d2', color: 'white' }}><strong>Occasion</strong></TableCell>
+                <TableCell sx={{ backgroundColor: 'rgba(0, 0, 0, 6)', color: 'white', fontWeight: 'bold' }}><strong>Holiday Date</strong></TableCell>
+                <TableCell sx={{ backgroundColor: 'rgba(0, 0, 0, 6)', color: 'white', fontWeight: 'bold' }}><strong>Holiday Type</strong></TableCell>
+                <TableCell sx={{ backgroundColor: 'rgba(0, 0, 0, 6)', color: 'white', fontWeight: 'bold' }}><strong>Holiday Day</strong></TableCell>
+                <TableCell sx={{ backgroundColor: 'rgba(0, 0, 0, 6)', color: 'white', fontWeight: 'bold' }}><strong>Occasion</strong></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {holidays[year][location].map((holiday, index) => (
-                <TableRow key={index} >
-                  <TableCell>{holiday.date}</TableCell>
-                  <TableCell>{holiday.day}</TableCell>
-                  <TableCell>{holiday.type}</TableCell>
-                  <TableCell>{holiday.occasion}</TableCell>
+                <TableRow key={index} sx={{ height: 45 }} >
+                  <TableCell sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: 'white', py: 0.5  }}>{holiday.date}</TableCell>
+                  <TableCell sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: 'white', py: 0.5  }}>{holiday.day}</TableCell>
+                  <TableCell sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: 'white', py: 0.5  }}>{holiday.type}</TableCell>
+                  <TableCell sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', color: 'white', py: 0.5  }}>{holiday.occasion}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
 
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'center', justifyContent: 'flex-start', mt: 2,mr: 8.5 }}>
+        <Box sx={{
+      display: 'flex',
+      flexWrap: 'wrap',
+      gap: 2,
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      mt: 2,
+      mr: 8.5,
+    }}>
           <FormControl size="small" sx={{ minWidth: 100, marginLeft: 'auto' }}>
-            <InputLabel id="year-label">Year</InputLabel>
+            <InputLabel id="year-label" sx={{ color: 'white' }}>Year</InputLabel>
             <Select
               labelId="year-label"
               id="year"
               value={year}
               label="Year"
               onChange={(e) => setYear(e.target.value)}
+              sx={{
+    color: 'white',
+    '.MuiOutlinedInput-notchedOutline': { borderColor: 'white' },
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'white' },
+    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'white' },
+    '.MuiSvgIcon-root': { color: 'white' },
+  }}
             >
               <MenuItem value="2021">2021</MenuItem>
               <MenuItem value="2022">2022</MenuItem>
@@ -228,13 +264,20 @@ function HolidayCalendar() {
           </FormControl>
 
           <FormControl size="small" sx={{ minWidth: 100 }}>
-            <InputLabel id="location-label">Location</InputLabel>
+            <InputLabel id="location-label" sx={{ color: 'white' }}>Location</InputLabel>
             <Select
               labelId="location-label"
               id="location"
               value={location}
               label="Location"
               onChange={(e) => setLocation(e.target.value)}
+              sx={{
+    color: 'white', // <-- white text
+    '.MuiOutlinedInput-notchedOutline': { borderColor: 'white' }, // white border
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'white' },
+    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'white' },
+    '.MuiSvgIcon-root': { color: 'white' }, // dropdown arrow icon white
+  }}
             >
               <MenuItem value="ind-blr">IND-BLR</MenuItem>
               <MenuItem value="usa-ny">USA-NY</MenuItem>
@@ -248,7 +291,7 @@ function HolidayCalendar() {
           </Box>
         </Box>
       </Box>
-    </ThemeProvider>
+    
   );
 }
 

@@ -6,7 +6,6 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Box from '@mui/material/Box';
-import palak from '../image/palak.jpeg';
 import axios from 'axios';
 
 
@@ -93,7 +92,11 @@ function Signin () {
             <button type="submit" className="submit">Submit</button>
           </div>
 
-          <p className="reset-link"><a href="/forgotpass">Reset Password?</a></p>
+          <p className="reset-link">
+            <span style={{cursor: 'pointer', color: '#1976d2', textDecoration: 'underline'}} onClick={() => navigate('/forgotpass')}>
+              Reset Password?
+            </span>
+          </p>
         </form>
       </div>
     </div>

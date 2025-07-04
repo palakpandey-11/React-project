@@ -36,7 +36,10 @@ export default function Approvals() {
   const [searchTerm, setSearchTerm] = useState('')
   // state
 const [activeTab, setActiveTab]         = useState('ACTIVE')
-const [activeRows, setActiveRows]       = useState(activeSampleRows)
+const [activeRows, setActiveRows] = useState(() => {
+  const stored = localStorage.getItem("leaveApprovals");
+  return stored ? JSON.parse(stored) : [];
+});
 const [selected, setSelected]   = useState([])
   const [page, setPage]                 = useState(0)
 

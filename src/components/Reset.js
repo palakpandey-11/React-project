@@ -1,160 +1,146 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import { Box,InputLabel,
-  OutlinedInput,
-  InputAdornment,
-  IconButton,
-FormControl } from "@mui/material";
+import { Box, InputLabel, OutlinedInput, InputAdornment, IconButton, FormControl } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 
-export class Reset extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      alertMessage: "",
-      alertSeverity: "",       // 'success' | 'error'
-      openSnackbar: false,
-      showCurrentPassword: false,
-      showNewPassword: false,
-      email: ""
-    };
-  }
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
-  // Toggle handlers for each field
-  handleClickShowCurrent = () =>
-    this.setState((s) => ({ showCurrentPassword: !s.showCurrentPassword }));
-  handleClickShowNew = () =>
-    this.setState((s) => ({ showNewPassword: !s.showNewPassword }));
-  handleMouseDownPassword = (e) => e.preventDefault();
+const Reset = () => {
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertSeverity, setAlertSeverity] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const navigate = useNavigate();
+  const query = useQuery();
+  const token = query.get("token");
+  console.log("Reset token from URL:", token);
 
-  handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const email = this.state.email;
-    const next = this.newPassword;
-    if (!email || !next) {
-      this.showAlert("Please fill in all fields", "error");
-    } else if (next.length < 6) {
-      this.showAlert("Password must be at least 6 characters", "error");
-    } else {
-      try {
-        await axios.post('http://localhost:8080/api/auth/reset-password', {
-          email,
-          password: next
-        });
-        this.showAlert("Password reset successful!", "success");
-        setTimeout(() => {
-          this.props.navigate("/");
-        }, 1500);
-      } catch (error) {
-        this.showAlert("Password reset failed", "error");
-      }
+    if (!newPassword || !confirmPassword) {
+      showAlert("Please fill in all fields", "error");
+      return;
+    }
+    if (newPassword.length < 6) {
+      showAlert("Password must be at least 6 characters", "error");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      showAlert("Passwords do not match", "error");
+      return;
+    }
+    if (!token) {
+      showAlert("Invalid or missing reset token.", "error");
+      return;
+    }
+    try {
+      await axios.post('http://localhost:8080/api/auth/confirm-reset', {
+        token,
+        newPassword,
+        confirmPassword
+      });
+      showAlert("Password reset successful! Redirecting to sign in...", "success");
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    } catch (error) {
+      const message = error.response?.data?.message || "Password reset failed";
+      showAlert(message, "error");
     }
   };
 
-  showAlert = (message, severity) => {
-    this.setState({
-      alertMessage: message,
-      alertSeverity: severity,
-      openSnackbar: true,
-    });
+  const showAlert = (message, severity) => {
+    setAlertMessage(message);
+    setAlertSeverity(severity);
+    setOpenSnackbar(true);
   };
 
-  handleClose = () => {
-    this.setState({ openSnackbar: false });
+  const handleClose = () => {
+    setOpenSnackbar(false);
   };
 
-  render() {
-    const {
-      alertMessage,
-      alertSeverity,
-      openSnackbar,
-      showCurrentPassword,
-      showNewPassword,
-    } = this.state;
-
-    return (
-      <div className="forgot-pass-wrapper">
-        <form className="forgot-pass-form" onSubmit={this.handleSubmit}>
-          <h3>Reset Password</h3>
-
-          {/* Email Field */}
-          <Box sx={{ width: 600, maxWidth: "100%", mb: 2 }}>
-            <FormControl fullWidth variant="outlined">
-              <InputLabel htmlFor="email">Email</InputLabel>
-              <OutlinedInput
-                id="email"
-                type="email"
-                autoComplete="email"
-                value={this.state.email}
-                onChange={(e) => this.setState({ email: e.target.value })}
-                label="Email"
-              />
-            </FormControl>
-          </Box>
-
-          {/* New Password Field */}
-          <Box sx={{ width: 600, maxWidth: "100%", mb: 2 }}>
-            <FormControl fullWidth variant="outlined">
-              <InputLabel htmlFor="new-password">New Password</InputLabel>
-              <OutlinedInput
-                id="new-password"
-                type={showNewPassword ? "text" : "password"}
-                autoComplete="new-password"
-                onChange={(e) => (this.newPassword = e.target.value)}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label={
-                        showNewPassword
-                          ? "Hide new password"
-                          : "Show new password"
-                      }
-                      onClick={this.handleClickShowNew}
-                      onMouseDown={this.handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {showNewPassword ? (
-                        <VisibilityOff />
-                      ) : (
-                        <Visibility />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="New Password"
-              />
-            </FormControl>
-          </Box>
-
-          <button className="submit-btn">Submit</button>
-        </form>
-
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={3000}
-          onClose={this.handleClose}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+  return (
+    <div className="forgot-pass-wrapper">
+      <form className="forgot-pass-form" onSubmit={handleSubmit}>
+        <h3>Reset Password</h3>
+        {/* New Password Field */}
+        <Box sx={{ width: 600, maxWidth: "100%", mb: 2 }}>
+          <FormControl fullWidth variant="outlined">
+            <InputLabel htmlFor="new-password">New Password</InputLabel>
+            <OutlinedInput
+              id="new-password"
+              type={showNewPassword ? "text" : "password"}
+              autoComplete="new-password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label={showNewPassword ? "Hide new password" : "Show new password"}
+                    onClick={() => setShowNewPassword((show) => !show)}
+                    edge="end"
+                  >
+                    {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="New Password"
+            />
+          </FormControl>
+        </Box>
+        {/* Confirm Password Field */}
+        <Box sx={{ width: 600, maxWidth: "100%", mb: 2 }}>
+          <FormControl fullWidth variant="outlined">
+            <InputLabel htmlFor="confirm-password">Confirm Password</InputLabel>
+            <OutlinedInput
+              id="confirm-password"
+              type={showConfirmPassword ? "text" : "password"}
+              autoComplete="new-password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                    onClick={() => setShowConfirmPassword((show) => !show)}
+                    edge="end"
+                  >
+                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Confirm Password"
+            />
+          </FormControl>
+        </Box>
+        <button className="submit-btn">Submit</button>
+      </form>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleClose}
+          severity={alertSeverity}
+          variant="filled"
+          sx={{ width: "100%" }}
         >
-          <Alert
-            onClose={this.handleClose}
-            severity={alertSeverity}
-            variant="filled"
-            sx={{ width: "100%" }}
-          >
-            {alertMessage}
-          </Alert>
-        </Snackbar>
-      </div>
-    );
-  }
-}
-function ResetWithNavigate(props) {
-  const navigate = useNavigate();
-  return <Reset {...props} navigate={navigate} />;
-}
+          {alertMessage}
+        </Alert>
+      </Snackbar>
+    </div>
+  );
+};
 
-export default ResetWithNavigate;
+export default Reset;

@@ -20,7 +20,7 @@ const HistoryPage = () => {
   return (
      <Box className="leave-container">
            <IconButton
-        onClick={() => navigate('/timesheettable')}
+        onClick={() => navigate('/leavepage')}
         sx={{ position: 'absolute', top: 16, left: 16, color: 'white' }}
       >
         <ArrowBackIosIcon />
@@ -34,7 +34,7 @@ const HistoryPage = () => {
                          <Button variant= "contained" className="history-button">HISTORY</Button>
                        </Box> 
 
-    <Box className="leave-history-section" sx={{ height: 430, width: '100%', backgroundColor: 'transparent', borderRadius: 2, padding: 2, mt: -2 }}>
+    <Box className="leave-history-section" sx={{ height: 430, width: '100%', borderRadius: 2, padding: 2, mt: -2 }}>
       {history.length === 0 ? (
         <Typography sx={{ color: 'white' }}>No leave records found.</Typography>
       ) : (

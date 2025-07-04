@@ -12,6 +12,8 @@ import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import IconButton from '@mui/material/IconButton';
 
 
 const LeavePage = () => {
@@ -66,19 +68,28 @@ const LeavePage = () => {
   return;
 }
 
-    const newEntry = {
-      empId: "100214",
-      leaveType,
-      startDate: dayjs(startDate).format('DD/MM/YYYY'),
-      endDate: dayjs(endDate).format('DD/MM/YYYY'),
-      reason: "", // Placeholder for now
-      balance: 15,
-      status: "Pending"
-    };
+   const newEntry = {
+    id: Date.now(), // unique ID
+    empId: "100214",
+    name: "Palak P", // 👈 Add employee name
+    leaveType,
+    startDate: dayjs(startDate).format('DD-MM-YYYY'),
+    endDate: dayjs(endDate).format('DD-MM-YYYY'),
+    days: dayjs(endDate).diff(dayjs(startDate), 'day') + 1,
+    appliedOn: dayjs().format('DD-MM-YYYY'),
+    reason: "",
+    balance: 15,
+    status: "Withdraw Pending"
+  };
 
     const updatedHistory = [...history, newEntry];
     setHistory(updatedHistory);
     localStorage.setItem("leaveHistory", JSON.stringify(updatedHistory));
+
+    const approvals = JSON.parse(localStorage.getItem("leaveApprovals") || "[]");
+    approvals.push(newEntry);
+    localStorage.setItem("leaveApprovals", JSON.stringify(approvals));
+
     handleClear();
     toast.success("Leave applied successfully!");
   };
@@ -86,6 +97,12 @@ const LeavePage = () => {
 
   return (
     <Box className="leave-container">
+      <IconButton
+              onClick={() => navigate('/timesheettable')}
+              sx={{ position: 'absolute', top: 16, left: 16, color: 'white' }}
+            >
+              <ArrowBackIosIcon />
+            </IconButton>
       <Box className="leave-header">
         <Typography variant="h5" className="leave-title">LEAVE</Typography>
 
@@ -104,9 +121,9 @@ const LeavePage = () => {
                     className="leave-type-btn"
                     variant="contained"
                     sx={{
-                      border: '5px solid #6fbcff',
+                      border: '4px solid #6fbcff',
                       color: 'white',
-                      borderRadius: '12px',
+                      borderRadius: '10px',
                       padding: '10px 20px',
                       marginBottom: '10px',
                     }}
@@ -242,7 +259,7 @@ const LeavePage = () => {
                       <MenuItem value="Niranjan Achutharam">Pankaj</MenuItem>
                     </Select>
                     <br /><br />
-                    <Grid container spacing={2} sx={{ justifyContent: 'center' }}>
+                    <Grid container spacing={1} sx={{ justifyContent: 'center' }}>
                       <Grid item xs={6}>
                         <Button fullWidth variant="outlined" color="error" onClick={handleClear}>CLEAR</Button>
                       </Grid>
