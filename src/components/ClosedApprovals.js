@@ -98,7 +98,7 @@ const [rowsPerPage, setRowsPerPage] = useState(5)
           }}>
             Reconciliation
           </Button>          
-        </Stack>
+            </Stack>
 
           <Box sx={{
           flex: 1,
@@ -111,16 +111,18 @@ const [rowsPerPage, setRowsPerPage] = useState(5)
           border: '1px solid rgba(255, 255, 255, 0.38)',
           borderRadius: 1,
           
-          maxHeight: 440,
+          maxHeight: 420,
             overflowY: 'auto',
             flex:1,
             
         }}>
-          <Table size='small'>
+          <Table size='small'stickyHeader>
             <TableHead>
-              <TableRow sx={{ backgroundColor: 'rgba(0,0,0,0.12)' }}>
+              <TableRow sx={{           "& .MuiTableCell-stickyHeader": {
+      backgroundColor: "rgb(6, 6, 6)",  // your translucent blue
+      color: "white",   } }}>
                 {['Emp Id','Emp Name','Leave Type','From','To','Days','Reason','Applied On','Balance','Status'].map(h => (
-                  <TableCell key={h} sx={{ color: 'white', fontWeight: 'bold', py:1.5, px:2 }}>{h}</TableCell>
+                  <TableCell key={h} sx={{ color: 'white', fontWeight: 'bold', py:1.3, px:1 }}>{h}</TableCell>
                 ))}
               </TableRow>
             </TableHead>
@@ -146,7 +148,7 @@ const [rowsPerPage, setRowsPerPage] = useState(5)
           </Table>
            </TableContainer>
                      {/* fixed footer pagination */}
-          <Box sx={{ flexShrink: 0, mt: 1 }}>
+          <Box sx={{ flexShrink: 0, mt: 2 }}>
             <TablePagination
               component="div"
               count={closedRows.length}

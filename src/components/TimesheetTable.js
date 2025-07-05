@@ -1369,7 +1369,10 @@ const TimesheetTable = ({ empID, projectId }) => {
         >
           APPROVALS
         </Button>
-        <Button variant="outlined" className="sidebar-button">
+        <Button variant="outlined" 
+        className="sidebar-button"
+        onClick={() => navigate("/leaveReconcilation")}
+        >
           LEAVE RECONCILIATION
         </Button>
         <Button
@@ -1417,7 +1420,7 @@ const TimesheetTable = ({ empID, projectId }) => {
           sx={{ width: "110%", marginTop: "3%" }}
         >
           <Table sx={{ minWidth: 800 }} aria-label="simple table">
-            <TableHead style={{ maxHeight: "50px" }}>
+            <TableHead style={{ maxHeight: "50px",border:'1px solid grey' }}>
               <TableRow
                 style={{
                   backgroundColor: theme.palette.primary.main,
@@ -1434,7 +1437,7 @@ const TimesheetTable = ({ empID, projectId }) => {
                     fontWeight: "bold",
                     height: "10px",
                     color: "white",
-                    backgroundColor: "#1d3e61",
+                    backgroundColor: "black",
                   }}
                 >
                   Task
@@ -1446,7 +1449,7 @@ const TimesheetTable = ({ empID, projectId }) => {
                     fontSize: "12px",
                     height: "10px",
                     color: "white",
-                    backgroundColor: "#1d3e61",
+                    backgroundColor: "black",
                   }}
                 >
                   <div
@@ -1475,7 +1478,7 @@ const TimesheetTable = ({ empID, projectId }) => {
                       style={{
                         textAlign: "center",
                         fontSize: "14px",
-                        backgroundColor: "#1d3e61",
+                        backgroundColor: "black",
                       }}
                     >
                       Mon
@@ -1492,7 +1495,7 @@ const TimesheetTable = ({ empID, projectId }) => {
                     fontSize: "14px",
                     height: "10px",
                     color: "white",
-                    backgroundColor: "#1d3e61",
+                    backgroundColor: "black",
                   }}
                 >
                   Tue
@@ -1506,7 +1509,7 @@ const TimesheetTable = ({ empID, projectId }) => {
                     fontSize: "14px",
                     height: "10px",
                     color: "white",
-                    backgroundColor: "#1d3e61",
+                    backgroundColor: "black",
                   }}
                 >
                   Wed
@@ -1521,7 +1524,7 @@ const TimesheetTable = ({ empID, projectId }) => {
                     fontSize: "14px",
                     height: "10px",
                     color: "white",
-                    backgroundColor: "#1d3e61",
+                    backgroundColor: "black",
                   }}
                 >
                   Thu
@@ -1536,7 +1539,7 @@ const TimesheetTable = ({ empID, projectId }) => {
                     fontSize: "14px",
                     height: "10px",
                     color: "white",
-                    backgroundColor: "#1d3e61",
+                    backgroundColor: "black",
                   }}
                 >
                   Fri
@@ -1551,7 +1554,7 @@ const TimesheetTable = ({ empID, projectId }) => {
                     fontSize: "14px",
                     height: "10px",
                     color: "white",
-                    backgroundColor: "#1d3e61",
+                    backgroundColor: "black",
                   }}
                 >
                   Sat
@@ -1565,7 +1568,7 @@ const TimesheetTable = ({ empID, projectId }) => {
                     fontSize: "14px",
                     height: "10px",
                     color: "white",
-                    backgroundColor: "#1d3e61",
+                    backgroundColor: "Black",
                   }}
                 >
                   <div

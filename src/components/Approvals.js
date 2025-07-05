@@ -311,9 +311,11 @@ localStorage.setItem("leaveApprovals", JSON.stringify(updatedActive));
             borderRadius: 1,
           }}>
             {/* stickyHeader */}
-            <Table size='small'>  
+            <Table size='small' stickyHeader>  
               <TableHead>
-                <TableRow sx={{ backgroundColor: 'rgba(0,0,0,0.12)' }}>
+                <TableRow sx={{ "& .MuiTableCell-stickyHeader": {
+      backgroundColor: "rgb(0, 0, 0)",  // your translucent blue
+      color: "white",   }}}>
                   <TableCell padding="checkbox">
                     <Checkbox
                       checked={ selected.length === filteredRows.length }
