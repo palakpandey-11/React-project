@@ -71,10 +71,17 @@ const handleApprove = () => {
       balance: r.balance || 10.0      //else whatever defaukt you like to give
     }))
 
- setActiveRows(prev => prev.filter(r => !selected.includes(r.id)))
+ const updatedActiveRows = activeRows.filter(r => !selected.includes(r.id));
+setActiveRows(updatedActiveRows);
+localStorage.setItem("leaveApprovals", JSON.stringify(updatedActiveRows));
 
     const existing = JSON.parse(localStorage.getItem('closedRows')||'[]')
     localStorage.setItem('closedRows', JSON.stringify([...existing, ...approvedItems]))
+
+     const updatedHistory = JSON.parse(localStorage.getItem("leaveHistory") || "[]").map(entry =>
+      selected.includes(entry.empId) ? { ...entry, status: "Approved" } : entry
+    );
+    localStorage.setItem("leaveHistory", JSON.stringify(updatedHistory));
 
     setSelected([])
     setActiveTab('CLOSED')
@@ -97,10 +104,18 @@ const handleOpenReject = () => {
   // this will be called when RejectButton finishes
   const onRowsRejected = (rejectedItems) => {
     // remove them from activeRows
-    setActiveRows(prev => prev.filter(r => !rejectedItems.some(x => x.id === r.id)))
+    const updatedActive = activeRows.filter(r => !rejectedItems.some(x => x.id === r.id));
+setActiveRows(updatedActive);
+localStorage.setItem("leaveApprovals", JSON.stringify(updatedActive));
     setSelected([])
     // optionally switch to CLOSED tab:
     //setActiveTab('CLOSED')
+     const updatedHistory = JSON.parse(localStorage.getItem("leaveHistory") || "[]").map(entry =>
+      rejectedItems.some(item => item.id === entry.empId) ? { ...entry, status: "Rejected" } : entry
+       );
+    localStorage.setItem("leaveHistory", JSON.stringify(updatedHistory));
+
+    setActiveTab('CLOSED');
   }
 
   const filteredRows = activeRows.filter(r => {

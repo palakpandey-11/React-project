@@ -7,6 +7,8 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import IconButton from '@mui/material/IconButton';
 
 export default function Reports() {
   const navigate = useNavigate();
@@ -39,7 +41,12 @@ export default function Reports() {
       py: 1,
       
     }}>
-       
+       <IconButton
+        onClick={() => navigate('/timesheettable')}
+        sx={{ position: 'absolute', top: 16, left: 16, color: 'white' }}
+      >
+        <ArrowBackIosIcon />
+      </IconButton>
 
        <Typography variant="h5" className="reports-title" sx={{color:'white'}}>REPORTS</Typography>
     
@@ -80,25 +87,46 @@ export default function Reports() {
         <RadioGroup
           row
           value={employeeType}
-          onChange={(e) => setEmployeeType(e.target.value)}
+          onChange={(e) => {
+  const value = e.target.value;
+  setEmployeeType(value);
+  if (value === 'all') {
+    setSelectedEmployee('ALL');
+  } else {
+    setSelectedEmployee(''); // Reset to empty when "Employee" is selected
+  }
+}}
           sx={{ mb: 2 }}
         >
           <FormControlLabel value="all" control={<Radio />} label="All Employees" />
           <FormControlLabel value="employee" control={<Radio />} label="Employee" />
         </RadioGroup>
 
-       <TextField
+     <TextField
   select
   fullWidth
   label="Employee"
   value={selectedEmployee}
   onChange={(e) => setSelectedEmployee(e.target.value)}
   sx={{ mb: 2 }}
+  disabled={employeeType === 'all'}
 >
-  <MenuItem value="">Select Employee</MenuItem>
-  <MenuItem value="Dheeraj M - 100245">Dheeraj M - 100245</MenuItem>
-  <MenuItem value="Palak P - 100214">Palak P - 100214</MenuItem>
+  {/* Only show when employeeType is 'employee' */}
+  {employeeType === 'employee' && (
+    <MenuItem value="">Select Employee</MenuItem>
+  )}
+  {/* Always present, but hidden unless 'all' is selected */}
+  {employeeType === 'all' && (
+    <MenuItem value="ALL">All Employees</MenuItem>
+  )}
+  {/* Always present employee list */}
+  <MenuItem value="Pranali - 100245">Pranali - 100245</MenuItem>
+  <MenuItem value="Palak - 100214">Palak - 100214</MenuItem>
+  <MenuItem value="Om - 100214">Om - 100235</MenuItem>
 </TextField>
+
+
+
 
         <TextField
   select
@@ -112,6 +140,9 @@ export default function Reports() {
   <MenuItem value="Annual Leave">Annual Leave</MenuItem>
   <MenuItem value="Sick Leave">Sick Leave</MenuItem>
   <MenuItem value="Restricted Holiday">RH</MenuItem>
+  <MenuItem value="LOP">LOP</MenuItem>
+  <MenuItem value="Privilege Leave">PL</MenuItem>
+  <MenuItem value="Maternity Leave">ML</MenuItem>
 </TextField>
 
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -134,13 +165,37 @@ export default function Reports() {
         </LocalizationProvider>
 
         <Stack direction="row" spacing={2} justifyContent="center" mt={2}>
-          <Button
-            variant="contained"
-            disabled={!isFormFilled}
-            sx={{ minWidth: 100 }}
-          >
-            SUBMIT
-          </Button>
+         <Button
+  variant="contained"
+  disabled={!isFormFilled}
+  sx={{ minWidth: 100 }}
+  onClick={() => {
+    const formData = {
+      name: selectedEmployee.split(' - ')[0],
+      id: selectedEmployee.split(' - ')[1],
+      date: dayjs(fromDate).format('DD-MM-YYYY'),
+      coding: 0,
+      testing: 0,
+      devops: 0,
+      db: 0,
+      meeting: 0,
+      misc: 0,
+      total: 0,
+      status: leaveType,
+      workStatus: 'On Leave',
+    };
+
+    // Save to localStorage
+    const existing = JSON.parse(localStorage.getItem('leaveReports')) || [];
+    localStorage.setItem('leaveReports', JSON.stringify([...existing, formData]));
+
+    // Navigate to Timesheet page
+    navigate('/timesheet');
+  }}
+>
+  SUBMIT
+</Button>
+
           <Button
             variant="outlined"
             color="error"

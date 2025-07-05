@@ -138,7 +138,7 @@ const LeavePage = () => {
     // ✅ Allow same day or future date
     setEndDate(newValue);
   } else {
-    alert("End date should be same or after start date");
+    
   }
 }}
                     sx={{

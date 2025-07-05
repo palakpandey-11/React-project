@@ -13,6 +13,9 @@ import ClosedApprovals from './components/ClosedApprovals.js';
 import ReconcilationApproval from './components/ReconcilationApproval.js';
 import Reports from './components/Reports.js';
 import Timesheet from './components/Timesheet.js';
+import ClientReport from './components/ClientReport.js';
+import Welcomepage from './components2/Welcomepage.js';
+import UpdateEmp from './components2/UpdateEmp.js';
 
 function App() {
     return (
@@ -31,6 +34,9 @@ function App() {
         <Route path='/approvals/reconcilation' element={<ReconcilationApproval/>} />
         <Route path='/reports' element={<Reports/>} />
         <Route path='/timesheet' element={<Timesheet />} />
+        <Route path='/clientreport' element={<ClientReport />} />
+        <Route path='/welcomepage' element={<Welcomepage />} />
+        <Route path='/updateemp' element={<UpdateEmp />} />
       </Routes>
     </Router>
   );
