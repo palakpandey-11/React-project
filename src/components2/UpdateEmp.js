@@ -11,15 +11,14 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Link as RouterLink } from 'react-router-dom';
 import SendIcon from '@mui/icons-material/Send';
-
-
-// MUI X Imports
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
 
 const UpdateEmp = () => {
+  const navigate = useNavigate();
   const [mainAnchorEl, setMainAnchorEl] = useState(null);
   const [infoAnchorEl, setInfoAnchorEl] = useState(null);
   const openMainMenu = Boolean(mainAnchorEl);
@@ -29,7 +28,6 @@ const UpdateEmp = () => {
 
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
-
 
   const [monthPickerOpen, setMonthPickerOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(dayjs());
@@ -46,6 +44,7 @@ const UpdateEmp = () => {
   const handleSettingsMenuClick = (event) => setSettingsAnchorEl(event.currentTarget);
   const handleSettingsMenuClose = () => setSettingsAnchorEl(null);
 
+  const [searchModalOpen, setSearchModalOpen] = useState(false);
 
   const [adminAnchorEl, setAdminAnchorEl] = useState(null);
   const openAdminMenu = Boolean(adminAnchorEl);
@@ -57,15 +56,15 @@ const UpdateEmp = () => {
   const [employeeHovered, setEmployeeHovered] = useState(false);
 
   const navButtonStyle = (tabName) => ({
-  color: activeTab === tabName ? 'primary.main' : 'white',
-  backgroundColor: activeTab === tabName ? 'rgba(0,123,255,0.1)' : 'transparent',
+  color: activeTab === tabName ? 'white' : 'white',
+  backgroundColor: activeTab === tabName ? 'rgba(39, 37, 37, 0.74)' : 'transparent',
   fontWeight: activeTab === tabName ? 600 : 500,
   textTransform: 'none',
   borderRadius: 2,
   px: 2,
   py: 0.5,
   '&:hover': {
-    backgroundColor: 'rgba(0,123,255,0.15)',
+    backgroundColor: 'rgba(39, 37, 37, 0.74)',
   },
 });
 
@@ -78,31 +77,104 @@ const handleSendMessage = () => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box sx={{ backgroundColor: 'rgba(255,255,255,0.1)', minHeight: '100vh' }}>
+      {searchModalOpen && (
+  <Box
+    sx={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      bgcolor: 'rgba(0,0,0,0.4)',
+      zIndex: 1300,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backdropFilter: 'blur(4px)',
+    }}
+  >
+    <Paper
+      elevation={4}
+      sx={{
+        width: 700,
+        maxHeight: '90vh',
+        p: 3,
+        borderRadius: 2,
+        overflowY: 'auto',
+      }}
+    >
+      {/* Top Row: Search + Close */}
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="h6">Search</Typography>
+        <IconButton onClick={() => setSearchModalOpen(false)}>✖</IconButton>
+      </Box>
+
+      {/* Search Input */}
+      <TextField
+        fullWidth
+        placeholder="Search Here"
+        variant="outlined"
+        size="small"
+        sx={{ mb: 2 }}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon />
+            </InputAdornment>
+          ),
+        }}
+      />
+
+      {/* Filter Buttons */}
+      <Box display="flex" gap={1} flexWrap="wrap" mb={2}>
+        {['All', 'My Favourites', 'Employee', 'Payroll', 'Leave'].map((label) => (
+          <Button key={label} variant="outlined" size="small" sx={{ borderRadius: 5 }}>
+            {label}
+          </Button>
+        ))}
+      </Box>
+
+      {/* Cards Grid */}
+      <Box display="grid" gridTemplateColumns="repeat(auto-fill, minmax(150px, 1fr))" gap={2}>
+        {[
+          'Add Bulletin Board', 'Add Employee', 'Approve Comp off', 'Approve leave',
+          'Approve leave cancellation', 'Assign Manager', 'Attendance', 'Attendance Muster',
+          'Bank Transfer', 'Bulk Data Upload'
+        ].map((title, idx) => (
+          <Paper key={idx} sx={{ p: 2, borderRadius: 2, backgroundColor: idx % 3 === 0 ? '#e3f2fd' : idx % 3 === 1 ? '#fce4ec' : '#e8f5e9' }}>
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+              <Box component="span" sx={{ fontSize: 24 }}>👤</Box>
+              <IconButton size="small">
+                <span>⭐</span>
+              </IconButton>
+            </Box>
+            <Typography variant="body2" fontWeight={500}>{title}</Typography>
+          </Paper>
+        ))}
+      </Box>
+    </Paper>
+  </Box>
+)}
+
+      <Box sx={{ backgroundColor: 'transparent', minHeight: '100vh' }}>
         {/* Navbar */}
         <AppBar
           position="fixed"
           elevation={0}
           sx={{
-            backgroundColor: '#212121',
-            borderBottom: '1px solid rgba(255,255,255,0.1)'
+            backgroundColor: 'rgba(39, 37, 37, 0.74)',
           }}
         >
           <Toolbar >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexGrow: 1 }}>
-            <Typography variant="h6" sx={{ color: 'primary.light' }}><img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmxvVgUbUVuW7In4M3VxZYEuGl29BoYeO9QA&s"
-                alt="illustration"
-                width={40}
-                
-              /></Typography>
+            <Typography variant="h6" sx={{ color: 'grey', fontWeight: "bold" }}>FlowSync</Typography>
            <Box sx={{ display: 'flex', gap: 1 }}>
   <Box
   onMouseEnter={() => setEmployeeHovered(true)}
   onMouseLeave={() => setEmployeeHovered(false)}
   sx={{ position: 'relative' }}
 >
-  <Button sx={navButtonStyle('Employee')} onClick={() => setActiveTab('Employee')}>
+  <Button sx={navButtonStyle('Employee')} onClick={() => setActiveTab('Employee')} >
     Employee
   </Button>
 
@@ -112,8 +184,8 @@ const handleSendMessage = () => {
         position: 'absolute',
         top: '100%',
         left: 0,
-        backgroundColor: '#fff',
-        color: '#000',
+        backgroundColor: 'rgba(0,0,0,0.7)',
+        color: 'white',
         px: 2,
         py: 1,
         borderRadius: 1,
@@ -145,7 +217,7 @@ const handleSendMessage = () => {
         sx={{
           transform: openMainMenu ? 'rotate(180deg)' : 'rotate(0deg)',
           transition: 'transform 0.2s',
-          color: activeTab === 'Main' ? 'primary.main' : 'secondary.500'
+          color: activeTab === 'Main' ? 'white' : 'white'
         }}
       />
     </Button>
@@ -157,9 +229,27 @@ const handleSendMessage = () => {
         onMouseEnter: () => setMainAnchorEl(mainAnchorEl),
         onMouseLeave: () => setMainAnchorEl(null),
       }}
+      PaperProps={{
+      sx: {
+      backgroundColor: 'rgba(0,0,0,0.7)', // dropdown background black
+      color: 'white',          // menu item text white
+    }
+  }}
     >
-      <MenuItem onClick={() => setMainAnchorEl(null)}>Analytics Hub</MenuItem>
-      <MenuItem onClick={() => setMainAnchorEl(null)}>Organization Chart</MenuItem>
+      <MenuItem onClick={() => {setMainAnchorEl(null); navigate('/analytics')}} sx={{
+      "&:hover": {
+        bgcolor: "rgba(25,118,210,0.2)",
+         borderLeft: "4px solid transparent",
+        borderLeftColor: "primary.light",
+      }
+    }} >Analytics Hub</MenuItem>
+      <MenuItem onClick={() => setMainAnchorEl(null)} sx={{
+      "&:hover": {
+        bgcolor: "rgba(25,118,210,0.2)",
+         borderLeft: "4px solid transparent",
+        borderLeftColor: "primary.light",
+      }
+    }}>Organization Chart</MenuItem>
     </Menu>
   </Box>
 
@@ -177,7 +267,7 @@ const handleSendMessage = () => {
         sx={{
           transform: openInfoMenu ? 'rotate(180deg)' : 'rotate(0deg)',
           transition: 'transform 0.2s',
-          color: activeTab === 'Information' ? 'primary.main' : 'secondary.500'
+          color: activeTab === 'Information' ? 'white' : 'white'
         }}
       />
     </Button>
@@ -189,14 +279,48 @@ const handleSendMessage = () => {
         onMouseEnter: () => setInfoAnchorEl(infoAnchorEl),
         onMouseLeave: () => setInfoAnchorEl(null),
       }}
+      PaperProps={{
+      sx: {
+      backgroundColor: 'rgba(0,0,0,0.7)', // dropdown background black
+      color: 'white',          // menu item text white
+    }
+  }}
     >
-      <MenuItem onClick={() => setInfoAnchorEl(null)}>Bank/PF/ESI</MenuItem>
-      <MenuItem onClick={() => setInfoAnchorEl(null)}>Family Details</MenuItem>
-      <MenuItem onClick={() => setInfoAnchorEl(null)}>Position History</MenuItem>
-      <MenuItem onClick={() => setInfoAnchorEl(null)}>Previous Employment</MenuItem>
-      <MenuItem onClick={() => setInfoAnchorEl(null)}>Separation</MenuItem>
-      <MenuItem onClick={() => setInfoAnchorEl(null)}>Access Card Deatils</MenuItem>
-      <MenuItem onClick={() => setInfoAnchorEl(null)}>Employmee Documents</MenuItem>
+      <MenuItem onClick={() => setInfoAnchorEl(null)} sx={{"&:hover": {
+        bgcolor: "rgba(25,118,210,0.2)",
+         borderLeft: "4px solid transparent",
+        borderLeftColor: "primary.light",
+      }}}>Bank/PF/ESI</MenuItem>
+      <MenuItem onClick={() => setInfoAnchorEl(null)} sx={{"&:hover": {
+        bgcolor: "rgba(25,118,210,0.2)",
+         borderLeft: "4px solid transparent",
+        borderLeftColor: "primary.light",
+      }}}>Family Details</MenuItem>
+      <MenuItem onClick={() => setInfoAnchorEl(null)} sx={{"&:hover": {
+        bgcolor: "rgba(25,118,210,0.2)",
+         borderLeft: "4px solid transparent",
+        borderLeftColor: "primary.light",
+      }}}>Position History</MenuItem>
+      <MenuItem onClick={() => setInfoAnchorEl(null)} sx={{"&:hover": {
+        bgcolor: "rgba(25,118,210,0.2)",
+         borderLeft: "4px solid transparent",
+        borderLeftColor: "primary.light",
+      }}}>Previous Employment</MenuItem>
+      <MenuItem onClick={() => setInfoAnchorEl(null)} sx={{"&:hover": {
+        bgcolor: "rgba(25,118,210,0.2)",
+         borderLeft: "4px solid transparent",
+        borderLeftColor: "primary.light",
+      }}}>Separation</MenuItem>
+      <MenuItem onClick={() => setInfoAnchorEl(null)} sx={{"&:hover": {
+        bgcolor: "rgba(25,118,210,0.2)",
+         borderLeft: "4px solid transparent",
+        borderLeftColor: "primary.light",
+      }}}>Access Card Deatils</MenuItem>
+      <MenuItem onClick={() => setInfoAnchorEl(null)} sx={{"&:hover": {
+        bgcolor: "rgba(25,118,210,0.2)",
+         borderLeft: "4px solid transparent",
+        borderLeftColor: "primary.light",
+      }}}>Employmee Documents</MenuItem>
     </Menu>
   </Box>
 
@@ -214,7 +338,7 @@ const handleSendMessage = () => {
       sx={{
         transform: openAdminMenu ? 'rotate(180deg)' : 'rotate(0deg)',
         transition: 'transform 0.2s',
-        color: activeTab === 'Admin' ? 'primary.main' : 'secondary.500'
+        color: activeTab === 'Admin' ? 'white' : 'white'
       }}
     />
   </Button>
@@ -226,11 +350,29 @@ const handleSendMessage = () => {
       onMouseEnter: () => setAdminAnchorEl(adminAnchorEl),
       onMouseLeave: () => setAdminAnchorEl(null),
     }}
+    PaperProps={{
+      sx: {
+      backgroundColor: 'rgba(0,0,0,0.7)', // dropdown background black
+      color: 'white',          // menu item text white
+    }
+  }}
   >
-    <MenuItem onClick={() => setAdminAnchorEl(null)}>General Letter </MenuItem>
-    <MenuItem onClick={() => setAdminAnchorEl(null)}>Excel Import</MenuItem>
-    <MenuItem onClick={() => setAdminAnchorEl(null)}>Bulletin Board</MenuItem>
-    <MenuItem onClick={() => setAdminAnchorEl(null)}>Mass Communication</MenuItem>
+    <MenuItem onClick={() => setAdminAnchorEl(null)} sx={{"&:hover": {
+        bgcolor: "rgba(25,118,210,0.2)",
+         borderLeft: "4px solid transparent",
+        borderLeftColor: "primary.light",}}}>General Letter </MenuItem>
+    <MenuItem onClick={() => setAdminAnchorEl(null)} sx={{"&:hover": {
+        bgcolor: "rgba(25,118,210,0.2)",
+         borderLeft: "4px solid transparent",
+        borderLeftColor: "primary.light",}}}>Excel Import</MenuItem>
+    <MenuItem onClick={() => setAdminAnchorEl(null)} sx={{"&:hover": {
+        bgcolor: "rgba(25,118,210,0.2)",
+         borderLeft: "4px solid transparent",
+        borderLeftColor: "primary.light",}}}>Bulletin Board</MenuItem>
+    <MenuItem onClick={() => setAdminAnchorEl(null)}sx={{"&:hover": {
+        bgcolor: "rgba(25,118,210,0.2)",
+         borderLeft: "4px solid transparent",
+        borderLeftColor: "primary.light",}}}>Mass Communication</MenuItem>
   </Menu>
 </Box>
 
@@ -248,7 +390,7 @@ const handleSendMessage = () => {
       sx={{
         transform: openSetupMenu ? 'rotate(180deg)' : 'rotate(0deg)',
         transition: 'transform 0.2s',
-        color: activeTab === 'Setup' ? 'primary.main' : 'secondary.500'
+        color: activeTab === 'Setup' ? 'white' : 'white'
       }}
     />
   </Button>
@@ -260,8 +402,17 @@ const handleSendMessage = () => {
       onMouseEnter: () => setSetupAnchorEl(setupAnchorEl),
       onMouseLeave: () => setSetupAnchorEl(null),
     }}
+    PaperProps={{
+      sx: {
+      backgroundColor: 'rgba(0,0,0,0.7)', // dropdown background black
+      color: 'white',          // menu item text white
+    }
+  }}
   >
-    <MenuItem onClick={() => setSetupAnchorEl(null)}>Company Ploicies & Forms</MenuItem>
+    <MenuItem onClick={() => setSetupAnchorEl(null)} sx={{"&:hover": {
+        bgcolor: "rgba(25,118,210,0.2)",
+         borderLeft: "4px solid transparent",
+        borderLeftColor: "primary.light",}}}>Company Ploicies & Forms</MenuItem>
   </Menu>
 </Box>
 </Box>
@@ -269,14 +420,14 @@ const handleSendMessage = () => {
 
 
             <Box>
-              <Tooltip title="Search"><IconButton sx={{ color: 'white' }}><SearchIcon /></IconButton></Tooltip>
+              <Tooltip title="Search"><IconButton sx={{ color: 'white' }} onClick={() => setSearchModalOpen(true)}><SearchIcon /></IconButton></Tooltip>
               <Tooltip title="Settings"><IconButton sx={{ color: 'white' }} onClick={handleSettingsMenuClick}><SettingsIcon /></IconButton></Tooltip>
               <Menu
   anchorEl={settingsAnchorEl}
   open={openSettingsMenu}
   onClose={handleSettingsMenuClose}
   PaperProps={{
-    sx: { minWidth: 220, p: 1 }
+    sx: { minWidth: 220, p: 1, backgroundColor: 'rgba(0,0,0,0.7)', color: 'white'  }
   }}
 >
   <Typography sx={{ px: 2, py: 1, fontSize: 13, color: 'gray' }}>Go to</Typography>
@@ -313,7 +464,7 @@ const handleSendMessage = () => {
           {/* Breadcrumb and Filters in One Row */}
           <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
             <Breadcrumbs aria-label="breadcrumb" separator=">" sx={{ '& .MuiBreadcrumbs-separator': {color: 'rgba(255,255,255,0.4)' } }}>
-              <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcomepage">Home</Link>
+              <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>
               <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" href="/updateemp">Employee</Link>
               <Typography color="rgba(255,255,255,0.4)">{activeTab}</Typography>
             </Breadcrumbs>
@@ -460,7 +611,7 @@ const handleSendMessage = () => {
           </Paper>
         </Box>
       </Box>
-      {/* Chatbox Floating Button + Window */}
+      
 {/* Chatbox Floating Button + Window */}
 <Box
   sx={{

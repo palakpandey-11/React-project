@@ -13,15 +13,13 @@ import Approvals from './components/Approvals.js';
 import ClosedApprovals from './components/ClosedApprovals.js';
 import ReconcilationApproval from './components/ReconcilationApproval.js';
 import LeaveReconcilation from './components/LeaveReconcilation.js';
-
 import Welcome from "./component2/Welcome.js";
 import UpdatePayrollData from "./component2/UpdatePayrollData.js";
-
 import Reports from './components/Reports.js';
 import Timesheet from './components/Timesheet.js';
 import ClientReport from './components/ClientReport.js';
-import Welcomepage from './components2/Welcomepage.js';
 import UpdateEmp from './components2/UpdateEmp.js';
+import Analytics from './components2/Analytics.js';
 
 function App() {
   return (
@@ -40,12 +38,12 @@ function App() {
         <Route path="/approvals" element={<Approvals />} />
         <Route path="/approvals/closed" element={<ClosedApprovals />} />
         <Route path="/approvals/reconcilation" element={<ReconcilationApproval />} />
-        <Route path="/leaveReconcilation" element={<LeaveReconcilation />} />
+        <Route path="/leavereconcilation" element={<LeaveReconcilation empID="12345" projectId="P001" />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/timesheet" element={<Timesheet />} />
         <Route path='/clientreport' element={<ClientReport />} />
-        <Route path='/welcomepage' element={<Welcomepage />} />
         <Route path='/updateemp' element={<UpdateEmp />} />
+        <Route path='/analytics' element={<Analytics />} />
       </Routes>
     </Router>
   );

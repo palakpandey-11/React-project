@@ -41,11 +41,13 @@ export default function ReconciliationApproval() {
    // new state for rows coming from your API
  const [reconRows,  setReconRows]    = useState([])
 
- useEffect(() => {
-  axios.get('/api/reconciliations')
-    .then(res => setReconRows(res.data))
-    .catch(console.error);
+useEffect(() => {
+  const stored = localStorage.getItem('reconciliationData');
+  if (stored) {
+    setReconRows(JSON.parse(stored));
+  }
 }, []);
+
 
 //merge yoyr static sample+dynamic api rows
   // filter by id or name 

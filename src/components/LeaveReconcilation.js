@@ -32,7 +32,6 @@ import MuiAlert from "@mui/material/Alert";
 import { Link } from "react-router-dom";
 import CloseIcon from "@mui/icons-material/Close";
 import "../App.css";
-import axios from "axios";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import Taskname from "./Taskname";
 
@@ -99,6 +98,7 @@ export default function LeaveReconcilation({ empID, projectId }) {
     }
     setSnackbarOpen(false);
   };
+  
   //dummy rows
   const [leaveDays, setLeaveDays] = useState([
     { reconciliation_date: "01-07-25", status: "Open", reason: "" },
@@ -108,6 +108,7 @@ export default function LeaveReconcilation({ empID, projectId }) {
       reason: "Missed Timesheet",
     },
   ]);
+  
 
   const [oldReasons, setOldReasons] = useState([]);
   const [formData, setFormData] = useState([]);
@@ -115,63 +116,29 @@ export default function LeaveReconcilation({ empID, projectId }) {
   const [noRowSelectedSnackbarOpen, setNoRowSelectedSnackbarOpen] =
     useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const url = `/leavereconcilation/${empID}`;
-        const response = await axios.get(url, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        setLoading(false);
-        console.log("Your project id is" + " " + projectId);
-        const today = new Date();
-        const startDate = new Date();
-        startDate.setDate(today.getDate() - 90);
-        const formattedStartDate = formatDate(startDate);
-        const formattedEndDate = formatDate(today);
-        function formatDate(date) {
-          const day = String(date.getDate()).padStart(2, "0");
-          const month = String(date.getMonth() + 1).padStart(2, "0");
-          const year = String(date.getFullYear()).slice(-2);
-          return `${day}-${month}-${year}`;
-        }
-        const timeManagementResponse = await axios.get(
-          `/ahWorkwave/employee/${empID}/effortDateRange`,
-          {
-            params: {
-              startDate: formattedStartDate,
-              endDate: formattedEndDate,
-            },
-          }
-        );
-        console.log(
-          "Time Management Response Data:",
-          timeManagementResponse.data
-        );
-        const results = timeManagementResponse.data;
-        console.log("Results:", results);
-        setResults(results);
-        if (response.status === 200) {
-          console.log(response.data);
-          setLeaveDays(response.data);
-          setOldReasons(response.data.map((ld) => ld.reason));
-          setReasons(
-            response.data.map((ld) =>
-              ld.status === "Rejected" || ld.status === "Pending"
-                ? ld.reason
-                : ""
-            )
-          );
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [empID]);
+useEffect(() => {
+  setLoading(false); // simulate fetch complete
+
+  const mockLeaveDays = [
+    { reconciliation_date: "01-07-25", status: "Open", reason: "" },
+    { reconciliation_date: "28-06-25", status: "Resolved", reason: "Missed Timesheet" },
+    
+  ];
+
+  const mockResults = [
+    { effortDate: "01-07-25", taskId: 1, effort: 2 },
+    { effortDate: "01-07-25", taskId: 2, effort: 3 },
+    { effortDate: "01-07-25", taskId: 3, effort: 1 },
+  ];
+
+  setLeaveDays(mockLeaveDays);
+  setOldReasons(mockLeaveDays.map((ld) => ld.reason));
+  setReasons(mockLeaveDays.map((ld) =>
+    ld.status === "Rejected" || ld.status === "Pending" ? ld.reason : ""
+  ));
+  setResults(mockResults);
+}, []);
+
 
   const [reasons, setReasons] = useState(leaveDays.map(() => ""));
   const [enabledRows, setEnabledRows] = useState([]);
@@ -264,6 +231,18 @@ export default function LeaveReconcilation({ empID, projectId }) {
     p: 4,
   };
 
+  if (!empID) {
+  console.error("empID is missing. Cannot proceed.");
+  return (
+    <Box p={4}>
+      <Typography variant="h6" color="error">
+        Error: Employee ID is missing.
+      </Typography>
+    </Box>
+  );
+}
+
+
   const handleSubmit = async () => {
      if (!empID) {
     console.error('Missing empID');
@@ -294,23 +273,23 @@ export default function LeaveReconcilation({ empID, projectId }) {
       return;
     }
 
-    try {
-      const formattedDate = formatDate(reconciliationDate);
-      const url = `/ahWorkwave/totalEffort/employee/${empID}/effortDate/${formattedDate}`;
-      const response = await axios.get(url, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+    // try {
+    //   const formattedDate = formatDate(reconciliationDate);
+    //   const url = `/ahWorkwave/totalEffort/employee/${empID}/effortDate/${formattedDate}`;
+    //   const response = await axios.get(url, {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //   });
 
-      if (response.status === 200) {
-        const final = response.data;
-        setTotal(final);
-        console.log("Total Effort is:", total);
-      }
-    } catch (error) {
-      console.error("Error fetching total effort:", error);
-    }
+    //   if (response.status === 200) {
+    //     const final = response.data;
+    //     setTotal(final);
+    //     console.log("Total Effort is:", total);
+    //   }
+    // } catch (error) {
+    //   console.error("Error fetching total effort:", error);
+    // }
 
     handleOpen(true);
     setLoading(false);
@@ -397,46 +376,40 @@ export default function LeaveReconcilation({ empID, projectId }) {
     }
   };
 
- const handleSubmitModal = async () => {
+const handleSubmitModal = async () => {
   setLoading(true);
 
-  // 1 post new “Pending” entries
-  try {
-    for (const selectedIndex of enabledRows) {
-      const { reconciliation_date, reason } = leaveDays[selectedIndex];
-      await axios.post('/api/reconciliations', {
-        employeeId: empID,
-        date: reconciliation_date,
-        reason,
-        status: 'Pending'
-      });
+const newEntries = enabledRows.map(index => ({
+    id: empID, // or use a unique taskId if needed
+    name: "Palak", // replace with actual name if available
+    reason: leaveDays[index].reason,
+    date: leaveDays[index].reconciliation_date,
+    status: "Pending"
+  }));
+
+  // ✅ Save to localStorage
+  const existingData = JSON.parse(localStorage.getItem('reconciliationData')) || [];
+  const updatedData = [...existingData, ...newEntries];
+  localStorage.setItem('reconciliationData', JSON.stringify(updatedData));
+
+  // ✅ You can still log the output if needed
+  newEntries.forEach(entry => {
+    console.log("Simulated POST: ", entry);
+  });
+
+  const dataToSubmit = leaveDays.reduce((result, { reason }, index) => {
+    const oldReason = oldReasons[index];
+    if (reason !== oldReason) {
+      result[index] = reason;
     }
-  } catch (postErr) {
-    console.error('Error posting reconciliation:', postErr);
-  }
-
-  // 2️ update reasons on the server
-  try {
-    const dataToSubmit = leaveDays.reduce((result, { leavereconciliationId, reason }, index) => {
-      const oldReason = oldReasons[index];
-      if (reason !== oldReason) {
-        result[leavereconciliationId] = reason;
-      }
-      return result;
-    }, {});
-
-    await axios.put('/leavereconciliation/updateReasons', dataToSubmit);
-    // …fetch fresh data, show snackbars, etc…
-  } catch (putErr) {
-    console.error('Error updating reasons:', putErr);
-  }
+    return result;
+  }, {});
+  console.log("Simulated PUT: updateReasons", dataToSubmit);
 
   handleClose();
   setSuccessSnackbarOpen(true);
   setLoading(false);
 };
-
-
 
 
   const handleCancel = () => {
@@ -573,7 +546,7 @@ export default function LeaveReconcilation({ empID, projectId }) {
         main: "#585858",
       },
     },
-  });
+  }); 
 
   return (
     <ThemeProvider theme={theme}>
