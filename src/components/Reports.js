@@ -42,7 +42,7 @@ export default function Reports() {
       
     }}>
        <IconButton
-        onClick={() => navigate('/timesheettable')}
+        onClick={() => navigate('/dashboard')}
         sx={{ position: 'absolute', top: 16, left: 16, color: 'white' }}
       >
         <ArrowBackIosIcon />

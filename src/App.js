@@ -20,6 +20,31 @@ import Timesheet from './components/Timesheet.js';
 import ClientReport from './components/ClientReport.js';
 import UpdateEmp from './components2/UpdateEmp.js';
 import Analytics from './components2/Analytics.js';
+import OrganizationChart from './components2/OrganizationChart.js';
+import Bank from './components2/Bank.js';
+import FamilyDetails from './components2/FamilyDetails.js';
+import PositionHistory from './components2/PositionHistory.js';
+import PreviousEmp from './components2/PreviousEmp.js';
+import Separation from './components2/Separation.js';
+import CardDetails from './components2/CardDetails.js';
+import EmpDoc from './components2/EmpDoc.js';
+import Company from './components2/Company.js';
+import PolicyForm from './components2/PolicyForm.js';
+import Form from './components2/Form.js';
+import Letter from './components2/Letter.js';
+import PrepLetter from './components2/PrepLetter.js';
+import Edit from './components2/Edit.js';
+import ReturnLogistics from './component3/ReturnLogistics.js';
+import Shrink from './component3/Shrink.js';
+import InStore from './component3/InStore.js';
+import ExcelImport from './components2/ExcelImport.js';
+import ImportExcel from './components2/ImportExcel.js';
+import Bulletin from './components2/Bulletin.js';
+import AddBulletin from './components2/AddBulletin.js';
+import MassCom from './components2/MassCom.js';
+import Compose from './components2/Compose.js';
+import AddEmp from './components2/AddEmp.js';
+import Info from './components2/Info.js';
 
 function App() {
   return (
@@ -44,6 +69,31 @@ function App() {
         <Route path='/clientreport' element={<ClientReport />} />
         <Route path='/updateemp' element={<UpdateEmp />} />
         <Route path='/analytics' element={<Analytics />} />
+        <Route path='/organizationchart' element={<OrganizationChart />} />
+        <Route path='/bank' element={<Bank />} />
+        <Route path='/familydetails' element={<FamilyDetails />} />
+        <Route path='/positionhistory' element={<PositionHistory />} />
+        <Route path='/previousemp' element={<PreviousEmp />} />
+        <Route path='/separation' element={<Separation />} />
+        <Route path='/carddetails' element={<CardDetails />} />
+        <Route path='/empdoc' element={<EmpDoc />} />
+        <Route path='/company' element={<Company />} />
+        <Route path='/policyform' element={<PolicyForm />} />
+        <Route path='/form' element={<Form />} />
+        <Route path='/letter' element={<Letter />} />
+        <Route path='/prepletter' element={<PrepLetter />} />
+        <Route path='/edit' element={<Edit />} />
+        <Route path='/returnlogistics' element={<ReturnLogistics />} />
+        <Route path='/shrink' element={<Shrink />} />
+        <Route path='/instore' element={<InStore />} />
+        <Route path='/excelimport' element={<ExcelImport />} />
+        <Route path='/importexcel' element={<ImportExcel />} />
+        <Route path='/bulletin' element={<Bulletin />} />
+        <Route path='/addbulletin' element={<AddBulletin />} />
+        <Route path='/masscom' element={<MassCom />} />
+        <Route path='/compose' element={<Compose />} />
+        <Route path='/addemp' element={<AddEmp />} />
+        <Route path='/info' element={<Info />} />
       </Routes>
     </Router>
   );
