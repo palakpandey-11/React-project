@@ -32,7 +32,7 @@ export default function Welcome() {
 
   const favouriteItems = [
     { title: 'Update Employee Data', icon: PersonIcon, color: 'primary.main',  route: '/updateemp' },
-    { title: 'Add Employee', icon: PersonIcon, color: 'primary.main' },
+    { title: 'Add Employee', icon: PersonIcon, color: 'primary.main',  route: '/addemp' },
     { title: 'Update Payroll Data', icon: StorageIcon, color: 'warning.main', route:"/updatepayroll" },
     { title: 'Process Payroll', icon: CreditCardIcon, color: 'warning.main',  route:"/updatepayroll" },
     { title: 'Salary statement for a month', icon: StorageIcon, color: 'warning.main',  route:"/updatepayroll" },
