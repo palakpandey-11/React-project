@@ -1,9 +1,11 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background-image: url("background_img.png");
-  /* background: url('https://img.freepik.com/premium-vector/abstract-blue-background-with-wavy-lines-halftone-dot-effect-abstract-banner-modern-background_720029-3105.jpg?ga=GA1.1.528369950.1749014755&semt=ais_hybrid&w=740') no-repeat center center fixed; */
+ background-image: url("background_img.png");
   background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
 }
 
 .dashboard-container {
