@@ -193,7 +193,7 @@ const handleSendMessage = () => {
     </Menu>
   </Box>
 
-  {/* INFORMATION */}
+  {/* INFORMATION
   <Box
     onMouseEnter={(e) => {
       setInfoAnchorEl(e.currentTarget);
@@ -262,7 +262,7 @@ const handleSendMessage = () => {
         borderLeftColor: "primary.light",
       }}}>Employmee Documents</MenuItem>
     </Menu>
-  </Box>
+  </Box> */}
 
  {/* ADMIN */}
 <Box
@@ -409,7 +409,7 @@ const handleSendMessage = () => {
       </AccordionDetails>
     </Accordion>
 
-    <Accordion sx={{ bgcolor: 'transparent', color: '#fff' }}>
+    {/* <Accordion sx={{ bgcolor: 'transparent', color: '#fff' }}>
       <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}>
         Information
       </AccordionSummary>
@@ -422,7 +422,7 @@ const handleSendMessage = () => {
         <Typography onClick={() => { navigate('/carddetails'); setMobileOpen(false); }} sx={{ cursor: 'pointer' }}>Access Card Details</Typography>
         <Typography onClick={() => { navigate('/empdoc'); setMobileOpen(false); }} sx={{ cursor: 'pointer' }}>Employee Documents</Typography>
       </AccordionDetails>
-    </Accordion>
+    </Accordion> */}
 
     <Accordion sx={{ bgcolor: 'transparent', color: '#fff' }}>
       <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}>
@@ -447,7 +447,6 @@ const handleSendMessage = () => {
   </Box>
 </Drawer>
 
-
         {/* Page Content */}
         <Box p={3} pt={10}  >
           <Box sx={{ p:3, maxWidth: '1200px',mx: 'auto'}}>
@@ -466,7 +465,7 @@ const handleSendMessage = () => {
               <Typography color="rgba(255,255,255,0.4)" fontSize={{xs:12,md:16}}>{activeTab}</Typography>
             </Breadcrumbs>
 
-            <Box display="flex" gap={2} alignItems="center">
+            <Box display="flex" gap={1} alignItems="center">
               {/* Month Picker */}
             <Box sx={{
               display: 'flex',
@@ -539,7 +538,7 @@ const handleSendMessage = () => {
           </Box>
 
           {/* Search Section */}
-          <Paper sx={{ p: 2, display: 'flex', justifyContent: 'space-between',maxWidth: '1100px',mx: 'auto', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.3)', mt: 3 }}>
+          <Paper sx={{ p: 2, display: 'flex', justifyContent: 'space-between',maxWidth: '1100px',mx: 'auto', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.3)', mt: 1 }}>
             <Box width="100%" maxWidth="500px">
               <Typography fontWeight="bold" fontSize={{xs:12,md:18}} mb={1} color="white">
                 Start searching to see specific employee details here
@@ -636,7 +635,7 @@ const handleSendMessage = () => {
           </Paper>
         </Box>
         {showInfo && (
-  <Box mt={1} maxWidth="1200px" mx="auto">
+  <Box maxWidth="1155px"  mx="auto">
     <Info  />
   </Box>
 )}
