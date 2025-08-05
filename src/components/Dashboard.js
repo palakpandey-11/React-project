@@ -41,10 +41,10 @@ const closeImage = () => {
 const cards = [
   { title: 'OptiTime', image: time, route: '/timesheettable' },
   { title: 'Reports', image: reports, route: '/reports' },
-  { title: 'Careers', image: careers },
-  { title: 'Learning', image: learn },
+  { title: 'Careers', image: careers, route: '/returnlogistics' },
+  { title: 'Learning', image: learn, route: '/shrink' },
   { title: 'Employee Dashboard', image: Empdash, route:'/welcome' },
-  { title: 'More Apps', image: more },
+  { title: 'More Apps', image: more, route:'/instore' },
   { title: 'Document Center', image: doc },
   { title: 'Testimonials', image: testimonials },
   { title: 'Feeds', image: feed },
@@ -61,7 +61,7 @@ const handleLogout = () => {
   return (
     <>
      <header className="dashboard-header">
-  <div className="logo-name">WorkNexus</div>
+  <div className="logo-name">FlowSync</div>
         <div className="user-info">
           <span className="role">
   {user?.name || "Employee"}

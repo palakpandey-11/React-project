@@ -42,27 +42,32 @@ const generateMonths = (startDate, count) => {
 
 // Inline MonthPicker with glassy controls, inherits page background
 function MonthPicker({ monthsToShow = 12, onMonthChange }) {
-  const today = useMemo(() => new Date(), []);
-   const start = useMemo(
-     () => new Date(today.getFullYear(), today.getMonth() - 3, 1),
-    [today]
-  );
-  const months = useMemo(
-    () => generateMonths(start, monthsToShow),
-    [start, monthsToShow]
-  );
-  const [selectedIndex, setSelectedIndex] = useState(
-    months.findIndex(
-      m => m.date.getMonth() === today.getMonth() && m.date.getFullYear() === today.getFullYear()
-    )
-  );
-  const [openDelete, setOpenDelete] = useState(false);
+const today = useMemo(() => new Date(), []);
+const start = useMemo(() => new Date(today.getFullYear(), today.getMonth() - 3, 1), [today]);
+const months = useMemo(() => generateMonths(start, monthsToShow), [start, monthsToShow]);
+
+const [selectedIndex, setSelectedIndex] = useState(
+  months.findIndex(
+    m => m.date.getMonth() === today.getMonth() && m.date.getFullYear() === today.getFullYear()
+  )
+);
+
+const [openDelete, setOpenDelete] = useState(false);
+const [openEditDialog, setOpenEditDialog] = useState(false);
+
+const [formValues, setFormValues] = useState({
+  workDays: 30,
+  fromDate: `01 ${months[selectedIndex].label} ${months[selectedIndex].year}`,
+  toDate: `31 ${months[selectedIndex].label} ${months[selectedIndex].year}`,
+});
 
   const handleSelect = idx => {
     if (months[idx].date > today) return;
     setSelectedIndex(idx);
     onMonthChange && onMonthChange(months[idx].date);
   };
+
+
   const handleOpenDelete = () => setOpenDelete(true);
   const handleCloseDelete = () => setOpenDelete(false);
 
@@ -134,11 +139,16 @@ function MonthPicker({ monthsToShow = 12, onMonthChange }) {
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
             <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)', fontStyle: 'italic' }}>
-              Cutoff from 01 {months[selectedIndex].label} {months[selectedIndex].year} to 31 {months[selectedIndex].label} {months[selectedIndex].year}
+              Cutoff from {formValues.fromDate} to {formValues.toDate}
             </Typography>
-            <IconButton size="small" sx={{ color: 'rgba(255,255,255,0.7)', ml: 1 }}>
-              <EditIcon fontSize="small" />
-            </IconButton>
+            <IconButton
+  size="small"
+  sx={{ color: 'rgba(255,255,255,0.7)', ml: 1 }}
+  onClick={() => setOpenEditDialog(true)}
+>
+  <EditIcon fontSize="small" />
+</IconButton>
+
             <IconButton size="small" sx={{ color: 'error.light', ml: 0.5 }} onClick={handleOpenDelete}>
               <DeleteIcon fontSize="small" />
             </IconButton>
@@ -149,6 +159,72 @@ function MonthPicker({ monthsToShow = 12, onMonthChange }) {
         </Button>
       </Box>
 
+<Dialog
+  open={openEditDialog}
+  onClose={() => setOpenEditDialog(false)}
+  BackdropProps={{
+          sx: {
+            backdropFilter: 'blur(2px)',
+            backgroundColor: 'rgba(0,0,0,0.5)',
+          },
+        }}
+  PaperProps={{
+    sx: {
+      background: 'rgba(79, 72, 72, 0.36)',
+      backdropFilter: 'blur(15px)',
+      boxShadow: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
+      borderRadius: 3,
+      p: 3,
+      minWidth: 400,
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+    },
+  }}
+>
+  <DialogTitle sx={{ fontWeight: 600, color: 'white' }}>Update Payroll Info</DialogTitle>
+  <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
+    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <Typography sx={{ color: 'white' }}>Number Of Work Days</Typography>
+      <input
+        type="number"
+        value={formValues.workDays}
+        onChange={(e) => setFormValues({ ...formValues, workDays: e.target.value })}
+        style={{ padding: 6, width: 120, borderRadius: 4, border: "1px solid #ccc" }}
+      />
+    </Box>
+    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <Typography sx={{ color: 'white' }}>Cutoff Fromdate</Typography>
+      <input
+        type="date"
+        value={formValues.fromDate}
+        onChange={(e) => setFormValues({ ...formValues, fromDate: e.target.value })}
+        style={{ padding: 6, width: 160, borderRadius: 4, border: "1px solid #ccc" }}
+      />
+    </Box>
+    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <Typography sx={{ color: 'white' }}>Cutoff Todate</Typography>
+      <input
+        type="date"
+        value={formValues.toDate}
+        onChange={(e) => setFormValues({ ...formValues, toDate: e.target.value })}
+        style={{ padding: 6, width: 160, borderRadius: 4, border: "1px solid #ccc" }}
+      />
+    </Box>
+  </DialogContent>
+  <DialogActions sx={{ mt: 2 }}>
+    <Button variant="outlined" onClick={() => setOpenEditDialog(false)}>Cancel</Button>
+    <Button
+      variant="contained"
+      onClick={() => {
+        console.log("Updated values:", formValues);
+        setOpenEditDialog(false);
+      }}
+    >
+      Update
+    </Button>
+  </DialogActions>
+</Dialog>
+
+
       {/* Delete confirmation */}
       <Dialog
         open={openDelete}
@@ -158,16 +234,26 @@ function MonthPicker({ monthsToShow = 12, onMonthChange }) {
             backdropFilter: 'blur(2px)',
             backgroundColor: 'rgba(0,0,0,0.5)',
           },
-        }}
+        }}PaperProps={{
+    sx: {
+      background: 'rgba(79, 72, 72, 0.36)',
+      backdropFilter: 'blur(15px)',
+      boxShadow: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
+      borderRadius: 3,
+      p: 3,
+      minWidth: 400,
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+    },
+  }}
       >
-        <DialogTitle sx={{ bgcolor: 'rgba(139, 139, 139, 0.19)' }}>Delete Payroll</DialogTitle>
-        <DialogContent sx={{ bgcolor: 'rgba(139, 139, 139, 0.19)' }}>
-          <DialogContentText sx={{ color: 'text.primary' }}>
+        <DialogTitle sx={{ color:'white'}}>Delete Payroll</DialogTitle>
+        <DialogContent >
+          <DialogContentText sx={{ color: 'white' }}>
             ⚠️ Deleted records cannot be retrieved!<br />
             You are about to delete payroll for {months[selectedIndex].label} {months[selectedIndex].year}.
           </DialogContentText>
         </DialogContent>
-        <DialogActions sx={{ bgcolor: 'rgba(139, 139, 139, 0.19)' }}>
+        <DialogActions >
           <Button onClick={handleCloseDelete}>Cancel</Button>
           <Button onClick={() => { /* delete logic */ handleCloseDelete(); }} variant="contained" color="error">
             Delete

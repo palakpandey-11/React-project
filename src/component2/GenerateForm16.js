@@ -100,19 +100,19 @@ export default function GenerateForm16() {
           sx={{
             mb: 3,
             color: '#bf360c',
-            bgcolor: 'rgba(255, 235, 238, 1)',
+            bgcolor: 'rgba(237, 234, 234, 0.58)',
             '& .MuiAlert-icon': { color: '#bf360c' },
           }}
         >
           <AlertTitle>Form 16 – Responsible Person Details are mandatory.</AlertTitle>
-          <Button
+          {/* <Button
             component={RouterLink}
             to="/form16/settings"
             variant="text"
             sx={{ textTransform: 'none', fontWeight: 600, ml: 1 }}
           >
             Update now
-          </Button>
+          </Button> */}
         </Alert>
 
         <Typography variant="subtitle1" gutterBottom>
@@ -181,9 +181,9 @@ export default function GenerateForm16() {
                   size="small"
                   placeholder="BSR Code/Receipt Number"
                   sx={{
-                    bgcolor: '#fff',
+                    bgcolor: 'rgba(0, 0, 0, 0.4)',
                     borderRadius: 1,
-                    '& .MuiInputBase-input': { color: '#000' },
+                    '& .MuiInputBase-input': { color: 'white' },
                   }}
                 />
               </Grid>
@@ -193,9 +193,9 @@ export default function GenerateForm16() {
                   size="small"
                   placeholder="PAN as in Statement"
                   sx={{
-                    bgcolor: '#fff',
+                    bgcolor: 'rgba(0, 0, 0, 0.4)',
                     borderRadius: 1,
-                    '& .MuiInputBase-input': { color: '#000' },
+                    '& .MuiInputBase-input': { color: 'white' },
                   }}
                 />
               </Grid>
@@ -205,9 +205,9 @@ export default function GenerateForm16() {
                   size="small"
                   placeholder="Total Amount Deducted/Collected (Rs)"
                   sx={{
-                    bgcolor: '#fff',
+                    bgcolor: 'rgba(0, 0, 0, 0.4)',
                     borderRadius: 1,
-                    '& .MuiInputBase-input': { color: '#000' },
+                    '& .MuiInputBase-input': { color: 'white' },
                   }}
                 />
               </Grid>
@@ -219,9 +219,9 @@ export default function GenerateForm16() {
                   type="date"
                   InputLabelProps={{ shrink: true }}
                   sx={{
-                    bgcolor: '#fff',
+                    bgcolor: 'rgba(0, 0, 0, 0.4)',
                     borderRadius: 1,
-                    '& .MuiInputBase-input': { color: '#000' },
+                    '& .MuiInputBase-input': { color: 'white' },
                   }}
                 />
               </Grid>
@@ -231,9 +231,9 @@ export default function GenerateForm16() {
                   size="small"
                   placeholder="Challan Serial Number/DDO"
                   sx={{
-                    bgcolor: '#fff',
+                    bgcolor: 'rgba(0, 0, 0, 0.4)',
                     borderRadius: 1,
-                    '& .MuiInputBase-input': { color: '#000' },
+                    '& .MuiInputBase-input': { color: 'white' },
                   }}
                 />
               </Grid>
@@ -243,9 +243,9 @@ export default function GenerateForm16() {
                   size="small"
                   placeholder="Challan Amount/Transfer Voucher"
                   sx={{
-                    bgcolor: '#fff',
+                    bgcolor: 'rgba(0, 0, 0, 0.4)',
                     borderRadius: 1,
-                    '& .MuiInputBase-input': { color: '#000' },
+                    '& .MuiInputBase-input': { color: 'white' },
                   }}
                 />
               </Grid>
@@ -261,7 +261,7 @@ export default function GenerateForm16() {
         </Paper>
 
         {/* Navigation buttons */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
           <Button
             component={RouterLink}
             to="/form16"
@@ -274,7 +274,7 @@ export default function GenerateForm16() {
             Previous
           </Button>
 
-          <Box>
+          <Box sx={{mb:2}}>
             <Button
               component={RouterLink}
               to="/form16/verify-part-a"

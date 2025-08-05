@@ -52,8 +52,9 @@ export default function ProceedBtn() {
         {/* Info Banner */}
         <Box
           sx={{
-            bgcolor: "#FEF7E0",
-            border: "1px solid #F5D6A5",
+            bgcolor: "#fef7e069",
+            color:'white',
+            border: "1px solid #2f2f2f3e",
             borderRadius: 1,
             p: 1.5,
             display: "flex",
@@ -220,10 +221,11 @@ export default function ProceedBtn() {
       <Box
         sx={{
           width: 320,
-          border: "1px solid #E0E0E0",
+          border: "1px solid #e0e0e0c8",
           borderRadius: 1,
+          color:'grey',
           p: 2,
-          bgcolor: "#fafafa",
+          bgcolor: "#5c5c5c9e",
           position: "sticky",
           top: 16,
           alignSelf: "flex-start"

@@ -31,18 +31,18 @@ export default function FormSixteen(){
         {/* Orange Banner */}
         <Box
           sx={{
-            background: "#fff5ebc4",
-            border: "1.5px solid #F5C99A",
+            background: "#fff5eb34",
+            border: "1.5px solid #9c948bff",
             borderRadius: 2,
             p: { xs: 2, md: 3 },
             mt: 2,
             mb: 3,
           }}
         >
-          <Typography fontWeight={600} fontSize={22} sx={{ mb: 1, color: "#B97823" }}>
+          <Typography fontWeight={600} fontSize={22} sx={{ mb: 1, color: "#d3c3afff" }}>
             Know about your Form 16!
           </Typography>
-          <Typography color="#6b4e12" sx={{ mb: 2 }}>
+          <Typography color="#98948eff" sx={{ mb: 2 }}>
             Form 16 includes Part A that is downloaded from traces site and Part B that will be generated through greytHR.
             These forms can be signed by authorized person and published to the respective employees. They can also be digitally signed.
             <br />
@@ -53,7 +53,7 @@ export default function FormSixteen(){
           {/* Settings Section */}
           <Box
             sx={{
-              background: "#fffdf9af",
+              background: "#fffdf98e",
               border: "1px dashed #aaa",
               borderRadius: 2,
               p: { xs: 2, md: 4 },
@@ -77,14 +77,14 @@ export default function FormSixteen(){
             >
               Options marked in RED are mandatory to proceed.
             </Typography>
-            <Divider sx={{ my: 2, borderColor: "#e6ccb3" }} />
+            <Divider sx={{ my: 2, borderColor: "#747474ff" }} />
 
             {/* Three Columns */}
             <Grid container spacing={3}>
 
               {/* Column 1 */}
               <Grid item xs={12} md={4}>
-                <Typography fontWeight={500} fontSize={20} sx={{ color: "#acacac", mb: 2 }}>
+                <Typography fontWeight={500} fontSize={20} sx={{ color: "#6f6b6bff", mb: 2 }}>
                   Responsible Person's Details
                 </Typography>
                 <Typography sx={{ color: "#e53935", fontWeight: 600, mb: 0.5 }}>
@@ -106,7 +106,7 @@ export default function FormSixteen(){
 
               {/* Column 2 */}
               <Grid item xs={12} md={4}>
-                <Typography fontWeight={500} fontSize={20} sx={{ color: "#acacac", mb: 2 }}>
+                <Typography fontWeight={500} fontSize={20} sx={{ color: "#6f6b6bff", mb: 2 }}>
                   Form 16 Details
                 </Typography>
                 <Typography fontWeight={600} sx={{ mb: 1 }}>
@@ -116,7 +116,7 @@ export default function FormSixteen(){
                   TDS Circle Address: ?
                 </Typography>
 
-                <Typography fontWeight={500} fontSize={19} sx={{ color: "#acacac", mb: 1 }}>
+                <Typography fontWeight={500} fontSize={19} sx={{ color: "#6f6b6bff", mb: 1 }}>
                   Part B Configuration
                 </Typography>
                 <Typography sx={{ color: "#a23a25", fontWeight: 700, fontSize: 17 }}>
@@ -141,7 +141,7 @@ export default function FormSixteen(){
 
               {/* Column 3 */}
               <Grid item xs={12} md={4}>
-                <Typography fontWeight={500} fontSize={20} sx={{ color: "#acacac", mb: 2 }}>
+                <Typography fontWeight={500} fontSize={20} sx={{ color: "#6f6b6bff", mb: 2 }}>
                   Form 16 Generation
                 </Typography>
                 <Typography sx={{ color: "#1a6b1a", fontWeight: 700, fontSize: 17 }}>
@@ -157,7 +157,7 @@ export default function FormSixteen(){
                   ✖ Whether Form 16 should be Digitally signed
                 </Typography>
 
-                <Typography fontWeight={500} fontSize={19} sx={{ color: "#acacac", mb: 1, mt: 3 }}>
+                <Typography fontWeight={500} fontSize={19} sx={{ color: "#6f6b6bff", mb: 1, mt: 3 }}>
                   Company Details
                 </Typography>
                 <Typography>
@@ -183,7 +183,7 @@ export default function FormSixteen(){
                 variant="contained"
                 sx={{
                   mr: 3,
-                  bgcolor: "#74aaff",
+                  bgcolor: "#596981ff",
                   ":hover": { bgcolor: "#4977b6" },
                   fontWeight: 600,
                   fontSize: 18,
@@ -196,8 +196,8 @@ export default function FormSixteen(){
               onClick={() => navigate('/form16/procced')} 
                 variant="contained"
                 sx={{
-                  bgcolor: "#74aaff",
-                  ":hover": { bgcolor: "#4977b6" },
+                  bgcolor: "#3768b7ff",
+                  ":hover": { bgcolor: "#5e82b6ff" },
                   fontWeight: 600,
                   fontSize: 18,
                   px: 5

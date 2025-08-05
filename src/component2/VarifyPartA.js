@@ -207,7 +207,7 @@ export default function VerifyPartA() {
   </Box>
 )}
         {/* navigation */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
           <Button
             component={RouterLink}
             to="/form16/generate"

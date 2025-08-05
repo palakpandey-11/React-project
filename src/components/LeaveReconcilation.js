@@ -219,17 +219,19 @@ useEffect(() => {
     });
   };
 
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-  };
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: '90%',
+  maxWidth: 550,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
 
   if (!empID) {
   console.error("empID is missing. Cannot proceed.");
@@ -737,7 +739,11 @@ const newEntries = enabledRows.map(index => ({
           <Table>
             <TableHead>
               <TableRow>
-   <TableCell colSpan={3} align="center">
+   <TableCell colSpan={3} align="center" sx={{
+      py: 0.5,      // reduce vertical padding
+      fontSize: "13px",
+      fontWeight: 500,
+    }}>
      <Typography>Date: {formatDate(reconciliationDate)}</Typography>
    </TableCell>
  </TableRow>
@@ -1187,6 +1193,8 @@ const newEntries = enabledRows.map(index => ({
                             padding: "10px 0px",
                             fontSize: "13px",
                             height: "16px",
+                            backgroundColor: '#e8e9e7'
+
                           },
                         }}
                         onKeyPress={(event) => {
@@ -1758,20 +1766,18 @@ const newEntries = enabledRows.map(index => ({
             </TableBody>
           </Table>
 
-          <Box className="buttonContainer" style={{ position: "relative" }}>
+          <Box className="buttonContainer"   sx={{ mt: 1, display: "flex", justifyContent: "center" }} >
             <Button
               variant="contained"
               color="primary"
               className="customButton"
               onClick={handleSubmitModal}
               style={{
-                
-                fontFamily: "Arial",
-                width: "20%",
-                height: "40px",
-                fontSize: "13px",
-                boxShadow: "2px 2px 4px rgba(0, 0, 0, 0.85)",
-              }}
+      width: "30%",
+      height: "36px",
+      fontSize: "13px",
+      boxShadow: "2px 2px 4px rgba(0, 0, 0, 0.85)",
+    }}
               disabled={loading}
             >
               Submit

@@ -42,7 +42,7 @@ export default function Reports() {
       
     }}>
        <IconButton
-        onClick={() => navigate('/timesheettable')}
+        onClick={() => navigate('/dashboard')}
         sx={{ position: 'absolute', top: 16, left: 16, color: 'white' }}
       >
         <ArrowBackIosIcon />
@@ -55,8 +55,8 @@ export default function Reports() {
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'column', 
-    width: '80%',
-    height: '550px',
+    width: '50%',
+    height: '530px',
   }} >
 
   <Box className="reports-buttons" sx={{
@@ -71,8 +71,8 @@ export default function Reports() {
        
 
       <Paper elevation={6} sx={{
-        width: '100%',
-        maxWidth: 800,
+        width: '85%',
+        maxWidth: 500,
         p: 4,
         mb: '50px',
         border: '3px solid rgba(255,255,255,0.7)',

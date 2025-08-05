@@ -1,30 +1,45 @@
 import React, { useState } from 'react';
 import {
   AppBar, Toolbar, Typography, IconButton, Box, Paper, TextField, InputAdornment,
-  Select, MenuItem, Menu, Button, Breadcrumbs, Link, Tooltip
+  Select, MenuItem, Menu, Button, Breadcrumbs, Link, Tooltip, Drawer, Accordion, AccordionSummary, AccordionDetails, useMediaQuery 
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
-import GroupsIcon from '@mui/icons-material/Groups';
+import GroupIcon from '@mui/icons-material/Groups';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Link as RouterLink } from 'react-router-dom';
-import SendIcon from '@mui/icons-material/Send';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
+import Info from './Info';
+import MenuIcon from '@mui/icons-material/Menu';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useTheme } from '@mui/material/styles';
 
 const UpdateEmp = () => {
   const navigate = useNavigate();
+  const [showInfo, setShowInfo] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [payrollMonth, setPayrollMonth] = useState(dayjs().format("MMM YYYY"));  
   const [mainAnchorEl, setMainAnchorEl] = useState(null);
   const [infoAnchorEl, setInfoAnchorEl] = useState(null);
   const openMainMenu = Boolean(mainAnchorEl);
   const openInfoMenu = Boolean(infoAnchorEl);
   const [employeeType, setEmployeeType] = useState('Current Employees');
-  const [chatOpen, setChatOpen] = useState(false);
+
+  const handleEmployeeSearch = () => {
+  // For now, we simulate a successful search if anything is typed
+  if (searchQuery.trim() !== "") {
+    setShowInfo(true);
+  } else {
+    setShowInfo(false); // optional: hide if empty
+  }
+};
+const [mobileOpen, setMobileOpen] = useState(false);
+const theme = useTheme();
+const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
@@ -77,86 +92,8 @@ const handleSendMessage = () => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      {searchModalOpen && (
-  <Box
-    sx={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100vw',
-      height: '100vh',
-      bgcolor: 'rgba(0,0,0,0.4)',
-      zIndex: 1300,
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      backdropFilter: 'blur(4px)',
-    }}
-  >
-    <Paper
-      elevation={4}
-      sx={{
-        width: 700,
-        maxHeight: '90vh',
-        p: 3,
-        borderRadius: 2,
-        overflowY: 'auto',
-      }}
-    >
-      {/* Top Row: Search + Close */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h6">Search</Typography>
-        <IconButton onClick={() => setSearchModalOpen(false)}>✖</IconButton>
-      </Box>
 
-      {/* Search Input */}
-      <TextField
-        fullWidth
-        placeholder="Search Here"
-        variant="outlined"
-        size="small"
-        sx={{ mb: 2 }}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
-        }}
-      />
-
-      {/* Filter Buttons */}
-      <Box display="flex" gap={1} flexWrap="wrap" mb={2}>
-        {['All', 'My Favourites', 'Employee', 'Payroll', 'Leave'].map((label) => (
-          <Button key={label} variant="outlined" size="small" sx={{ borderRadius: 5 }}>
-            {label}
-          </Button>
-        ))}
-      </Box>
-
-      {/* Cards Grid */}
-      <Box display="grid" gridTemplateColumns="repeat(auto-fill, minmax(150px, 1fr))" gap={2}>
-        {[
-          'Add Bulletin Board', 'Add Employee', 'Approve Comp off', 'Approve leave',
-          'Approve leave cancellation', 'Assign Manager', 'Attendance', 'Attendance Muster',
-          'Bank Transfer', 'Bulk Data Upload'
-        ].map((title, idx) => (
-          <Paper key={idx} sx={{ p: 2, borderRadius: 2, backgroundColor: idx % 3 === 0 ? '#e3f2fd' : idx % 3 === 1 ? '#fce4ec' : '#e8f5e9' }}>
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-              <Box component="span" sx={{ fontSize: 24 }}>👤</Box>
-              <IconButton size="small">
-                <span>⭐</span>
-              </IconButton>
-            </Box>
-            <Typography variant="body2" fontWeight={500}>{title}</Typography>
-          </Paper>
-        ))}
-      </Box>
-    </Paper>
-  </Box>
-)}
-
-      <Box sx={{ backgroundColor: 'transparent', minHeight: '100vh' }}>
+      <Box sx={{ backgroundColor: 'transparent', minHeight:{xs:'50vh' ,md:'100vh'} }}>
         {/* Navbar */}
         <AppBar
           position="fixed"
@@ -168,6 +105,9 @@ const handleSendMessage = () => {
           <Toolbar >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexGrow: 1 }}>
             <Typography variant="h6" sx={{ color: 'grey', fontWeight: "bold" }}>FlowSync</Typography>
+            {!isMobile && (
+  <Box sx={{ display: 'flex', gap: 1 }}>
+
            <Box sx={{ display: 'flex', gap: 1 }}>
   <Box
   onMouseEnter={() => setEmployeeHovered(true)}
@@ -243,7 +183,7 @@ const handleSendMessage = () => {
         borderLeftColor: "primary.light",
       }
     }} >Analytics Hub</MenuItem>
-      <MenuItem onClick={() => setMainAnchorEl(null)} sx={{
+      <MenuItem onClick={() => {setMainAnchorEl(null); navigate('/organizationchart')}} sx={{
       "&:hover": {
         bgcolor: "rgba(25,118,210,0.2)",
          borderLeft: "4px solid transparent",
@@ -253,7 +193,7 @@ const handleSendMessage = () => {
     </Menu>
   </Box>
 
-  {/* INFORMATION */}
+  {/* INFORMATION
   <Box
     onMouseEnter={(e) => {
       setInfoAnchorEl(e.currentTarget);
@@ -286,43 +226,43 @@ const handleSendMessage = () => {
     }
   }}
     >
-      <MenuItem onClick={() => setInfoAnchorEl(null)} sx={{"&:hover": {
+      <MenuItem onClick={() => {setMainAnchorEl(null); navigate('/bank')}} sx={{"&:hover": {
         bgcolor: "rgba(25,118,210,0.2)",
          borderLeft: "4px solid transparent",
         borderLeftColor: "primary.light",
       }}}>Bank/PF/ESI</MenuItem>
-      <MenuItem onClick={() => setInfoAnchorEl(null)} sx={{"&:hover": {
+      <MenuItem onClick={() => {setMainAnchorEl(null); navigate('/familydetails')}} sx={{"&:hover": {
         bgcolor: "rgba(25,118,210,0.2)",
          borderLeft: "4px solid transparent",
         borderLeftColor: "primary.light",
       }}}>Family Details</MenuItem>
-      <MenuItem onClick={() => setInfoAnchorEl(null)} sx={{"&:hover": {
+      <MenuItem onClick={() => {setMainAnchorEl(null); navigate('/positionhistory')}} sx={{"&:hover": {
         bgcolor: "rgba(25,118,210,0.2)",
          borderLeft: "4px solid transparent",
         borderLeftColor: "primary.light",
       }}}>Position History</MenuItem>
-      <MenuItem onClick={() => setInfoAnchorEl(null)} sx={{"&:hover": {
+      <MenuItem onClick={() => {setMainAnchorEl(null); navigate('/previousemp')}} sx={{"&:hover": {
         bgcolor: "rgba(25,118,210,0.2)",
          borderLeft: "4px solid transparent",
         borderLeftColor: "primary.light",
       }}}>Previous Employment</MenuItem>
-      <MenuItem onClick={() => setInfoAnchorEl(null)} sx={{"&:hover": {
+      <MenuItem onClick={() => {setMainAnchorEl(null); navigate('/separation')}} sx={{"&:hover": {
         bgcolor: "rgba(25,118,210,0.2)",
          borderLeft: "4px solid transparent",
         borderLeftColor: "primary.light",
       }}}>Separation</MenuItem>
-      <MenuItem onClick={() => setInfoAnchorEl(null)} sx={{"&:hover": {
+      <MenuItem onClick={() => {setMainAnchorEl(null); navigate('/carddetails')}} sx={{"&:hover": {
         bgcolor: "rgba(25,118,210,0.2)",
          borderLeft: "4px solid transparent",
         borderLeftColor: "primary.light",
       }}}>Access Card Deatils</MenuItem>
-      <MenuItem onClick={() => setInfoAnchorEl(null)} sx={{"&:hover": {
+      <MenuItem onClick={() => {setMainAnchorEl(null); navigate('/empdoc')}} sx={{"&:hover": {
         bgcolor: "rgba(25,118,210,0.2)",
          borderLeft: "4px solid transparent",
         borderLeftColor: "primary.light",
       }}}>Employmee Documents</MenuItem>
     </Menu>
-  </Box>
+  </Box> */}
 
  {/* ADMIN */}
 <Box
@@ -357,19 +297,19 @@ const handleSendMessage = () => {
     }
   }}
   >
-    <MenuItem onClick={() => setAdminAnchorEl(null)} sx={{"&:hover": {
+    <MenuItem onClick={() => {setMainAnchorEl(null); navigate('/letter')}} sx={{"&:hover": {
         bgcolor: "rgba(25,118,210,0.2)",
          borderLeft: "4px solid transparent",
         borderLeftColor: "primary.light",}}}>General Letter </MenuItem>
-    <MenuItem onClick={() => setAdminAnchorEl(null)} sx={{"&:hover": {
+    <MenuItem onClick={() => {setMainAnchorEl(null); navigate('/excelimport')}} sx={{"&:hover": {
         bgcolor: "rgba(25,118,210,0.2)",
          borderLeft: "4px solid transparent",
         borderLeftColor: "primary.light",}}}>Excel Import</MenuItem>
-    <MenuItem onClick={() => setAdminAnchorEl(null)} sx={{"&:hover": {
+    <MenuItem onClick={() => {setMainAnchorEl(null); navigate('/bulletin')}} sx={{"&:hover": {
         bgcolor: "rgba(25,118,210,0.2)",
          borderLeft: "4px solid transparent",
         borderLeftColor: "primary.light",}}}>Bulletin Board</MenuItem>
-    <MenuItem onClick={() => setAdminAnchorEl(null)}sx={{"&:hover": {
+    <MenuItem onClick={() => {setMainAnchorEl(null); navigate('/masscom')}} sx={{"&:hover": {
         bgcolor: "rgba(25,118,210,0.2)",
          borderLeft: "4px solid transparent",
         borderLeftColor: "primary.light",}}}>Mass Communication</MenuItem>
@@ -409,122 +349,203 @@ const handleSendMessage = () => {
     }
   }}
   >
-    <MenuItem onClick={() => setSetupAnchorEl(null)} sx={{"&:hover": {
+    <MenuItem onClick={() => {setMainAnchorEl(null); navigate('/company')}} sx={{"&:hover": {
         bgcolor: "rgba(25,118,210,0.2)",
          borderLeft: "4px solid transparent",
         borderLeftColor: "primary.light",}}}>Company Ploicies & Forms</MenuItem>
   </Menu>
 </Box>
 </Box>
+ </Box>
+)}
 </Box>
+ 
+{isMobile && (
+  <IconButton onClick={() => setMobileOpen(true)} sx={{ color: '#fff'}}>
+    <MenuIcon />
+  </IconButton>
+)}
 
+<Tooltip title="Logout" onClick={() => {navigate('/welcome')}}>
+  <IconButton sx={{ color: 'error.light' }} >
+    <LogoutIcon />
+  </IconButton>
+</Tooltip>
 
-            <Box>
-              <Tooltip title="Search"><IconButton sx={{ color: 'white' }} onClick={() => setSearchModalOpen(true)}><SearchIcon /></IconButton></Tooltip>
-              <Tooltip title="Settings"><IconButton sx={{ color: 'white' }} onClick={handleSettingsMenuClick}><SettingsIcon /></IconButton></Tooltip>
-              <Menu
-  anchorEl={settingsAnchorEl}
-  open={openSettingsMenu}
-  onClose={handleSettingsMenuClose}
-  PaperProps={{
-    sx: { minWidth: 220, p: 1, backgroundColor: 'rgba(0,0,0,0.7)', color: 'white'  }
-  }}
->
-  <Typography sx={{ px: 2, py: 1, fontSize: 13, color: 'gray' }}>Go to</Typography>
-  <MenuItem onClick={handleSettingsMenuClose}>
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-      <span role="img" aria-label="profile">👤</span> My Profile
-    </Box>
-  </MenuItem>
-  <MenuItem onClick={handleSettingsMenuClose}>
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-      <SettingsIcon fontSize="small" /> Account Settings
-    </Box>
-  </MenuItem>
-  <MenuItem onClick={handleSettingsMenuClose}>
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-      <span role="img" aria-label="admin">🛠️</span> User Administration
-    </Box>
-  </MenuItem>
-  <MenuItem onClick={handleSettingsMenuClose}>
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-      <span role="img" aria-label="system">🖥️</span> System Settings
-    </Box>
-  </MenuItem>
-</Menu>
-
-              <Tooltip title="Logout"><IconButton sx={{ color: 'error.light' }}><LogoutIcon /></IconButton></Tooltip>
-            </Box>
           </Toolbar>
         </AppBar>
 
+        <Drawer
+  anchor="right"
+  open={mobileOpen}
+  onClose={() => setMobileOpen(false)}
+  PaperProps={{
+    sx: {
+      width: 250,
+      bgcolor: 'rgba(20, 20, 20, 0.95)',
+      color: '#fff',
+      p: 2,
+      height:450
+    }
+  }}
+>
+  <Box>
+    <Accordion sx={{ bgcolor: 'transparent', color: '#fff' }}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}>
+        Employee
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography  sx={{ cursor: 'pointer' }}>Employee Overview</Typography>
+      </AccordionDetails>
+    </Accordion>
+
+    <Accordion sx={{ bgcolor: 'transparent', color: '#fff' }}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}>
+        Main
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography onClick={() => { navigate('/analytics'); setMobileOpen(false); }} sx={{ cursor: 'pointer' }}>Analytics Hub</Typography>
+        <Typography onClick={() => { navigate('/organizationchart'); setMobileOpen(false); }} sx={{ cursor: 'pointer' }}>Organization Chart</Typography>
+      </AccordionDetails>
+    </Accordion>
+
+    {/* <Accordion sx={{ bgcolor: 'transparent', color: '#fff' }}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}>
+        Information
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography onClick={() => { navigate('/bank'); setMobileOpen(false); }} sx={{ cursor: 'pointer' }}>Bank/PF/ESI</Typography>
+        <Typography onClick={() => { navigate('/familydetails'); setMobileOpen(false); }} sx={{ cursor: 'pointer' }}>Family Details</Typography>
+        <Typography onClick={() => { navigate('/positionhistory'); setMobileOpen(false); }} sx={{ cursor: 'pointer' }}>Position History</Typography>
+        <Typography onClick={() => { navigate('/previousemp'); setMobileOpen(false); }} sx={{ cursor: 'pointer' }}>Previous Employment</Typography>
+        <Typography onClick={() => { navigate('/separation'); setMobileOpen(false); }} sx={{ cursor: 'pointer' }}>Separation</Typography>
+        <Typography onClick={() => { navigate('/carddetails'); setMobileOpen(false); }} sx={{ cursor: 'pointer' }}>Access Card Details</Typography>
+        <Typography onClick={() => { navigate('/empdoc'); setMobileOpen(false); }} sx={{ cursor: 'pointer' }}>Employee Documents</Typography>
+      </AccordionDetails>
+    </Accordion> */}
+
+    <Accordion sx={{ bgcolor: 'transparent', color: '#fff' }}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}>
+        Admin
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography onClick={() => { navigate('/letter'); setMobileOpen(false); }} sx={{ cursor: 'pointer' }}>General Letter</Typography>
+        <Typography onClick={() => { navigate('/excelimport'); setMobileOpen(false); }} sx={{ cursor: 'pointer' }}>Excel Import</Typography>
+        <Typography onClick={() => { navigate('/bulletin'); setMobileOpen(false); }} sx={{ cursor: 'pointer' }}>Bulletin Board</Typography>
+        <Typography onClick={() => { navigate('/masscom'); setMobileOpen(false); }} sx={{ cursor: 'pointer' }}>Mass Communication</Typography>
+      </AccordionDetails>
+    </Accordion>
+
+    <Accordion sx={{ bgcolor: 'transparent', color: '#fff' }}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: '#fff' }} />}>
+        Setup
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography onClick={() => { navigate('/company'); setMobileOpen(false); }} sx={{ cursor: 'pointer' }}>Company Policies & Forms</Typography>
+      </AccordionDetails>
+    </Accordion>
+  </Box>
+</Drawer>
+
+
         {/* Page Content */}
         <Box p={3} pt={10}  >
-          <Box sx={{borderRadius: '5px',backgroundColor:'rgba(255,255,255,0.3)' , p:3, maxWidth: '1200px',mx: 'auto'}}>
+          <Box sx={{ p:3, maxWidth: '1200px',mx: 'auto'}}>
           {/* Breadcrumb and Filters in One Row */}
-          <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-            <Breadcrumbs aria-label="breadcrumb" separator=">" sx={{ '& .MuiBreadcrumbs-separator': {color: 'rgba(255,255,255,0.4)' } }}>
+          <Box
+  display="flex"
+  flexDirection={{ xs: 'column', sm: 'row' }}
+  justifyContent="space-between"
+  alignItems={{ xs: 'stretch', sm: 'center' }}
+  gap={2}
+  sx={{ mb: 2 }}
+>
+            <Breadcrumbs aria-label="breadcrumb" separator=">" sx={{ '& .MuiBreadcrumbs-separator': {color: 'rgba(255,255,255,0.4)' },fontSize:{xs:13,md:16} }}>
               <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>
-              <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" href="/updateemp">Employee</Link>
-              <Typography color="rgba(255,255,255,0.4)">{activeTab}</Typography>
+              <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/updateemp">Employee</Link>
+              <Typography color="rgba(255,255,255,0.4)" fontSize={{xs:12,md:16}}>{activeTab}</Typography>
             </Breadcrumbs>
 
             <Box display="flex" gap={2} alignItems="center">
               {/* Month Picker */}
+            <Box sx={{
+              display: 'flex',
+              alignItems: 'center',
+              border: '1px solid #ccc',
+              px: 2,
+              py:0.4,
+              borderRadius: 1,
+              bgcolor: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(8px)',
+              width: { xs: '150px', sm: '150px' } // for Month Picker
+            }}>
               <DatePicker
                 views={['year', 'month']}
-                open={monthPickerOpen}
-                onOpen={() => setMonthPickerOpen(true)}
-                onClose={() => setMonthPickerOpen(false)}
-                value={selectedMonth}
+                value={dayjs(payrollMonth, "MMM YYYY")}
                 onChange={(newValue) => {
-                  setSelectedMonth(newValue);
-                  setMonthPickerOpen(false);
+                  const formatted = dayjs(newValue).format("MMM YYYY");
+                  setPayrollMonth(formatted);
                 }}
-                renderInput={() => (
-                  <Button
-                    variant="outlined"
-                    startIcon={<CalendarMonthIcon />}
-                    onClick={() => setMonthPickerOpen(true)}
-                    sx={{ textTransform: 'none', fontWeight: 500 }}
-                  >
-                    Payroll Month: {selectedMonth.format("MMM 'YY")}
-                  </Button>
-                )}
+                slotProps={{
+                  textField: {
+                    variant: 'standard',
+                    fullWidth: true,
+                    InputLabelProps: { shrink: false },
+                    InputProps: {
+                      disableUnderline: true,
+                      sx: {
+                        fontSize: '12px',
+                        color: '#fff',
+                        '& .MuiSvgIcon-root': { color: '#fff' }
+                      }
+                    },
+                    inputProps: {
+                      style: {
+                        fontSize: '12px',
+                        padding: '6px 4px',
+                        color: '#fff'
+                      },
+                      placeholder: ''
+                    },
+                  },
+                }}
               />
+            </Box>
 
-              {/* Department with Icon */}
+            {/* Employee Type Dropdown */}
+            <Box sx={{
+              display: 'flex',
+              alignItems: 'center',
+              border: '1px solid #ccc',
+              px: 2,
+              borderRadius: 1,
+              bgcolor: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(8px)',
+              width: { xs: '100px', sm: 'auto' } // for Dropdown box
+            }}>
+              <GroupIcon sx={{ mr: 1, color: '#ddd' }} />
               <Select
-                size="small"
-                defaultValue="All"
-                displayEmpty
-                startAdornment={<GroupsIcon sx={{ color: 'action.active', mr: 1 }} />}
-                sx={{ minWidth: 120, backgroundColor: 'white' }}
+                value={employeeType}
+                onChange={(e) => setEmployeeType(e.target.value)}
+                variant="standard"
+                disableUnderline
+                sx={{ color: '#fff', '& .MuiSelect-icon': { color: '#fff' } }}
               >
-                <MenuItem value="No Options">No Options</MenuItem>
+                <MenuItem value="No Options" disabled>No Options</MenuItem>
               </Select>
             </Box>
+            </Box>
           </Box>
-
-          {/* Help Info */}
-          <Paper sx={{ p: 2, mb: 3, backgroundColor: '#e9f6fc' }}>
-            <Typography>
-              This page allows you to add/edit the profile details of an employee. The page helps you to keep the employee information up to date.
-            </Typography>
-            <Typography variant="body2" mt={1}>
-              Explore greyHR by <Link href="#">Help-Doc</Link>, watching <Link href="#">How-to Videos</Link> and <Link href="#">FAQ</Link>.
-            </Typography>
-          </Paper>
           </Box>
 
           {/* Search Section */}
-          <Paper sx={{ p: 3, display: 'flex', justifyContent: 'space-between',maxWidth: '1200px',mx: 'auto', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.3)', mt: 3 }}>
+          <Paper sx={{ p: 2, display: 'flex', justifyContent: 'space-between',maxWidth: '1100px',mx: 'auto', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.3)', mt: 3 }}>
             <Box width="100%" maxWidth="500px">
-              <Typography fontWeight="bold" fontSize="18px" mb={1} color="white">
+              <Typography fontWeight="bold" fontSize={{xs:12,md:18}} mb={1} color="white">
                 Start searching to see specific employee details here
               </Typography>
               <Box display="flex" alignItems="center" gap={1} mb={1}>
-              <Typography variant="body2" mb={1} color="white">
+              <Typography variant="body2" mb={1} color="white" fontSize={{xs:12,md:14}}>
                 Employee Type:  </Typography>
                 <Select
     value={employeeType}
@@ -534,6 +555,7 @@ const handleSendMessage = () => {
     disableUnderline
     sx={{
       color: 'white',
+       fontSize:{xs:12,md:14},
       backgroundColor: 'transparent',
       '& .MuiSelect-icon': { color: 'white' }
     }}
@@ -549,6 +571,11 @@ const handleSendMessage = () => {
   placeholder="Search by Emp No/ Name"
   variant="outlined"
   size="small"
+  value={searchQuery}
+  onChange={(e) => setSearchQuery(e.target.value)}
+  onKeyPress={(e) => {
+    if (e.key === 'Enter') handleEmployeeSearch();
+  }}
   InputProps={{
     startAdornment: (
       <InputAdornment position="start">
@@ -556,13 +583,14 @@ const handleSendMessage = () => {
       </InputAdornment>
     ),
     sx: {
-      width: 300,
+      width: {xs:200,md:300},
       color: 'white',
       '& input': {
         color: 'white',                         // Text color
         '::placeholder': {
           color: 'white',                       // Placeholder color
           opacity: 0.2,
+          fontSize:{xs:12,md:14}
         },
       },
       '& fieldset': {
@@ -597,116 +625,24 @@ const handleSendMessage = () => {
     }
   }}
 />
-
-            </Box>
-
-            <Box>
+</Box>
+          <Box>
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmxvVgUbUVuW7In4M3VxZYEuGl29BoYeO9QA&s"
                 alt="illustration"
-                width={180}
-                
+                style={{ maxWidth: '80%', height: 'auto' }}
               />
             </Box>
           </Paper>
         </Box>
+        {showInfo && (
+  <Box mt={1} maxWidth="1200px" mx="auto">
+    <Info  />
+  </Box>
+)}
+
       </Box>
-      
-{/* Chatbox Floating Button + Window */}
-<Box
-  sx={{
-    position: 'fixed',
-    bottom: 20,
-    left: 20,
-    zIndex: 1000,
-  }}
->
-  <Button
-    variant="contained"
-    color="primary"
-    onClick={() => setChatOpen((prev) => !prev)}
-    sx={{ borderRadius: '50%', minWidth: 0, width: 56, height: 56 }}
-  >
-    💬
-  </Button>
-
-  {chatOpen && (
-    <Paper
-      elevation={3}
-      sx={{
-        mt: 1,
-        width: 300,
-        height: 350,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        p: 2,
-        backgroundColor: 'white',
-      }}
-    >
-      <Typography variant="h6" fontSize="16px" fontWeight="bold" mb={1}>
-        Chat Support
-      </Typography>
-
-      <Box
-        sx={{
-          flex: 1,
-          overflowY: 'auto',
-          backgroundColor: '#f5f5f5',
-          borderRadius: 1,
-          p: 1,
-          mb: 1,
-        }}
-      >
-        {messages.length === 0 ? (
-          <Typography variant="body2" color="text.secondary">
-            Hi there! How can I help you?
-          </Typography>
-        ) : (
-          messages.map((msg, idx) => (
-            <Box
-              key={idx}
-              sx={{
-                backgroundColor: idx % 2 === 0 ? '#1976d2' : '#e0e0e0',
-                color: idx % 2 === 0 ? 'white' : 'black',
-                alignSelf: idx % 2 === 0 ? 'flex-end' : 'flex-start',
-                maxWidth: '75%',
-                px: 1.5,
-                py: 1,
-                borderRadius: 2,
-                mb: 1,
-              }}
-            >
-              <Typography variant="body2">{msg}</Typography>
-            </Box>
-          ))
-        )}
-      </Box>
-
-      <TextField
-        placeholder="Type a message..."
-        size="small"
-        variant="outlined"
-        fullWidth
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton size="small" color="primary" onClick={handleSendMessage}>
-                <SendIcon />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-      />
-    </Paper>
-  )}
-</Box>
-
-
-    </LocalizationProvider>
+</LocalizationProvider>
   );
 };
 

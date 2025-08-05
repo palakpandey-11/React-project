@@ -23,7 +23,7 @@ import {
 
 // Navbar menu definitions
 const menus = {
-  payrollInputs: ["Salary", "Loan", "Income Tax", "Reimbursement", "Employee LOP Days", "Stop Salary Processing", "Arrears", "Final Settlement"],
+  payrollInputs: ["Salary", "Loan", "Income Tax", "Arrears", "Final Settlement"],
   process: ["Payroll Process","CTC Payslip"],
   verify: ["Quick Salary Statement", "Payroll Statement"],
   payout: ["Bank Transfer", "Payslips"],
@@ -80,6 +80,8 @@ export default function Header({ onMenuItemClick = () => {}, /* …rest… */ })
               ? RouterLink
               :key ==="admin" &&["Form 16", "Form24Q", "Employee IT Declaration","POI Overview"].includes(item)
               ? RouterLink
+              :key === "process" && ["Payroll Process", "CTC Payslip"].includes(item)
+              ? RouterLink
               : undefined
           }
           to={
@@ -98,6 +100,7 @@ export default function Header({ onMenuItemClick = () => {}, /* …rest… */ })
               ? '/arrears'
               : key ==='payrollInputs' && item ==='Final Settlement'
               ? '/finalsettlement'
+              : key === "process" && item === "Payroll Process"?'/payrollprocess'
               : key === "admin" && item === "Form 16"?'/form16'
               : key === "admin" && item === "Form24Q"?'/form24q'
               : key === "admin" && item === "Employee IT Declaration"?'/employeeitdeclaration'

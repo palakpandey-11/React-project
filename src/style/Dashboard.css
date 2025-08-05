@@ -199,3 +199,30 @@ body {
   font-weight: bold;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3);
 }
+
+.card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+.card:nth-child(1) { animation-delay: 0.05s; }
+.card:nth-child(2) { animation-delay: 0.05s; }
+.card:nth-child(3) { animation-delay: 0.05s; }
+.card:nth-child(4) { animation-delay: 0.10s; }
+.card:nth-child(5) { animation-delay: 0.10s; }
+.card:nth-child(6) { animation-delay: 0.10s; }
+.card:nth-child(7) { animation-delay: 0.15s; }
+.card:nth-child(8) { animation-delay: 0.15s; }
+.card:nth-child(9) { animation-delay: 0.15s; }
+.card:nth-child(10) { animation-delay: 0.20s; }
+.card:nth-child(11) { animation-delay: 0.20s; }
+.card:nth-child(12) { animation-delay: 0.20s; }
+/* ... and so on or use JS to apply delay inline */
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

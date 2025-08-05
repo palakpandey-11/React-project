@@ -28,11 +28,8 @@ import PayArrears from "./component2/PayArrears.js";
 import FinalSettlement from "./component2/FinalSettlement.js";
 import SettleEmployee from "./component2/SettleEmployee.js";
 import QuickSalaryStatement from "./component2/QuickSalaryStatement.js";
-import ShrinkLossDashboard from "./component2/ShrinkLossDashboard.js";
 import BankTransfer from "./component2/BankTransfer.js";
 import PayrollStatement from "./component2/PayrollStatement.js";
-import ReturnLogistics from "./component2/ReturnLogistics.js";
-import InStore from "./component2/InStore.js";
 import FormSixteen from "./component2/FormSixteen.js";
 import ProceedBtn from "./component2/ProceedBtn.js";
 import GenerateForm16 from "./component2/GenerateForm16.js";
@@ -41,14 +38,35 @@ import Form24Q from "./component2/Form24Q.js";
 import ChallansPage from "./component2/ChallanPage.js";
 import EmployeeITDeclaration from "./component2/EmployeeITDeclaration.js";
 import POIOverview from "./component2/POIOverview.js";
+import OrganizationChart from './components2/OrganizationChart.js';
+import Bank from './components2/Bank.js';
+import FamilyDetails from './components2/FamilyDetails.js';
+import PositionHistory from './components2/PositionHistory.js';
+import PreviousEmp from './components2/PreviousEmp.js';
+import Separation from './components2/Separation.js';
+import CardDetails from './components2/CardDetails.js';
+import EmpDoc from './components2/EmpDoc.js';
+import Company from './components2/Company.js';
+import PolicyForm from './components2/PolicyForm.js';
+import Form from './components2/Form.js';
+import Letter from './components2/Letter.js';
+import PrepLetter from './components2/PrepLetter.js';
+import Edit from './components2/Edit.js';
+import ExcelImport from './components2/ExcelImport.js';
+import ImportExcel from './components2/ImportExcel.js';
+import Bulletin from './components2/Bulletin.js';
+import AddBulletin from './components2/AddBulletin.js';
+import MassCom from './components2/MassCom.js';
+import Compose from './components2/Compose.js';
+import AddEmp from './components2/AddEmp.js';
+import Info from './components2/Info.js';
+import PayrollProcess from "./component2/PayrollProcess.js";
+
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/shrinklossdashboard" element={<ShrinkLossDashboard/>} />
-         <Route path="/returns" element={<ReturnLogistics />} />
-         <Route path="/instore" element={<InStore/>} />
         <Route path="/" element={<Signup />} />
         <Route path="/forgotpass" element={<ForgotPass />} />
         <Route path="/reset" element={<Reset />} />
@@ -86,6 +104,29 @@ function App() {
         <Route path='/clientreport' element={<ClientReport />} />
         <Route path='/updateemp' element={<UpdateEmp />} />
         <Route path='/analytics' element={<Analytics />} />
+        <Route path='/organizationchart' element={<OrganizationChart />} />
+        <Route path='/bank' element={<Bank />} />
+        <Route path='/familydetails' element={<FamilyDetails />} />
+        <Route path='/positionhistory' element={<PositionHistory />} />
+        <Route path='/previousemp' element={<PreviousEmp />} />
+        <Route path='/separation' element={<Separation />} />
+        <Route path='/carddetails' element={<CardDetails />} />
+        <Route path='/empdoc' element={<EmpDoc />} />
+        <Route path='/company' element={<Company />} />
+        <Route path='/policyform' element={<PolicyForm />} />
+        <Route path='/form' element={<Form />} />
+        <Route path='/letter' element={<Letter />} />
+        <Route path='/prepletter' element={<PrepLetter />} />
+        <Route path='/edit' element={<Edit />} />
+        <Route path='/excelimport' element={<ExcelImport />} />
+        <Route path='/importexcel' element={<ImportExcel />} />
+        <Route path='/bulletin' element={<Bulletin />} />
+        <Route path='/addbulletin' element={<AddBulletin />} />
+        <Route path='/masscom' element={<MassCom />} />
+        <Route path='/compose' element={<Compose />} />
+        <Route path='/addemp' element={<AddEmp />} />
+        <Route path='/info' element={<Info />} />
+        <Route path="/payrollprocess" element={<PayrollProcess/>} />
       </Routes>
     </Router>
   );

@@ -272,8 +272,8 @@ export default function QuickSalaryStatement() {
 
             // header bar
             '& .MuiDataGrid-columnHeaders': {
-              bgcolor: 'rgba(92, 92, 92, 0.9)',
-              color: 'white',
+              bgcolor: 'rgba(23, 23, 23, 0.9)',
+              color: 'black',
             },
             // cells
             '& .MuiDataGrid-cell': {
@@ -292,8 +292,8 @@ export default function QuickSalaryStatement() {
     },
             // footer (pagination)
             '& .MuiDataGrid-footerContainer': {
-              bgcolor: 'rgba(110, 108, 108, 0.57)',
-              color: 'black',
+              bgcolor: 'rgba(110, 108, 108, 0.45)',
+              color: 'white',
             },
           }}
         />
