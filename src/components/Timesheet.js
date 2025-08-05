@@ -23,8 +23,8 @@ export default function Timesheet() {
 
 const data = [
   {
-    name: 'Dheeraj M',
-    id: '100245',
+    name: 'Palak ',
+    id: '10022',
     date: '01-12-2024',
     coding: 0,
     testing: 0,
@@ -68,10 +68,8 @@ const handleReset = () => {
       py: 1,
       
     }}>
-       
 
        <Typography variant="h5" className="reports-title" sx={{color:'white'}}>REPORTS</Typography>
-    
 
   <Box className="random" sx={{    
     display: 'flex',
@@ -154,9 +152,9 @@ const handleReset = () => {
       }}
     >
       {/* <MenuItem value="">Select</MenuItem> */}
-      <MenuItem value="Pranali - 100245">Pranali - 100245</MenuItem>
-      <MenuItem value="Palak - 100214">Palak - 100214</MenuItem>
-      <MenuItem value="Om - 100214">Om - 100235</MenuItem>
+      <MenuItem value="Pranali - 10021">Pranali - 10021</MenuItem>
+      <MenuItem value="Palak - 10022">Palak - 10022</MenuItem>
+      {/* <MenuItem value="Om - 100214">Om - 100235</MenuItem> */}
     </TextField>
 
    <LocalizationProvider dateAdapter={AdapterDayjs}>

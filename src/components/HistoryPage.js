@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import IconButton from '@mui/material/IconButton';
 
-
 const HistoryPage = () => {
   const navigate = useNavigate();
   const [history, setHistory] = useState([]);
@@ -100,13 +99,6 @@ const HistoryPage = () => {
               '& .MuiDataGrid-columnSeparator': {
                 display: 'none !important',
               },
-              // '& .MuiDataGrid-cell': {
-              //   display: 'flex',
-              //   alignItems: 'center',
-              //   justifyContent: 'center',
-              //   color: 'white',
-              //   textAlign: 'center',
-              // },
             }}
           />
         </>

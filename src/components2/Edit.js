@@ -226,7 +226,7 @@ const filteredEmployees = originalEmployees.filter((emp) =>
        
           {activeStep === 0 && (
             // Step 1: General
-            <Box display="flex" flexDirection="column" gap={1} sx={{ width:{xs:'400px',md:'500px'},backgroundColor:'rgba(48, 41, 41, 0.59)' ,p:2}}>
+            <Box display="flex" flexDirection="column" gap={1} sx={{ width:{xs:'400px',md:'500px'},backgroundColor:'rgba(48, 41, 41, 0.59)',border:'1px solid gray',borderRadius:'3px',p:2}}>
               {/* Letter Template */}
               <Box>
                 <Typography variant="body1" fontWeight="500" mb={1}sx={{color: 'white'}}>
@@ -327,7 +327,7 @@ const filteredEmployees = originalEmployees.filter((emp) =>
 
           {activeStep === 1 && (
             // Step 2: Select Employees (Styled Card)
-            <Box sx={{width: '400px', p:2,backgroundColor:'rgba(48, 41, 41, 0.59)'}}>
+            <Box sx={{width: '400px', p:2,backgroundColor:'rgba(48, 41, 41, 0.59)',border:'1px solid gray',borderRadius:'3px'}}>
             <Box
             display="flex"
             alignItems="center"
@@ -446,7 +446,7 @@ const filteredEmployees = originalEmployees.filter((emp) =>
           )}
              
              {activeStep === 3 && (
-        <Box sx={{width: '600px', p:2 ,backgroundColor:'rgba(48, 41, 41, 0.59)'}}>
+        <Box sx={{width: '600px', p:2 ,backgroundColor:'rgba(48, 41, 41, 0.59)',border:'1px solid gray',borderRadius:'3px'}}>
           <Typography variant="h6" gutterBottom sx={{color:'white'}}>
             Generate Letter Summary
           </Typography>
@@ -551,7 +551,7 @@ const filteredEmployees = originalEmployees.filter((emp) =>
       {/* Bottom Buttons */}
       <Divider sx={{ my: 1 }} />
       <Box display="flex" justifyContent="flex-end" gap={1}>
-        <Button variant="text" color="primary">
+        <Button variant="text" color="primary" onClick={()=>navigate('/letter')}>
           Cancel
         </Button>
         {activeStep > 0 && (

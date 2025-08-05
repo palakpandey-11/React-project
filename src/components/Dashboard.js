@@ -40,11 +40,11 @@ const closeImage = () => {
 
 const cards = [
   { title: 'OptiTime', image: time, route: '/timesheettable' },
-  { title: 'Reports', image: reports, route: '/reports' },
-  { title: 'Careers', image: careers, route: '/returnlogistics' },
-  { title: 'Learning', image: learn, route: '/shrink' },
+  { title: 'Reports', image: reports, route: '/reports', restrictedTo:  ['employee', 'manager'] },
+  { title: 'Careers', image: careers },
+  { title: 'Learning', image: learn},
   { title: 'Employee Dashboard', image: Empdash, route:'/welcome' },
-  { title: 'More Apps', image: more, route:'/instore' },
+  { title: 'More Apps', image: more },
   { title: 'Document Center', image: doc },
   { title: 'Testimonials', image: testimonials },
   { title: 'Feeds', image: feed },
@@ -63,9 +63,10 @@ const handleLogout = () => {
      <header className="dashboard-header">
   <div className="logo-name">WorkNexus</div>
         <div className="user-info">
-          <span className="role">
-  {user?.name || "Employee"}
-</span>
+          <div className="role">
+     <div className="name">{user?.name || "Employee"}</div>
+     <div className="empId">{user?.empId || ""}</div>
+</div>
           <span className="img"onClick={handleImageClick}  style={{
         backgroundImage: `url(${user?.image})`,
         backgroundSize: 'cover',
@@ -77,18 +78,20 @@ const handleLogout = () => {
         </div>
         </header>
     <div className="dashboard-container">
-        {cards.map((card, idx) => (
+        {cards.map((card, idx) => {
+          const isHidden = Array.isArray(card.restrictedTo) && card.restrictedTo.includes(user?.role);
+if (isHidden) return null;
+          return (
           <div className="card" 
           key={idx}  
-          onClick={() => {
-            if (card.route) navigate(card.route);
-          }}
+           onClick={() => card.route && navigate(card.route)}
           style={{ cursor: card.route ? 'pointer' : 'default' }}
         >
           <img src={card.image} alt={card.title} />
           <div className="title">{card.title}</div>
           </div>
-      ))}
+      );
+      })}
     </div>
     {isImageOpen && (
   <div className="image-modal">

@@ -30,6 +30,8 @@ const AddBulletin = () => {
   const navigate = useNavigate();  
   const [payrollMonth, setPayrollMonth] = useState(dayjs());
   const [employeeType, setEmployeeType] = useState('');   
+  const location = useLocation();
+  const bulletinData = location.state?.bulletin || null;
   const [openFilterDialog, setOpenFilterDialog] = useState(false);
   const [activeTab, setActiveTab] = useState('quick');
   const [category, setCategory] = useState('');
@@ -38,9 +40,22 @@ const AddBulletin = () => {
   const [expiryDate, setExpiryDate] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [postedDate, setPostedDate] = useState('');
   const [hide, setHide] = useState(false);
   const [file, setFile] = useState(null);
   const [employeeFilter, setEmployeeFilter] = useState('All Employees');
+
+  useEffect(() => {
+  if (bulletinData) {
+    setCategory(bulletinData.category || '');
+    setTitle(bulletinData.title || '');
+    setStartDate(dayjs().format('YYYY-MM-DD')); // Replace with real startDate if available
+    setExpiryDate(dayjs().format('YYYY-MM-DD')); // Replace with real expiryDate if available
+    setRank(bulletinData.rank || 0);
+    setContent(bulletinData.content || '');
+    // Add other fields if needed
+  }
+}, [bulletinData]);
 
   const [criteriaList, setCriteriaList] = useState([
   { id: Date.now(), field: '', condition: '' }
@@ -136,7 +151,7 @@ const AddBulletin = () => {
                   </Box>
                 </Box>
               </LocalizationProvider>    
-    <Box p={2} sx={{backgroundColor:'rgba(255, 255, 255, 0.66)',border:'1px solid gray',borderRadius:'5px',width: { xs: '90vw', sm: '80vw', md: '70vw' },m:'20px auto'}}>
+    <Box p={2} sx={{backgroundColor:'rgba(255, 255, 255, 0.58)',border:'1px solid gray',borderRadius:'5px',width: { xs: '90vw', sm: '80vw', md: '70vw' },m:'20px auto'}}>
       <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={1} >
         <Box flex={0.5} mr={2} color="white" >
           <InputLabel >Category</InputLabel>
@@ -170,7 +185,7 @@ const AddBulletin = () => {
 
           <Box mt={1}>
             <InputLabel>Expiry Date</InputLabel>
-            <TextField fullWidth size="small" type="date" value={expiryDate} onChange={(e) => setExpiryDate(e.target.value)} />
+            <TextField fullWidth size="small" type="date" value={expiryDate} onChange={(e) => {setExpiryDate(e.target.value); setPostedDate(e.target.value);}} />
           </Box>
         </Box>
 
@@ -224,7 +239,33 @@ const AddBulletin = () => {
       </Box>
 
       <Box mt={1}>
-        <Button variant="contained" sx={{ mr: 2 }}>Save</Button>
+        <Button variant="contained" sx={{ mr: 2 }}onClick={() => {
+  const newBulletin = {
+    id: bulletinData?.id || Date.now(),
+    category,
+    title,
+    startDate,
+    expiryDate,
+    rank,
+    content
+  };
+
+  const storedBulletins = JSON.parse(localStorage.getItem('bulletins') || '[]');
+
+  let updatedBulletins;
+  if (bulletinData) {
+    // Update existing bulletin
+    updatedBulletins = storedBulletins.map(b =>
+      b.id === bulletinData.id ? newBulletin : b
+    );
+  } else {
+    // Add new bulletin
+    updatedBulletins = [...storedBulletins, newBulletin];
+  }
+
+  localStorage.setItem('bulletins', JSON.stringify(updatedBulletins));
+  navigate('/bulletin');
+}}> {bulletinData ? 'Update' : 'Save'}</Button>
         <Button variant="outlined" onClick={()=> navigate('/bulletin')}>Close</Button>
       </Box>
     </Box>

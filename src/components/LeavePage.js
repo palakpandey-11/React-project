@@ -10,10 +10,9 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { DataGrid } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import IconButton from '@mui/material/IconButton';
+import { Snackbar, Alert } from '@mui/material';
 
 
 const LeavePage = () => {
@@ -29,6 +28,15 @@ const LeavePage = () => {
  //const [userGender, setUserGender] = useState("");
   //const user = useSelector(state => state.auth.user);
 //const userGender = user?.gender; // e.g. "male" or "female"
+
+const [toastState, setToastState] = useState({ show: false, message: "", type: "" });
+
+const triggerToast = (message, type) => {
+  setToastState({ show: true, message, type });
+  setTimeout(() => {
+    setToastState({ show: false, message: "", type: "" });
+  }, 1500);
+};
 
 
   const [history, setHistory] = useState(() => {
@@ -54,24 +62,24 @@ const LeavePage = () => {
 
   const handleApply = () => {
     if (!startDate || !endDate || !leaveType || !applyTo) {
-      toast.error("Please fill all fields.");
+      triggerToast("Please fill all fields.", "error");
       return;
     }
 
     if (leaveType === "Maternity Leave" && userGender !== "female") {
-    toast.error("Maternity Leave can only be applied by female employees.");
+    triggerToast("Maternity Leave can only be applied by female employees.", "error");
     return;
   }
 
   if (dayjs(endDate).isBefore(dayjs(startDate).startOf('day'))) {
-  toast.error("End date cannot be before start date.");
+  triggerToast("End date cannot be before start date.", "error");
   return;
 }
 
    const newEntry = {
     id: Date.now(), // unique ID
-    empId: "100214",
-    name: "Palak P", // 👈 Add employee name
+    empId: "10022",
+    name: "Palak", // 👈 Add employee name
     leaveType,
     startDate: dayjs(startDate).format('DD-MM-YYYY'),
     endDate: dayjs(endDate).format('DD-MM-YYYY'),
@@ -91,7 +99,7 @@ const LeavePage = () => {
     localStorage.setItem("leaveApprovals", JSON.stringify(approvals));
 
     handleClear();
-    toast.success("Leave applied successfully!");
+    triggerToast("Leave applied successfully!", "success");
   };
 
 
@@ -111,7 +119,6 @@ const LeavePage = () => {
             <Button variant={showHistory ? "outlined" : "contained"} color="primary">APPLY</Button>
             <Button variant={showHistory ? "contained" : "outlined"} className="history-button" onClick={() => navigate('/history')}>HISTORY</Button>
           </Box>
-
 
             <Box className="leave-content">
               <Box className="left-panel">
@@ -156,7 +163,7 @@ const LeavePage = () => {
                         color: 'white',
                         fontSize: '1rem',
                         width: 40,
-                        height: 40,
+                        height: 35,
                       },
                       '.Mui-selected': {
                         backgroundColor: '#1976d2',
@@ -214,6 +221,7 @@ const LeavePage = () => {
                       label="Start Date"
                       value={startDate}
                       onChange={(newValue) => setStartDate(newValue)}
+                      format="DD-MM-YYYY"
                       enableAccessibleFieldDOMStructure={false}
                       slots={{
                         openPickerIcon: () => null,
@@ -233,6 +241,7 @@ const LeavePage = () => {
                       label="End Date"
                       value={endDate}
                       onChange={(newValue) => setEndDate(newValue)}
+                      format="DD-MM-YYYY"
                       enableAccessibleFieldDOMStructure={false}
                       slots={{
                         openPickerIcon: () => null,
@@ -272,7 +281,21 @@ const LeavePage = () => {
               </Card>
             </Box>
         </Box>
-        <ToastContainer position="top-right" autoClose={3000} />
+        <Snackbar
+  open={toastState.show}
+  autoHideDuration={3000}
+  onClose={() => setToastState({ show: false, message: "", type: "" })}
+  anchorOrigin={{ vertical: "top", horizontal: "right" }}
+>
+  <Alert
+    onClose={() => setToastState({ show: false, message: "", type: "" })}
+    severity={toastState.type}
+    variant="filled"
+    sx={{ width: "100%" }}
+  >
+    {toastState.message}
+  </Alert>
+</Snackbar>
       </Box>
     </Box>
   );

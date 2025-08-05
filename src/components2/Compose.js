@@ -1,20 +1,5 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Tabs,
-  Tab,
-  TextField,
-  Typography,
-  Button,
-  MenuItem,
-  Select,
-  InputLabel,
-  FormControl,
-  Grid,
-  IconButton,
-  Breadcrumbs,
-  Link,
-} from "@mui/material";
+import {Box,Tabs,Tab,TextField,Typography,Button,MenuItem,Select,InputLabel,FormControl,Grid,IconButton,Breadcrumbs,Link,} from "@mui/material";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Link as RouterLink } from 'react-router-dom';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -251,7 +236,6 @@ const Compose = () => {
     },
   }}
             />
-
             <Typography variant="caption" color="error"  display="block">
               Note: Please do not change the [EMP_NAME_AND_NUMBER] tag. This tag will be replaced with the employee name and number while sending the mail.
             </Typography>

@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
-import {IconButton,useTheme, useMediaQuery, Dialog} from  '@mui/material';
+import {
+  IconButton,
+  useTheme,
+  useMediaQuery,
+  Dialog,
+  DialogTitle,
+  DialogContent
+} from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import { flexWrap, height } from '@mui/system';
-import { useNavigate } from 'react-router-dom';
+import FilterAltIcon    from '@mui/icons-material/FilterAlt';
+import CloseIcon        from '@mui/icons-material/Close';      // ← add this
+import InStore          from './InStore';
 import ReturnLogistics  from './ReturnLogistics';
-import InStore from './InStore';
+import { useNavigate }  from 'react-router-dom';
+
 
 const ShrinkLossDashboard = () => {
   const [region, setRegion] = useState('');
@@ -19,7 +27,7 @@ const navigate    = useNavigate();
   const handleOpenReturn  = () => setOpenReturn(true);
   const handleCloseReturn = () => {
     setOpenReturn(false);
-    navigate('/shrink');           // <- ensure URL is back to dashboard
+    navigate('/shrinklossdashboard');           // <- ensure URL is back to dashboard
   };
 
   // **in‑store modal** state & handlers (new)
@@ -310,7 +318,7 @@ const theme = useTheme();
   leftBottom: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '16px',
+    gap: '10px',
     flex: 1
   },
 
@@ -357,7 +365,7 @@ const theme = useTheme();
   causesList: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '8px'
+    gap: '5px'
   },
   causeItem: {
     display: 'flex',
@@ -439,6 +447,7 @@ const theme = useTheme();
     borderRadius: '20px'
   }
   };
+  
 
   return (
     <div style={{
@@ -449,18 +458,34 @@ const theme = useTheme();
       }}>
 
       {/* Filters Section */}
-      <div style={styles.filtersSection}>
+      <div style={{
+    ...styles.filtersSection,
+    display: 'flex',
+    flexWrap: isMobile ? 'wrap' : 'nowrap',
+    gap: isMobile ? '8px' : '16px',
+    alignItems: 'center'
+  }}>
         <IconButton sx={{ color: 'black', mr:'auto' }}>
         <ArrowBackIosIcon />
         </IconButton>
-        <div style={styles.filtersRow}>
-        <IconButton sx={{ color: 'black', mr:'auto' }}>
+        <div style={{
+      ...styles.filtersRow,
+      display: 'flex',
+      flexWrap: isMobile ? 'wrap' : 'nowrap',
+      gap: isMobile ? '8px' : '12px',
+      alignItems: 'center'
+    }}>
+        <IconButton sx={{ color: 'black'}}>
         <FilterAltIcon />
         </IconButton>          
           <select 
             value={region} 
             onChange={(e) => setRegion(e.target.value)}
-            style={styles.filterSelect}
+            style={{
+        ...styles.filterSelect,
+        flex: '1 1 160px',
+        minWidth: '120px'
+      }}
           >
             <option value="">Region</option>
             <option value="west">West</option>
@@ -471,7 +496,11 @@ const theme = useTheme();
           <select 
             value={store} 
             onChange={(e) => setStore(e.target.value)}
-            style={styles.filterSelect}
+            style={{
+        ...styles.filterSelect,
+        flex: '1 1 150px',
+        minWidth: '120px'
+      }}
           >
             <option value="">Store</option>
             {stores.map((storeOption, index) => (
@@ -482,7 +511,8 @@ const theme = useTheme();
           <select 
             value={timePeriod} 
             onChange={(e) => setTimePeriod(e.target.value)}
-            style={styles.filterSelect}
+            style={{...styles.filterSelect,flex: '1 1 200px',
+        minWidth: '140px'}}
           >
             <option value="">Time Period</option>
             <option value="week">This Week</option>
@@ -493,7 +523,8 @@ const theme = useTheme();
           <select 
             value={skuCategory} 
             onChange={(e) => setSkuCategory(e.target.value)}
-            style={styles.filterSelect}
+            style={{...styles.filterSelect,flex: '1 1 200px',
+        minWidth: '140px'}}
           >
             <option value="">SKU Category</option>
             <option value="dairy">Dairy</option>
@@ -504,7 +535,11 @@ const theme = useTheme();
           <select 
             value={shrinkCategory} 
             onChange={(e) => setShrinkCategory(e.target.value)}
-            style={styles.filterSelect}
+           style={{
+        ...styles.filterSelect,
+        flex: '1 1 200px',
+        minWidth: '140px'
+      }}
           >
             <option value="">Shrink Category</option>
             <option value="damage">Damage</option>
@@ -512,13 +547,36 @@ const theme = useTheme();
             <option value="expiry">Expiry</option>
           </select>
           
-          <button style={styles.applyBtn}>Apply</button>
-          <button style={styles.clearBtn} disabled>Close</button>
+          <button style={{
+        ...styles.applyBtn,
+        flex: '1 1 120px',
+        minWidth: '100px'
+      }}
+    >
+      Apply
+    </button>
+    <button
+      style={{
+        ...styles.clearBtn,
+        flex: '1 1 120px',
+        minWidth: '100px'
+      }}
+      disabled
+    >
+      Close
+    </button>
         </div>
       </div>
 
      {/* Alert Banner */}
-      <div style={styles.alertBanner}>
+      <div  style={{
+    ...styles.alertBanner,
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: isMobile ? 'center' : 'flex-start',
+    textAlign: isMobile ? 'center' : 'left',
+    gap: '8px'
+  }}>
         <span>⚠</span>
         Mars is experiencing prices in frozen desserts and ice cream by 4% | Sales down in Fragrance by 2%
       </div>
@@ -692,6 +750,7 @@ const theme = useTheme();
       <Dialog
         open={openInStore}
         onClose={handleCloseInStore}
+        scroll="paper" 
         BackdropProps={{
           sx: {
             backdropFilter: 'blur(6px)',
@@ -708,8 +767,36 @@ const theme = useTheme();
         fullWidth
         maxWidth="lg"
       >
-        <InStore onClose={handleCloseInStore} />
-      </Dialog>
+        <DialogTitle
+    sx={{
+      backgroundColor: 'rgba(255,255,255,0.9)',
+      position: 'sticky',
+      top: 0,
+      zIndex: 10,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between'
+    }}
+  >
+    In‑Store/Shelf Replenishment & Display
+    <IconButton size="small" onClick={handleCloseInStore}>
+      <CloseIcon fontSize="small" />
+    </IconButton>
+  </DialogTitle>
+
+  {/* this area scrolls */}
+  <DialogContent
+    dividers
+    sx={{
+      p: 0,
+      maxHeight: '80vh',          // adjust so it never overflows viewport
+      overflowY: 'auto',
+      backgroundColor: 'rgba(255,255,255,0.9)'
+    }}
+  >
+    <InStore onClose={handleCloseInStore} />          {/* extract the contents of your InStore box here */}
+  </DialogContent>
+</Dialog>
 
         </div>  
   );

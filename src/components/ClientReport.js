@@ -125,10 +125,9 @@ return (
     },
   }}
 >
-  <MenuItem value="">Select Employee</MenuItem>
-  <MenuItem value="Abhishek S - 100248">Abhishek S - 100248</MenuItem>
-  <MenuItem value="Dheeraj M - 100245">Dheeraj M - 100245</MenuItem>
-  <MenuItem value="Palak P - 100214">Palak P - 100214</MenuItem>
+  <MenuItem value="" disabled>Select Employee</MenuItem>
+  <MenuItem value="Pranali- 10021">Pranali- 10021</MenuItem>
+  <MenuItem value="Palak - 10022">Palak - 10022</MenuItem>
 </TextField>
 
 {/* Month Picker */}

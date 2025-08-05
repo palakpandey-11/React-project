@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -25,25 +25,24 @@ import dayjs from 'dayjs';
 import GroupIcon from '@mui/icons-material/Group';
 import { useNavigate } from 'react-router-dom';
 
+
 const Bulletin = () => {
   const navigate = useNavigate();
   const [payrollMonth, setPayrollMonth] = useState(dayjs());
   const [employeeType, setEmployeeType] = useState('');    
   const [status, setStatus] = useState('Open');
-  const bulletins = [
-    {
-      category: 'General',
-      title: 'Food Coupons',
-      postedDate: '23 Sep 2024',
-      rank: 0,
-    },
-    {
-      category: 'General',
-      title: 'Savings Declaration Update',
-      postedDate: '23 Sep 2024',
-      rank: 0,
-    },
-  ];
+  const [bulletins, setBulletins] = useState([]);
+  useEffect(() => {
+  const stored = JSON.parse(localStorage.getItem('bulletins') || '[]');
+  setBulletins(stored);
+}, []);
+
+const handleDelete = (id) => {
+  const updatedBulletins = bulletins.filter(bulletin => bulletin.id !== id);
+  setBulletins(updatedBulletins); // Update UI
+  localStorage.setItem('bulletins', JSON.stringify(updatedBulletins)); // Update storage
+};
+
 
   return (
     <Box p={2} sx={{ backgroundColor: 'transparent', maxHeight: '100vh' }}>
@@ -169,13 +168,13 @@ const Bulletin = () => {
               <TableRow key={idx} >
                 <TableCell>{row.category}</TableCell>
                 <TableCell>{row.title}</TableCell>
-                <TableCell>{row.postedDate}</TableCell>
+                <TableCell>{row.expiryDate}</TableCell>
                 <TableCell>{row.rank}</TableCell>
                 <TableCell align="center">
                   <IconButton size="small" color="primary" onClick={() => navigate('/addbulletin', { state: { bulletin: row } })}>
                     <EditIcon fontSize="small" />
                   </IconButton>
-                  <IconButton size="small" color="error">
+                  <IconButton size="small" color="error" onClick={() => handleDelete(row.id)}>
                     <DeleteIcon fontSize="small" />
                   </IconButton>
                 </TableCell>

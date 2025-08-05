@@ -24,6 +24,7 @@ import { saveAs } from 'file-saver';
 import { Tooltip } from '@mui/material';
 import jsPDF from 'jspdf';
 
+
 const Letter = () => {
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [rowToDelete, setRowToDelete] = useState(null);
@@ -228,9 +229,9 @@ const Letter = () => {
           Using greytHR, efficiently generate and publish employee letters in just a few minutes—
           <strong>streamlining your process and saving time.</strong>
         </Typography>
-        {/* <Button variant="contained" color="primary" sx={{ ml: 'auto' }} onClick={() => navigate('/prepletter')}>
+        <Button variant="contained" color="primary" sx={{ ml: 'auto' }} onClick={() => navigate('/edit')}>
           Prepare Letter
-        </Button> */}
+        </Button>
       </Paper>
 
     <Box sx={{border: '2px solid white', backgroundColor: 'rgba(53, 49, 49, 0.63)', p: 1}}>

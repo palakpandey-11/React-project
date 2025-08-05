@@ -31,6 +31,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 const TimesheetTable = ({ empID, projectId }) => {
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
   const [codingValues, setCodingValues] = useState([0, 0, 0, 0, 0, 0, 0]);
   const [testingValues, setTestingValues] = useState([0, 0, 0, 0, 0, 0, 0]);
   const [devopsValues, setDevopsValues] = useState([0, 0, 0, 0, 0, 0, 0]);
@@ -1358,6 +1359,7 @@ const TimesheetTable = ({ empID, projectId }) => {
           <ArrowBackIosIcon fontSize="30" />
         </IconButton>
 
+{user?.role !== "employee" && (
         <Button
           variant="outlined"
           className="sidebar-button"
@@ -1369,6 +1371,7 @@ const TimesheetTable = ({ empID, projectId }) => {
         >
           APPROVALS
         </Button>
+)}
         <Button variant="outlined" 
         className="sidebar-button"
         onClick={() => navigate("/leaveReconcilation")}

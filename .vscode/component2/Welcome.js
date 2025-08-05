@@ -32,10 +32,10 @@ export default function Welcome() {
 
   const favouriteItems = [
     { title: 'Update Employee Data', icon: PersonIcon, color: 'primary.main',  route: '/updateemp' },
-    { title: 'Add Employee', icon: PersonIcon, color: 'primary.main',  route: '/addemp' },
+    { title: 'Add Employee', icon: PersonIcon, color: 'primary.main' },
     { title: 'Update Payroll Data', icon: StorageIcon, color: 'warning.main', route:"/updatepayroll" },
-    { title: 'Process Payroll', icon: CreditCardIcon, color: 'warning.main',  route:"/updatepayroll" },
-    { title: 'Salary statement for a month', icon: StorageIcon, color: 'warning.main',  route:"/updatepayroll" },
+    { title: 'Process Payroll', icon: CreditCardIcon, color: 'warning.main' },
+    { title: 'Salary statement for a month', icon: StorageIcon, color: 'warning.main' },
   ];
 
   return (
@@ -65,7 +65,7 @@ export default function Welcome() {
           <Box>
             <IconButton sx={{ color: 'white' }}><SearchIcon /></IconButton>
             <IconButton sx={{ color: 'white' }}><SettingsIcon /></IconButton>
-            <IconButton sx={{ color: 'error.light' }} onClick={()=> navigate('/dashboard')}><LogoutIcon /></IconButton>
+            <IconButton sx={{ color: 'error.light' }}><LogoutIcon /></IconButton>
           </Box>
         </Toolbar>
       </AppBar>

@@ -20,6 +20,24 @@ import Timesheet from './components/Timesheet.js';
 import ClientReport from './components/ClientReport.js';
 import UpdateEmp from './components2/UpdateEmp.js';
 import Analytics from './components2/Analytics.js';
+import SalaryUpdate from "./component2/SalaryUpdate.js";
+import LoanInput from "./component2/LoanInput.js";
+import IncomeTax from "./component2/IncomeTax.js";
+import Arrears from "./component2/Arrears.js";
+import PayArrears from "./component2/PayArrears.js";
+import FinalSettlement from "./component2/FinalSettlement.js";
+import SettleEmployee from "./component2/SettleEmployee.js";
+import QuickSalaryStatement from "./component2/QuickSalaryStatement.js";
+import BankTransfer from "./component2/BankTransfer.js";
+import PayrollStatement from "./component2/PayrollStatement.js";
+import FormSixteen from "./component2/FormSixteen.js";
+import ProceedBtn from "./component2/ProceedBtn.js";
+import GenerateForm16 from "./component2/GenerateForm16.js";
+import VarifyPartA from "./component2/VarifyPartA.js"
+import Form24Q from "./component2/Form24Q.js";
+import ChallansPage from "./component2/ChallanPage.js";
+import EmployeeITDeclaration from "./component2/EmployeeITDeclaration.js";
+import POIOverview from "./component2/POIOverview.js";
 import OrganizationChart from './components2/OrganizationChart.js';
 import Bank from './components2/Bank.js';
 import FamilyDetails from './components2/FamilyDetails.js';
@@ -32,11 +50,7 @@ import Company from './components2/Company.js';
 import PolicyForm from './components2/PolicyForm.js';
 import Form from './components2/Form.js';
 import Letter from './components2/Letter.js';
-import PrepLetter from './components2/PrepLetter.js';
 import Edit from './components2/Edit.js';
-import ReturnLogistics from './component3/ReturnLogistics.js';
-import Shrink from './component3/Shrink.js';
-import InStore from './component3/InStore.js';
 import ExcelImport from './components2/ExcelImport.js';
 import ImportExcel from './components2/ImportExcel.js';
 import Bulletin from './components2/Bulletin.js';
@@ -45,6 +59,7 @@ import MassCom from './components2/MassCom.js';
 import Compose from './components2/Compose.js';
 import AddEmp from './components2/AddEmp.js';
 import Info from './components2/Info.js';
+import Navbar from './components2/Navbar.js';
 
 function App() {
   return (
@@ -56,6 +71,24 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/updatepayroll" element={<UpdatePayrollData />} />
+        <Route path="/salary" element={<SalaryUpdate/>} />
+        <Route path='/loan' element={<LoanInput/>} />
+        <Route path='/incometax' element={<IncomeTax/>} />
+        <Route path='/arrears'element={<Arrears/>} />
+        <Route path='/arrears/payarrears' element={< PayArrears/>} />
+        <Route path='/finalsettlement' element={<FinalSettlement/>} />
+        <Route path='/finalsettlement/settleEmployee' element={<SettleEmployee/>} />
+        <Route path="/quickSalary" element={<QuickSalaryStatement/>} />
+        <Route path="/payrollstatement" element={<PayrollStatement/>} />
+        <Route path="/banktransfer" element={<BankTransfer/>}/>
+        <Route path="/form16" element={<FormSixteen />}/>
+        <Route path="/form16/procced" element={<ProceedBtn/>} />
+        <Route path="/form16/generateForm" element={<GenerateForm16 />} />
+        <Route path="/form16/verify-part-a" element={<VarifyPartA/>} />
+        <Route path="/form24q" element={< Form24Q />} />
+        <Route path="/form24q/challans" element={<ChallansPage/>}/>
+        <Route path="/employeeitdeclaration" element={<EmployeeITDeclaration/>}/>
+        <Route path="/poioverview" element={<POIOverview/>} />
         <Route path="/timesheettable" element={<TimesheetTable />} />
         <Route path="/holidaycalendar" element={<HolidayCalendar />} />
         <Route path="/leavepage" element={<LeavePage />} />
@@ -81,11 +114,7 @@ function App() {
         <Route path='/policyform' element={<PolicyForm />} />
         <Route path='/form' element={<Form />} />
         <Route path='/letter' element={<Letter />} />
-        <Route path='/prepletter' element={<PrepLetter />} />
         <Route path='/edit' element={<Edit />} />
-        <Route path='/returnlogistics' element={<ReturnLogistics />} />
-        <Route path='/shrink' element={<Shrink />} />
-        <Route path='/instore' element={<InStore />} />
         <Route path='/excelimport' element={<ExcelImport />} />
         <Route path='/importexcel' element={<ImportExcel />} />
         <Route path='/bulletin' element={<Bulletin />} />
@@ -94,6 +123,7 @@ function App() {
         <Route path='/compose' element={<Compose />} />
         <Route path='/addemp' element={<AddEmp />} />
         <Route path='/info' element={<Info />} />
+        <Route path='/navbar' element={<Navbar />} />
       </Routes>
     </Router>
   );
