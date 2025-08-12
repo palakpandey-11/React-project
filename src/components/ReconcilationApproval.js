@@ -24,9 +24,7 @@ import SearchIcon from '@mui/icons-material/Search'
 
 // sample data for Reconciliation tab
 const reconSampleRows = [
-  { id: 100214, name: 'om', reason: 'Forgot to enter time', date: '17-10-2024', status: 'Pending' },
-  { id: 100218, name: 'palak',     reason: 'fgh',                 date: '16-10-2024', status: 'Pending' },
-  { id: 100146, name: 'pranali',reason: 'okkkk fill',          date: '16-10-2024', status: 'Pending' },
+    { id: 100146, name: 'pranali',reason: 'okkkk fill',          date: '16-10-2024', status: 'Pending' },
   // …add more as needed…
 ]
 
@@ -71,6 +69,37 @@ useEffect(() => {
         : [...prev, id]
     )
   }
+
+  const handleStatusChange = (newStatus) => {
+  // Get existing history
+  const existingHistory = JSON.parse(localStorage.getItem("leaveHistory") || "[]");
+
+  // Update selected rows with new status
+  const updatedRows = allRows
+    .filter((row) => selected.includes(row.id))
+    .map((row) => ({
+      ...row,
+      status: newStatus,
+      empId: row.empID || row.empId || row.id,  // ensure key match
+      leaveType: "Reconciliation",              // optional: mark it
+      startDate: row.date || "",                // map date if needed
+      endDate: row.date || "",
+      balance: "-",                             // or keep it blank if not relevant
+    }));
+
+  // Add updated rows to leaveHistory
+  const newHistory = [...existingHistory, ...updatedRows];
+  localStorage.setItem("leaveHistory", JSON.stringify(newHistory));
+
+  // Remove updated rows from reconciliationData
+  const remainingRecon = reconRows.filter((row) => !selected.includes(row.id));
+  localStorage.setItem("reconciliationData", JSON.stringify(remainingRecon));
+  setReconRows(remainingRecon);
+
+  // Clear selection
+  setSelected([]);
+};
+
 
   return (
     <div style={{ position: 'relative', textAlign: 'center', color: 'white', fontFamily: 'Arial', paddingTop: 16 }}>
@@ -155,7 +184,7 @@ useEffect(() => {
             <Button
               variant="outlined"
               disabled={!selected.length}
-              onClick={() => {/* TODO: reconciliation-approve */}}
+              onClick={() => handleStatusChange("Approved")}
                 sx={{
                   color: 'white',
                   borderColor: 'rgba(255,255,255,0.5)',
@@ -176,7 +205,7 @@ useEffect(() => {
             <Button
               variant="outlined"
               disabled={!selected.length}
-              onClick={() => {/* TODO: reconciliation-reject */}}
+              onClick={() => handleStatusChange("Rejected")}
                 sx={{
                   color: 'white',
                   borderColor: 'rgba(255,255,255,0.5)',
@@ -228,7 +257,7 @@ useEffect(() => {
              }}
                   />
                 </TableCell>
-                {['EmployeeId','EmployeeName','Reason','Date','Status'].map(h => (
+                {['Employee ID','Employee Name','Reason','Date','Status'].map(h => (
                   <TableCell key={h} sx={{ color: 'white', fontWeight: 'bold', backgroundColor: 'rgba(0,0,0,0.3)', py:1.5, px:2 }}>
                     {h}
                   </TableCell>
@@ -261,7 +290,7 @@ useEffect(() => {
                  }}
                       />
                     </TableCell>
-                    <TableCell sx={{ color: 'white', py:1.3, px:2 }}>{row.id}</TableCell>
+                    <TableCell sx={{ color: 'white', py:1.3, px:2 }}>{row.empID}</TableCell>
                     <TableCell sx={{ color: 'white', py:1.3, px:2 }}>{row.name}</TableCell>
                     <TableCell sx={{ color: 'white', py:1.3, px:2 }}>{row.reason}</TableCell>
                     <TableCell sx={{ color: 'white', py:1.3, px:2 }}>{row.date}</TableCell>

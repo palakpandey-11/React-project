@@ -146,7 +146,7 @@ export default function EmployeeITDeclaration() {
           separator=">"
           sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.5)' } }}
         >
-          <MuiLink component={RouterLink} to="/" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+          <MuiLink component={RouterLink} to="/welcome" sx={{ color: 'rgba(255,255,255,0.7)' }}>
             Home
           </MuiLink>
           <MuiLink component={RouterLink} to="/updatepayroll" sx={{ color: 'rgba(255,255,255,0.7)' }}>
@@ -157,6 +157,16 @@ export default function EmployeeITDeclaration() {
           </Typography>
         </Breadcrumbs>
  </Box>
+
+ <Box sx={{
+  maxWidth:1000,
+  width:'100%',
+  mx:'auto',
+  pt:2,
+  pb:3
+ }}>
+
+
         <Tabs
           value={tabIndex}
           onChange={(e,v) => setTabIndex(v)}
@@ -374,6 +384,7 @@ export default function EmployeeITDeclaration() {
           IT Declaration release options saved successfully
         </Alert>
       </Snackbar>
+       </Box>
     </>
   );
 }

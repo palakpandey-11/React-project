@@ -69,6 +69,17 @@ export default function POIOverview() {
         </Breadcrumbs>
       </Box>
 
+
+<Box 
+sx={{
+  maxWidth:1000,
+  width:'100%',
+  mx:'auto',
+  pt:2,
+  pb:3
+}}>
+
+
       {/* Year selector & tools */}
       <Box
         sx={{
@@ -306,6 +317,7 @@ export default function POIOverview() {
             Submit
           </Button>
         </Box>
+      </Box>
       </Box>
     </>
   );

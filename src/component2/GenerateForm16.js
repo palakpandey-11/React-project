@@ -40,7 +40,7 @@ export default function GenerateForm16() {
       {/* Breadcrumbs */}
       <Box sx={{ p: 2, bgcolor: 'rgba(10,20,40,0.8)' }}>
         <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.5)' } }}>
-          <MuiLink component={RouterLink} to="/" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+          <MuiLink component={RouterLink} to="/welcome" sx={{ color: 'rgba(255,255,255,0.7)' }}>
             Home
           </MuiLink>
           <MuiLink component={RouterLink} to="/updatepayroll" sx={{ color: 'rgba(255,255,255,0.7)' }}>
@@ -55,12 +55,18 @@ export default function GenerateForm16() {
         </Breadcrumbs>
       </Box>
 
+      <Box sx={{maxWidth:1200,
+        width:'100%',
+        mx:'auto',
+        pt:2,
+        pb:3 }}>  
+
       {/* Stepper bar */}
       <Paper
         elevation={0}
         sx={{
           mx: 2,
-          mt: 2,
+          mt: 1,
           px: 3,
           py: 2,
           bgcolor: 'rgba(255,255,255,0.05)',
@@ -88,7 +94,7 @@ export default function GenerateForm16() {
       </Paper>
 
       {/* Content */}
-      <Box sx={{ mx: 2, mt: 3, color: '#fff' }}>
+      <Box sx={{ mx: 2, mt: 1, color: '#fff' }}>
         <Typography variant="h6" gutterBottom>
           Step 1: UPLOAD PART A
         </Typography>
@@ -98,7 +104,7 @@ export default function GenerateForm16() {
           severity="warning"
           iconMapping={{ warning: <InfoOutlinedIcon /> }}
           sx={{
-            mb: 3,
+           
             color: '#bf360c',
             bgcolor: 'rgba(237, 234, 234, 0.58)',
             '& .MuiAlert-icon': { color: '#bf360c' },
@@ -152,8 +158,8 @@ export default function GenerateForm16() {
         <Paper
           variant="outlined"
           sx={{
-            mt: 4,
-            p: 2,
+            mt: 1,
+            p: 1,
             bgcolor: 'rgba(255,255,255,0.08)',
             borderColor: 'rgba(255,255,255,0.3)',
           }}
@@ -292,6 +298,7 @@ export default function GenerateForm16() {
             </Button>
           </Box>
         </Box>
+      </Box>
       </Box>
     </>
   );

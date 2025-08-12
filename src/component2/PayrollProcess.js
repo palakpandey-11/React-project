@@ -54,7 +54,7 @@ export default function PayrollProcess() {
         >
           <MuiLink
             component={RouterLink}
-            to="/"
+            to="/welcome"
             sx={{ color: "rgba(255,255,255,0.7)", textDecoration: "none" }}
           >
             Home

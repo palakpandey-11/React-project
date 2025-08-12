@@ -57,8 +57,6 @@ const COMPONENTS = [
 ];
 
 export default function SalaryUpdate() {
-  const theme = useTheme();
-  const [anchorEl, setAnchorEl] = useState({});
 const [activeTab, setActiveTab] = useState('');
   const [employeeType, setEmployeeType] = useState("Current");
   const [employee, setEmployee] = useState(null);
@@ -86,11 +84,6 @@ const [activeTab, setActiveTab] = useState('');
     });
     return groups;
   }, [filteredComponents]);
-
-  const handleOpen = (key) => (e) =>
-    setAnchorEl((prev) => ({ ...prev, [key]: e.currentTarget }));
-  const handleClose = (key) => () =>
-    setAnchorEl((prev) => ({ ...prev, [key]: null }));
 
   const toggleGroup = (group) => {
     setExpandedGroups((prev) => ({
@@ -135,7 +128,14 @@ const [activeTab, setActiveTab] = useState('');
       </Box>
 
       {/* Main Content */}
-      <Box sx={{ p: 3 }}>
+      <Box sx={{
+    maxWidth: 900,
+    width: '100%',
+    mx: 'auto',
+    p: 3,
+    px: { xs: 2, md: 3 },
+    mt: 2
+  }}>
         <Paper
           sx={{
             p: 4,
@@ -396,9 +396,9 @@ const [activeTab, setActiveTab] = useState('');
       px: { xs: 2, md: 4 },         // optional inner padding
       mt: 4
     }}>
-            <Grid container spacing={3}>
+            <Grid container spacing={3} justifyContent="center" >
               {/* Component Breakdown - Left Side */}
-              <Grid item xs={12} md={9}>
+              <Grid item xs={12} md={7}>
                 <Card
                   sx={{
                     p:2,
@@ -570,7 +570,7 @@ const [activeTab, setActiveTab] = useState('');
               </Grid>
 
               {/* Employee Details - Right Side */}
-              <Grid item xs={12} md={12}>
+              <Grid item xs={12} md={5}>
                 <Card
                   sx={{
                     bgcolor: "rgba(30, 41, 59, 0.5)",

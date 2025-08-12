@@ -131,11 +131,6 @@ export default function Welcome() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     boxShadow: 4,
-                    transition: 'transform 0.2s, box-shadow 0.2s',
-                    '&:hover': {
-                      transform: 'translateY(-6px)',
-                      boxShadow: 8,
-                    },
                     cursor: item.route ? 'pointer' : 'default'
                   }}
                   onClick={() => item.route && navigate(item.route)}

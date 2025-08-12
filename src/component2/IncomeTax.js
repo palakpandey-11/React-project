@@ -19,6 +19,9 @@ import {
   TableRow,
   TableCell,
   TableBody,
+   TablePagination,
+   useTheme,
+  useMediaQuery,
   Button
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -58,15 +61,15 @@ const EMPLOYEES = [
 
 // dummy tax components
 const TAX_COMPONENTS = [
-  { component: 'SPECIAL ALLOWANCE', total: 382184, Apr: 366917, May: 0, Jun: 15267, Jul: 0, Aug:0, Sep:0, Oct:0, Nov:0, Dec:0, Jan:0, Feb:0, Mar:0 },
+  { component: 'SPECIAL ALLOWANCE', total: 382184, Apr: 3669, May: 0, Jun: 1526, Jul: 0, Aug:0, Sep:0, Oct:0, Nov:0, Dec:0, Jan:0, Feb:0, Mar:0 },
   { component: 'PF',               total: 46060,  Apr: 44220,  May: 0, Jun: 1840,  Jul: 0, Aug:0, Sep:0, Oct:0, Nov:0, Dec:0, Jan:0, Feb:0, Mar:0 },
-  { component: 'INCOME TAX',       total: 36080,  Apr: 32247,  May: 0, Jun: 3833,  Jul: 0, Aug:0, Sep:0, Oct:0, Nov:0, Dec:0, Jan:0, Feb:0, Mar:0 },
-  { component: 'PROF TAX',       total: 36080,  Apr: 32247,  May: 0, Jun: 3833,  Jul: 0, Aug:0, Sep:0, Oct:0, Nov:0, Dec:0, Jan:0, Feb:0, Mar:0 },
-  { component: 'RAW TAX MONTHLY WITH PREV EMP',       total: 36080,  Apr: 32247,  May: 0, Jun: 3833,  Jul: 0, Aug:0, Sep:0, Oct:0, Nov:0, Dec:0, Jan:0, Feb:0, Mar:0 },
-  { component: 'UNCLAIMED SALARY',       total: 36080,  Apr: 32247,  May: 0, Jun: 3833,  Jul: 0, Aug:0, Sep:0, Oct:0, Nov:0, Dec:0, Jan:0, Feb:0, Mar:0 },
-  { component: 'INCOME TAX',       total: 36080,  Apr: 32247,  May: 0, Jun: 3833,  Jul: 0, Aug:0, Sep:0, Oct:0, Nov:0, Dec:0, Jan:0, Feb:0, Mar:0 },
-  { component: 'INCOME TAX',       total: 36080,  Apr: 32247,  May: 0, Jun: 3833,  Jul: 0, Aug:0, Sep:0, Oct:0, Nov:0, Dec:0, Jan:0, Feb:0, Mar:0 },
-  { component: 'INCOME TAX',       total: 36080,  Apr: 32247,  May: 0, Jun: 3833,  Jul: 0, Aug:0, Sep:0, Oct:0, Nov:0, Dec:0, Jan:0, Feb:0, Mar:0 },
+  { component: 'INCOME TAX',       total: 36080,  Apr: 3225,  May: 0, Jun: 3833,  Jul: 0, Aug:0, Sep:0, Oct:0, Nov:0, Dec:0, Jan:0, Feb:0, Mar:0 },
+  { component: 'PROF TAX',       total: 36080,  Apr: 3224,  May: 0, Jun: 3833,  Jul: 0, Aug:0, Sep:0, Oct:0, Nov:0, Dec:0, Jan:0, Feb:0, Mar:0 },
+  { component: 'RAW TAX MONTHLY WITH PREV EMP',       total: 36080,  Apr: 3224,  May: 0, Jun: 3833,  Jul: 0, Aug:0, Sep:0, Oct:0, Nov:0, Dec:0, Jan:0, Feb:0, Mar:0 },
+  { component: 'UNCLAIMED SALARY',       total: 36080,  Apr: 3224,  May: 0, Jun: 3833,  Jul: 0, Aug:0, Sep:0, Oct:0, Nov:0, Dec:0, Jan:0, Feb:0, Mar:0 },
+  { component: 'INCOME TAX',       total: 36080,  Apr: 3224,  May: 0, Jun: 3833,  Jul: 0, Aug:0, Sep:0, Oct:0, Nov:0, Dec:0, Jan:0, Feb:0, Mar:0 },
+  { component: 'INCOME TAX',       total: 36080,  Apr: 3227,  May: 0, Jun: 3833,  Jul: 0, Aug:0, Sep:0, Oct:0, Nov:0, Dec:0, Jan:0, Feb:0, Mar:0 },
+  { component: 'INCOME TAX',       total: 36080,  Apr: 3247,  May: 0, Jun: 3833,  Jul: 0, Aug:0, Sep:0, Oct:0, Nov:0, Dec:0, Jan:0, Feb:0, Mar:0 },
   // …etc…
 ];
 
@@ -74,6 +77,25 @@ export default function IncomeTax() {
   const [employee, setEmployee] = useState(null);
   const [tabIndex, setTabIndex] = useState(0);
   
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  const handleChangePage = (_, newPage) => {
+    setPage(newPage);
+  };
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+    // Paginated slice of your dummy data
+  const paginatedRows = TAX_COMPONENTS.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   const processedOn = useMemo(() => {
     const now = new Date();
@@ -87,17 +109,23 @@ export default function IncomeTax() {
       {/* Breadcrumbs */}
       <Box sx={{ p: 2, bgcolor: 'rgba(10,20,40,0.7)', overflow:'hidden'}}>
         <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.5)' } }}>
-          <MuiLink component={RouterLink} to="/" sx={{ color:'rgba(255,255,255,0.7)' }}>Home</MuiLink>
+          <MuiLink component={RouterLink} to="/welcome" sx={{ color:'rgba(255,255,255,0.7)' }}>Home</MuiLink>
           <MuiLink component={RouterLink} to="/updatepayroll" sx={{ color:'rgba(255,255,255,0.7)' }}>Payroll</MuiLink>
           <Typography sx={{ color:'rgba(255,255,255,0.5)' }}>Income Tax</Typography>
         </Breadcrumbs>
       </Box>
 
+<Box sx={{maxWidth: 1200,     // or whatever max width you prefer
+    width: '100%',
+    mx: 'auto',         // center horizontally
+   // px: { xs: 2, md: 3 }, // small side padding on mobile
+    mt: 1,
+    overflow:'hidden'}}>
       {/* Search bar */}
       {!employee && (
         <Box
           sx={{
-            mx: 2, my: 2, p: 2,
+           my: 2, p: 2,
             display: 'flex',
             alignItems: 'center',
             gap: 2,
@@ -157,12 +185,14 @@ export default function IncomeTax() {
           <Box
             sx={{
               display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
+              flexDirection: { xs: 'column', md: 'row' },
+              alignItems: { xs: 'flex-start', md: 'center' },
+               justifyContent: 'space-between',
               p:1.5,
               bgcolor: 'rgba(255,255,255,0.1)',
               borderRadius: 1,
-              backdropFilter: 'blur(4px)'
+              backdropFilter: 'blur(4px)',
+              gap:2
             }}
           >
             <Box sx={{ display:'flex', alignItems:'center', gap:2 }}>
@@ -189,10 +219,10 @@ export default function IncomeTax() {
                 <Typography variant="caption" sx={{ color:'rgba(255,255,255,0.6)' }}>Location</Typography>
                 <Typography>{employee.location}</Typography>
               </Box>
-              <Box>
+              {/* <Box>
                 <Typography variant="caption" sx={{ color:'rgba(255,255,255,0.6)' }}>Leaving Date</Typography>
                 <Typography>{employee.leavingDate}</Typography>
-              </Box>
+              </Box> */}
               <Box>
                 <Typography variant="caption" sx={{ color:'rgba(255,255,255,0.6)' }}>Income Tax Processed On</Typography>
                 <Typography sx={{ fontWeight:600 }}>{processedOn}</Typography>
@@ -238,70 +268,148 @@ export default function IncomeTax() {
 
           {/* Income tab panel */}
           {tabIndex === 0 && (
-            <Box sx={{ mt:2 }}>
-              <Typography variant="h6" sx={{ color:'white', mb:2 }}>
-                Tax Related Components
-              </Typography>
+        <Box sx={{ mt: 2 }}>
+          <Typography variant="h6" sx={{ color: 'white', mb: 2 }}>
+            Tax Related Components
+          </Typography>
 
-              <TableContainer
-                sx={{
-                    maxHeight: 310,
-                  bgcolor: 'rgba(198, 194, 194, 0.2)',
-                  borderRadius: 1,
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
-                }}
+          {/* Horizontal scroll wrapper for mobile */}
+          <Box
+            sx={{
+              overflowX: isMobile ? 'auto' : 'visible',
+              width: '100%',
+            }}
+          >
+            <TableContainer
+              component={Paper}
+              sx={{
+                bgcolor: 'rgba(198,194,194,0.2)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                maxWidth:'100%',
+              }}
+            >
+              <Table size="small"
+              sx={{
+                tableLayout:'fixed',
+                minWidth:'700px',
+                 '& th, & td': {
+                  px:1,
+                  py:0.5,
+                  overflow:'hidden',
+                  textOverflow:'ellipsis',
+                  whiteSpace:'nowrap',
+                 }
+              }}
               >
-                <Table stickyHeader>
-                  <TableHead>
-                    <TableRow>
-                      {['Component','Total','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'].map(col => (
+                <TableHead>
+                  <TableRow>
+                    {[
+                        {label:'Component', width:200},
+                        {label:'Total', width:80},
+                        { label: 'Apr',       width:  50 },
+                        { label: 'May',       width:  50 },
+                        { label: 'June',       width: 50 },
+                        { label: 'July',       width: 50 },
+                        { label: 'Aug',       width:  50 },
+                        { label: 'Sep',       width:  50 },
+                        { label: 'Oct',       width:  50 },
+                        { label: 'Nov',       width:  50 },
+                        { label: 'Dec',       width:  50 },
+                        { label: 'Jan',       width:  50 },
+                        { label: 'Feb',       width:  50 },
+                        { label: 'Mar',       width:  50 },
+                    ].map(({ label, width }) => (
+                     <TableCell key={label}
+                     sx={{
+                          bgcolor: 'rgba(22,29,43,1)',
+                          color:'white',
+                          width,
+                         }}
+                     >
+                        {label}
+                     </TableCell>
+                    ))}
+                        
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {paginatedRows.map((row, i) => (
+                    <TableRow key={i} hover>
+                      <TableCell
+                        sx={{
+                          color: 'white',
+                          bgcolor: i % 2
+                            ? 'rgba(255,255,255,0.02)'
+                            : 'transparent',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {row.component}
+                      </TableCell>
+                      {[
+                        'total',
+                        'Apr',
+                        'May',
+                        'Jun',
+                        'Jul',
+                        'Aug',
+                        'Sep',
+                        'Oct',
+                        'Nov',
+                        'Dec',
+                        'Jan',
+                        'Feb',
+                        'Mar',
+                      ].map((key) => (
                         <TableCell
-                          key={col}
+                          key={key}
                           sx={{
-                            bgcolor: 'rgba(22, 29, 43, 1)',
-                            color: 'white'
+                            color: 'white',
+                            bgcolor: i % 2
+                              ? 'rgba(255,255,255,0.02)'
+                              : 'transparent',
+                            whiteSpace: 'nowrap',
                           }}
                         >
-                          {col}
+                          {row[key]}
                         </TableCell>
                       ))}
                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {TAX_COMPONENTS.map((row, i) => (
-                      <TableRow key={i} hover>
-                        <TableCell sx={{ color:'white', bgcolor: i%2? 'rgba(255,255,255,0.02)' : 'transparent' }}>
-                          {row.component}
-                        </TableCell>
-                        {['total','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'].map(key => (
-                          <TableCell
-                            key={key}
-                            sx={{
-                              color:'white',
-                              bgcolor: i%2? 'rgba(255,255,255,0.02)' : 'transparent'
-                            }}
-                          >
-                            {row[key]}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+
+          {/* Pagination controls */}
+          <TablePagination
+            component="div"
+            count={TAX_COMPONENTS.length}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[5, 10, 25]}
+            sx={{
+              '& .MuiTablePagination-toolbar': {
+                color: 'white',
+                bgcolor: 'rgba(22,29,43,1)',
+              },
+            }}
+          />
 
               {/* Bottom actions */}
               <Box sx={{ mt:1, display:'flex', justifyContent:'flex-end', gap:1 }}>
                 <Button component={RouterLink} to="/salary" variant="contained">
                   Back To Salary
                 </Button>
-                <Button variant="outlined" color="secondary">
+                <Button variant="outlined" color="primary">
                   Preview
                 </Button>
-                <Button variant="outlined" color="secondary">
+                <Button variant="outlined" color="primary">
                   Download
                 </Button>
-                <Button variant="contained" color="warning">
+                <Button variant="contained" color="primary">
                   Recalculate
                 </Button>
               </Box>
@@ -309,6 +417,7 @@ export default function IncomeTax() {
           )}
         </Box>
       )}
+      </Box>
     </>
   );
 }

@@ -6,35 +6,38 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Box from '@mui/material/Box';
-import axios from 'axios';
+import { Link } from "react-router-dom";
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
-
-function Signin () {
-
-  const [employeeId, setEmployeeId] = useState("");
+function Signup () {
+  const [empId, setEmpId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [toastState, setToastState] = useState({ show: false, message: "", type: "" });
   const navigate = useNavigate();
 
-  const handleSignup = async (e) => {
+  const employees = [
+    { empId: "emp000", password: "pass000", name: "HR", role: "hr" },
+    { empId: "emp001", password: "pass001", name: "Pankaj Sir", role: "manager" },
+    { empId: "emp002", password: "pass002", name: "Pranali Bagul", role: "employee" },
+    { empId: "emp003", password: "pass003", name: "Palak Pandey", role: "employee" },
+  ];
+
+  const handleSignup = (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:8080/api/auth/login', {
-        employeeId,
-        password,
-      });
-      // Assuming backend returns user data and a token
-      const { user, token } = response.data;
-      localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('token', token);
+    const user = employees.find(emp => emp.empId === empId);
+
+    if (!user) {
+      triggerToast("Employee ID not found", "error");
+    } else if (user.password !== password) {
+      triggerToast("Incorrect password", "error");
+    } else {
+      localStorage.setItem("user", JSON.stringify(user));
       triggerToast("Signed in successfully!", "success");
       setTimeout(() => {
         navigate("/dashboard");
       }, 1500);
-    } catch (error) {
-      const message = error.response?.data?.message || "Login failed";
-      triggerToast(message, "error");
     }
   };
 
@@ -42,27 +45,27 @@ function Signin () {
     setToastState({ show: true, message, type });
     setTimeout(() => {
       setToastState({ show: false, message: "", type: "" });
-    }, 3000);
+    }, 2500);
   };
 
- return (
+  return (
     <>
-    <div className="signup-container"> 
-      <div className="form-box">
-        <div className="logo">Stibium</div>
-        <h2>Sign In</h2>
-        <form onSubmit={handleSignup}>
-          <Box mb={3}>
+      <div className="signup-container">
+        <div className="form-box">
+          <div className="logo">Stibium</div>
+          <h2>Sign In</h2>
+          <form onSubmit={handleSignup}>
+            <Box mb={3}>
               <TextField
                 fullWidth
                 required
                 label="Employee ID"
                 variant="outlined"
-                value={employeeId}
-                onChange={(e) => setEmployeeId(e.target.value)}
+                value={empId}
+                onChange={(e) => setEmpId(e.target.value)}
               />
             </Box>
-          <Box mb={3}>
+            <Box mb={3}>
               <TextField
                 fullWidth
                 required
@@ -85,27 +88,35 @@ function Signin () {
                 }}
               />
             </Box>
-          <div className="button-group">
-            <button type="button" className="cancel" onClick={() => navigate("/")}>
-              Cancel
-            </button>
-            <button type="submit" className="submit">Submit</button>
-          </div>
+            <div className="button-group">
+              <button type="button" className="cancel" onClick={() => navigate("/")}>
+                Cancel
+              </button>
+              <button type="submit" className="submit">Submit</button>
+            </div>
 
-          <p className="reset-link">
-            <span style={{cursor: 'pointer', color: '#1976d2', textDecoration: 'underline'}} onClick={() => navigate('/forgotpass')}>
-              Reset Password?
-            </span>
-          </p>
-        </form>
+            <p className="reset-link"> <Link to="/forgotpass">Reset Password?</Link></p>
+          </form>
+        </div>
       </div>
-    </div>
-      {toastState.show && (
-        <div className={`custom-toast ${toastState.type}`}>{toastState.message}</div>
-      )}
+
+      <Snackbar
+        open={toastState.show}
+        autoHideDuration={3000}
+        onClose={() => setToastState({ show: false, message: "", type: "" })}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={() => setToastState({ show: false, message: "", type: "" })}
+          severity={toastState.type}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {toastState.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
 
-
-export default Signin;
+export default Signup;

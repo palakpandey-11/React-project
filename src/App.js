@@ -42,7 +42,6 @@ import MassCom from './components2/MassCom.js';
 import Compose from './components2/Compose.js';
 import AddEmp from './components2/AddEmp.js';
 import Info from './components2/Info.js';
-=========
 import SalaryUpdate from "./component2/SalaryUpdate.js";
 import LoanInput from "./component2/LoanInput.js";
 import IncomeTax from "./component2/IncomeTax.js";
@@ -51,11 +50,8 @@ import PayArrears from "./component2/PayArrears.js";
 import FinalSettlement from "./component2/FinalSettlement.js";
 import SettleEmployee from "./component2/SettleEmployee.js";
 import QuickSalaryStatement from "./component2/QuickSalaryStatement.js";
-import ShrinkLossDashboard from "./component2/ShrinkLossDashboard.js";
 import BankTransfer from "./component2/BankTransfer.js";
 import PayrollStatement from "./component2/PayrollStatement.js";
-import ReturnLogistics from "./component2/ReturnLogistics.js";
-import InStore from "./component2/InStore.js";
 import FormSixteen from "./component2/FormSixteen.js";
 import ProceedBtn from "./component2/ProceedBtn.js";
 import GenerateForm16 from "./component2/GenerateForm16.js";
@@ -64,7 +60,7 @@ import Form24Q from "./component2/Form24Q.js";
 import ChallansPage from "./component2/ChallanPage.js";
 import EmployeeITDeclaration from "./component2/EmployeeITDeclaration.js";
 import POIOverview from "./component2/POIOverview.js";
->>>>>>>>> Temporary merge branch 2
+import PayrollProcess from "./component2/PayrollProcess.js"
 
 function App() {
   return (

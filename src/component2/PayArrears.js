@@ -68,12 +68,26 @@ export default function PayArrears() {
       {/* Breadcrumbs */}
       <Box sx={{ p: 2, bgcolor: 'rgba(10,20,40,0.7)' }}>
         <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.5)' } }}>
-          <MuiLink component={RouterLink} to="/" sx={{ color: 'rgba(255,255,255,0.7)' }}>Home</MuiLink>
+          <MuiLink component={RouterLink} to="/welcome" sx={{ color: 'rgba(255,255,255,0.7)' }}>Home</MuiLink>
           <MuiLink component={RouterLink} to="/updatepayroll" sx={{ color: 'rgba(255,255,255,0.7)' }}>Payroll</MuiLink>
+          <MuiLink component={RouterLink} to="/arrears" sx={{ color: 'rgba(255,255,255,0.7)' }}>Arrears</MuiLink>
           <Typography sx={{ color: 'rgba(255,255,255,0.5)' }}>Pay Arrears</Typography>
         </Breadcrumbs>
       </Box>
 
+ <Box
+        sx={{
+          maxWidth: 1000,       // ← new narrower width
+          width: '100%',
+          mx: 'auto',          // center horizontally
+          px: 2,               // small side padding
+          mt:-1,
+           display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+          //overflow:'hidden'
+        }}
+      >
       {/* Stepper */}
       <Paper elevation={0} sx={{ mx: 2, my: 2, p: 3, bgcolor: 'rgba(255, 255, 255, 0.09)', borderRadius: 2 }}>
         <Stepper activeStep={activeStep} alternativeLabel sx={{
@@ -172,7 +186,7 @@ export default function PayArrears() {
                     onChange={e => setEffectiveDate(e.target.value)}
                     sx={{ bgcolor:'rgba(255, 255, 255, 0.29)', borderRadius: 1 }}
                   />
-                </Grid>
+                
               </Grid>
               {/* Filters */}
               <Grid container spacing={2} sx={{ mb:2, mt:2 }}>
@@ -235,7 +249,7 @@ export default function PayArrears() {
                   </FormControl>
                 </Grid>
               </Grid>
-                      
+               </Grid>       
               {/* Dual‑table */}
               <Box sx={{ display:'flex', alignItems:'center', gap:2 }}>
                 {/* LEFT */}
@@ -361,6 +375,7 @@ export default function PayArrears() {
           </Box>
         </Box>
       </Paper>
+      </Box>
     </>
   );
 }

@@ -74,6 +74,7 @@ const [formValues, setFormValues] = useState({
   return (
     <>
   
+  
       {/* Month navigation */}
       <Box
         sx={{
@@ -272,7 +273,7 @@ export default function UpdatePayrollData() {
 
   return (
     <Box sx={{ minHeight: "100vh" }}>
- 
+      
      <Header/>
       {/* Breadcrumbs */}
       <Box sx={{ p: 2, bgcolor: 'rgba(10,20,40,0.7)' }}>
@@ -286,10 +287,18 @@ export default function UpdatePayrollData() {
           <Typography sx={{ color: 'rgba(255,255,255,0.5)' }}>{activeTab}</Typography>
         </Breadcrumbs>
       </Box>
-
+<Box sx={{
+    maxWidth:1140,
+    width:'100%',
+    mx:'auto',// ← center horizontally
+   // px:{xs:2, md:1}, // ← responsive side padding
+    pt:{xs:2, md:3}, // ← responsive top padding
+    pb:{xs:4, md:6}, // ← bottom padding for scroll breathing room
+  }}>
       {/* MonthPicker */}
             <MonthPicker onMonthChange={date => console.log('Selected:', date)} />
       
+    </Box>
     </Box>
   );
 }

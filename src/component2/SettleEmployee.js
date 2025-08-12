@@ -1,4 +1,3 @@
-// src/component2/SettleEmployee.js
 import React, { useState } from 'react';
 import Header from './Header';
 import { Link as RouterLink } from 'react-router-dom';
@@ -18,7 +17,9 @@ import {
   TextField,
   InputAdornment,
   IconButton,
-  Button
+  Button,
+  useTheme,
+  useMediaQuery
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -33,8 +34,10 @@ const steps = [
 
 export default function SettleEmployee() {
   const [activeStep, setActiveStep] = useState(0);
-  const [mode, setMode] = useState('separated'); // 'separated' | 'search'
+  const [mode, setMode] = useState('separated');
   const [searchValue, setSearchValue] = useState('');
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleNext = () => setActiveStep(s => Math.min(s + 1, steps.length - 1));
   const handleBack = () => setActiveStep(s => Math.max(s - 1, 0));
@@ -46,46 +49,55 @@ export default function SettleEmployee() {
       {/* Breadcrumbs */}
       <Box sx={{ p: 2, bgcolor: 'rgba(10,20,40,0.7)' }}>
         <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.5)' } }}>
-          <MuiLink component={RouterLink} to="/" sx={{ color: 'rgba(255,255,255,0.7)' }}>Home</MuiLink>
+          <MuiLink component={RouterLink} to="/welcome" sx={{ color: 'rgba(255,255,255,0.7)' }}>Home</MuiLink>
           <MuiLink component={RouterLink} to="/updatepayroll" sx={{ color: 'rgba(255,255,255,0.7)' }}>Payroll</MuiLink>
           <MuiLink component={RouterLink} to="/finalsettlement" sx={{ color: 'rgba(255,255,255,0.7)' }}>Final Settlement</MuiLink>
           <Typography sx={{ color: 'rgba(255,255,255,0.5)' }}>Settle Employee</Typography>
         </Breadcrumbs>
       </Box>
 
-      {/* Stepper */}
-      <Paper
-        elevation={0}
+      {/* Centered container with max width */}
+      <Box
         sx={{
-          mx: 2,
+          maxWidth: 800,
+          width: '100%',
+          mx: 'auto',
+          px: 2,
           my: 2,
-          p: 3,
-          bgcolor: 'rgba(255,255,255,0.05)',
-          borderRadius: 2
         }}
       >
-        <Stepper
-          activeStep={activeStep}
-          alternativeLabel
+        <Paper
+          elevation={0}
           sx={{
-            '& .MuiStepIcon-root': { color: 'rgba(255,255,255,0.3)' },
-            '& .MuiStepIcon-root.Mui-active': { color: 'green' },
-            '& .MuiStepIcon-root.Mui-completed': { color: 'white' },
-            '& .MuiStepLabel-label': { color: 'rgba(255,255,255,0.3)' },
-            '& .MuiStepLabel-label.Mui-active': { color: '#e5e5e5', fontWeight: 600 },
-            '& .MuiStepLabel-label.Mui-completed': { color: 'grey' },
+            p: 2,
+            bgcolor: 'rgba(255,255,255,0.05)',
+            borderRadius: 2
           }}
         >
-          {steps.map(label => (
-            <Step key={label}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
+          <Stepper
+            activeStep={activeStep}
+            alternativeLabel={!isMobile}
+            orientation={isMobile ? 'vertical' : 'horizontal'}
+            sx={{
+              width: '100%',
+              '& .MuiStepIcon-root': { color: 'rgba(255,255,255,0.3)' },
+              '& .MuiStepIcon-root.Mui-active': { color: 'green' },
+              '& .MuiStepIcon-root.Mui-completed': { color: 'white' },
+              '& .MuiStepLabel-label': { color: 'rgba(255,255,255,0.3)', fontSize: isMobile ? '0.75rem' : '0.875rem' },
+              '& .MuiStepLabel-label.Mui-active': { color: '#e5e5e5', fontWeight: 600 },
+              '& .MuiStepLabel-label.Mui-completed': { color: 'grey' },
+            }}
+          >
+            {steps.map(label => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
 
-        {/* Step Content */}
-        <Box sx={{ mt: 4 }}>
-          {/* --- Step 1: Employee --- */}
+          {/* Step content... */}
+          <Box sx={{ mt: isMobile ? 2 : 4 }}>
+              {/* --- Step 1: Employee --- */}
           {activeStep === 0 && (
             <Box>
               <Typography variant="h6" sx={{ color: 'white', mb: 2 }}>
@@ -164,39 +176,39 @@ export default function SettleEmployee() {
             <Typography sx={{ color: 'white' }}>Step 6: Remarks (TODO)</Typography>
           )}
 
-          {/* Navigation Buttons */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
-            <Button
-              onClick={handleBack}
-              disabled={activeStep === 0}
-              sx={{
-                color: 'rgba(255,255,255,0.7)',
-                '&.Mui-disabled': { color: 'rgba(255,255,255,0.3)' },
-                '&:hover': { backgroundColor: 'rgba(255,255,255,0.1)', color: '#fff' }
-              }}
-            >
-              Previous
-            </Button>
-
-            <Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3, flexDirection: isMobile ? 'column-reverse' : 'row', gap: 2 }}>
               <Button
-                onClick={handleNext}
-                variant="contained"
-                color="primary"
-                sx={{ textTransform: 'none' }}
+                onClick={handleBack}
+                disabled={activeStep === 0}
+                fullWidth={isMobile}
+                sx={{
+                  color: activeStep === 0 ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.7)',
+                  '&:hover': { backgroundColor: 'rgba(255,255,255,0.1)' }
+                }}
               >
-                {activeStep < steps.length - 1 ? 'Next →' : 'Finish'}
+                Previous
               </Button>
-              <Button
-                onClick={() => setActiveStep(0)}
-                sx={{ ml: 2, color: 'white', textTransform: 'none' }}
-              >
-                Cancel
-              </Button>
+              <Box sx={{ display: 'flex', gap: 2, justifyContent: isMobile ? 'center' : 'flex-end', width: isMobile ? '100%' : 'auto' }}>
+                <Button
+                  onClick={handleNext}
+                  variant="contained"
+                  color="primary"
+                  fullWidth={isMobile}
+                >
+                  {activeStep < steps.length - 1 ? 'Next →' : 'Finish'}
+                </Button>
+                <Button
+                  onClick={() => setActiveStep(0)}
+                  sx={{ color: 'white' }}
+                  fullWidth={isMobile}
+                >
+                  Cancel
+                </Button>
+              </Box>
             </Box>
           </Box>
-        </Box>
-      </Paper>
+        </Paper>
+      </Box>
     </>
   );
 }

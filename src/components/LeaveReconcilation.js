@@ -382,7 +382,7 @@ const handleSubmitModal = async () => {
   setLoading(true);
 
 const newEntries = enabledRows.map(index => ({
-    id: empID, // or use a unique taskId if needed
+    empID: '10022', // or use a unique taskId if needed
     name: "Palak", // replace with actual name if available
     reason: leaveDays[index].reason,
     date: leaveDays[index].reconciliation_date,
@@ -1829,11 +1829,10 @@ const newEntries = enabledRows.map(index => ({
         <MuiAlert
           onClose={handleSuccessSnackbarClose}
           severity="success"
+          variant="filled"
           sx={{
             width: "100%",
-            height: "70%",
-            backgroundColor: "#2e7d32",
-            color: "#ffffff",
+            height: "70%"
           }}
         >
           Details submitted successfully!

@@ -59,12 +59,21 @@ export default function LoanInput() {
       {/* Breadcrumbs */}
       <Box sx={{ p:2, bgcolor:'rgba(10,20,40,0.7)' }}>
         <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator':{color:'rgba(255,255,255,0.5)'} }}>
-          <MuiLink component={RouterLink} to="/" underline="hover" sx={{ color:'rgba(255,255,255,0.7)' }}>Home</MuiLink>
+          <MuiLink component={RouterLink} to="/welcome" underline="hover" sx={{ color:'rgba(255,255,255,0.7)' }}>Home</MuiLink>
           <MuiLink component={RouterLink} to="/updatepayroll" underline="hover" sx={{ color:'rgba(255,255,255,0.7)' }}>Payroll</MuiLink>
           <Typography sx={{ color:'rgba(255,255,255,0.5)' }}>Loan</Typography>
         </Breadcrumbs>
       </Box>
 
+<Box
+  sx={{
+    maxWidth: 900,     // or whatever max width you prefer
+    width: '100%',
+    mx: 'auto',         // center horizontally
+    px: { xs: 2, md: 3 }, // small side padding on mobile
+    mt: 2
+  }}
+>
       {/* Selection Panel */}
       <Box sx={{
         mx:2, mt:2, p:2,
@@ -201,10 +210,14 @@ export default function LoanInput() {
               noValidate
               autoComplete="off"
               sx={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: 2,
+                 display: 'grid',
+                 gap: 2,
                 color: 'common.white',
+                gridTemplateColumns: {
+                  xs: '1fr',            // mobile: single column
+                  sm: '1fr 1fr',        // tablets: two columns
+                  md: 'repeat(4, 1fr)'  // desktop: four columns
+                  }
               }}
             >
               {/* Loan Details */}
@@ -366,10 +379,10 @@ export default function LoanInput() {
                   mt: 2,
                 }}
               >
-                <Button component={RouterLink} to="/salary" variant="contained" color="primary">
+                <Button component={RouterLink} to="/salary" variant="outlined" color="primary">
                   Back to Salary
                 </Button>
-                <Button variant="contained" color="secondary">
+                <Button variant="contained" color="primary">
                   Save
                 </Button>
               </Box>
@@ -382,18 +395,16 @@ export default function LoanInput() {
              <TableContainer component={Paper} sx={{ bgcolor: 'rgba(255,255,255,0.05)', mt: 2, borderRadius: 1 }}>
                 <Table>
                     <TableHead>
-                        <TableRow>
-                          <TableCell sx={{ fontWeight: 'bold' }}>Date</TableCell>
-                          <TableCell sx={{ fontWeight: 'bold' }}>Trans Type</TableCell>
-                          <TableCell sx={{ fontWeight: 'bold' }}>Amount</TableCell>
-                          <TableCell sx={{ fontWeight: 'bold' }}>To Principal</TableCell>
-                          <TableCell sx={{ fontWeight: 'bold' }}>To Interest</TableCell>
-                          <TableCell sx={{ fontWeight: 'bold' }}>Actual Principal</TableCell>
-                          <TableCell sx={{ fontWeight: 'bold' }}>Actual Interest</TableCell>
-                          <TableCell sx={{ fontWeight: 'bold' }}>Remarks</TableCell>
-                          <TableCell sx={{ fontWeight: 'bold' }}>Perk Value</TableCell>
-                          <TableCell sx={{ fontWeight: 'bold' }}>Perk Amount</TableCell>
-                          <TableCell sx={{ fontWeight: 'bold' }}>Perk Rate</TableCell>
+                        <TableRow sx={{backgroundColor: "rgb(0, 0, 0)",}}>
+                          <TableCell sx={{ fontWeight: 'bold', color:'white' }}>Date</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold', color: "white" }}>Amount</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold', color: "white" }}>To Principal</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold', color: "white" }}>To Interest</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold', color: "white" }}>Actual Principal</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold', color: "white" }}>Actual Interest</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold', color: "white" }}>Remarks</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold', color: "white" }}>Perk Value</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold', color: "white" }}>Perk Amount</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -405,7 +416,7 @@ export default function LoanInput() {
       <Button
         component={RouterLink}
         to="/salary"
-        variant="contained"
+        variant="outlined"
         color="primary"
       >
         Back to Salary
@@ -418,13 +429,13 @@ export default function LoanInput() {
              <TableContainer component={Paper} sx={{ bgcolor: 'rgba(255,255,255,0.05)', mt: 2, borderRadius: 1 }}>
                 <Table>
                     <TableHead>
-                        <TableRow>
-                          <TableCell sx={{ fontWeight: 'bold' }}>Date</TableCell>
-                          <TableCell sx={{ fontWeight: 'bold' }}>To Principal</TableCell>
-                          <TableCell sx={{ fontWeight: 'bold' }}>To Interest</TableCell>
-                          <TableCell sx={{ fontWeight: 'bold' }}>Remarks</TableCell>
-                          <TableCell sx={{ fontWeight: 'bold' }}>Modifiy Date</TableCell>
-                        <TableCell sx={{ fontWeight: 'bold' }}>Modifiy Date</TableCell>                  
+                        <TableRow sx={{backgroundColor: "rgb(0, 0, 0)",}}>
+                          <TableCell sx={{ fontWeight: 'bold',color:'white' }}>Date</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold',color:'white' }}>To Principal</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold',color:'white' }}>To Interest</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold',color:'white' }}>Remarks</TableCell>
+                          <TableCell sx={{ fontWeight: 'bold',color:'white' }}>Modifiy Date</TableCell>
+              
                         </TableRow>
                     </TableHead>
                     <TableBody >
@@ -436,7 +447,7 @@ export default function LoanInput() {
       <Button
         component={RouterLink}
         to="/salary"
-        variant="contained"
+        variant="outlined"
         color="primary"
       >
         Back to Salary
@@ -538,10 +549,10 @@ export default function LoanInput() {
           mt: 1
         }}
       >
-        <Button component={RouterLink} to="/salary" variant="contained" color="primary">
+        <Button component={RouterLink} to="/salary" variant="outlined" color="primary">
           Back to Salary
         </Button>
-        <Button variant="contained" color="secondary">
+        <Button variant="contained" color="primary">
           Save
         </Button>
       </Box>
@@ -570,6 +581,7 @@ export default function LoanInput() {
   </>
 )}
         </Box>
+      </Box>
       </Box>
     </>
   );

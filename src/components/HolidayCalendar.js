@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-
   Table, TableHead, TableBody, TableRow, TableCell,
   Paper, TableContainer, Select, MenuItem,
   InputLabel, FormControl, Button, Typography, Box
 } from '@mui/material';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import IconButton from '@mui/material/IconButton';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 const holidays = {
   '2021': {
@@ -158,20 +161,27 @@ function HolidayCalendar() {
   const [location, setLocation] = useState('ind-blr');
   const [year, setYear] = useState('2025');
   const navigate = useNavigate();
-
-  
+  const [toastState, setToastState] = useState({ show: false, message: "", type: "" });
+  const triggerToast = (message, type) => {
+  setToastState({ show: true, message, type });
+  setTimeout(() => {
+    setToastState({ show: false, message: "", type: "" });
+  }, 2500);
+};
 
   const handleExport = () => {
-    const selected = holidays[year][location];
-    const csvContent = "data:text/csv;charset=utf-8,"
-      + ["Date,Day,Type,Occasion", ...selected.map(h => `${h.date},${h.day},${h.type},${h.occasion}`)].join("\n");
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `holiday_calendar_${year}_${location}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const selected = holidays[year][location];
+  const csvContent = "data:text/csv;charset=utf-8,"
+    + ["Date,Day,Type,Occasion", ...selected.map(h => `${h.date},${h.day},${h.type},${h.occasion}`)].join("\n");
+
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", `HolidayCalendar_${year}_${location}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+    triggerToast("Downloaded successfully!", "success");
   };
 
   const handleClose = () => {
@@ -179,7 +189,13 @@ function HolidayCalendar() {
   };
 
   return (
-    
+    <Box className="holiday-container">
+      <IconButton
+              onClick={() => navigate('/timesheettable')}
+              sx={{ position: 'absolute', top: 15, left: 16, color: 'white' }}
+            >
+              <ArrowBackIosIcon />
+            </IconButton>    
       <Box sx={{
     backgroundColor: 'rgba(0, 0, 0, 0.6)', // previously rgba(255,255,255,0.9)
     p: { xs: 2, sm: 3 },
@@ -254,6 +270,14 @@ function HolidayCalendar() {
     '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'white' },
     '.MuiSvgIcon-root': { color: 'white' },
   }}
+    MenuProps={{
+    PaperProps: {
+      sx: {
+        bgcolor: '#0b0b0be7', // 👈 your custom dropdown background
+        color: 'white',     // 👈 optional: text color inside dropdown
+      },
+    },
+  }}
             >
               <MenuItem value="2021">2021</MenuItem>
               <MenuItem value="2022">2022</MenuItem>
@@ -278,7 +302,15 @@ function HolidayCalendar() {
     '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'white' },
     '.MuiSvgIcon-root': { color: 'white' }, // dropdown arrow icon white
   }}
-            >
+    MenuProps={{
+    PaperProps: {
+      sx: {
+        bgcolor: '#0b0b0be7', // 👈 your custom dropdown background
+        color: 'white',     // 👈 optional: text color inside dropdown
+      },
+    },
+  }}
+     >
               <MenuItem value="ind-blr">IND-BLR</MenuItem>
               <MenuItem value="usa-ny">USA-NY</MenuItem>
               <MenuItem value="uk-ldn">UK-LDN</MenuItem>
@@ -290,6 +322,22 @@ function HolidayCalendar() {
             <Button fullWidth variant="outlined" color="error" onClick={handleClose}>CLOSE</Button>
           </Box>
         </Box>
+      </Box>
+      <Snackbar
+  open={toastState.show}
+  autoHideDuration={3000}
+  onClose={() => setToastState({ show: false, message: "", type: "" })}
+  anchorOrigin={{ vertical: "top", horizontal: "right" }}
+>
+  <Alert
+    onClose={() => setToastState({ show: false, message: "", type: "" })}
+    severity={toastState.type}
+    variant="filled"
+    sx={{ width: "100%" }}
+  >
+    {toastState.message}
+  </Alert>
+</Snackbar>
       </Box>
     
   );

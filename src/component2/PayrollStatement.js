@@ -31,7 +31,7 @@ export default function PayrollStatement() {
       {/* Breadcrumbs */}
       <Box sx={{ p: 2, bgcolor: 'rgba(10,20,40,0.7)' }}>
         <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.5)' } }}>
-          <MuiLink component={RouterLink} to="/" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+          <MuiLink component={RouterLink} to="/welcome" sx={{ color: 'rgba(255,255,255,0.7)' }}>
             Home
           </MuiLink>
           <MuiLink component={RouterLink} to="/updatepayroll" sx={{ color: 'rgba(255,255,255,0.7)' }}>
@@ -41,13 +41,18 @@ export default function PayrollStatement() {
         </Breadcrumbs>
       </Box>
 
+<Box sx={{maxWidth:1200,
+        width:'100%',
+        mx:'auto',
+        pt:2,
+        pb:3 }}>
       {/* Main Content */}
       <Box sx={{ p: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
            <Button
             variant="outlined"
             component={RouterLink}
-            to="/add-statement"
+            to=" "
             sx={{
               borderColor: 'rgba(255,255,255,0.6)',
               color: 'rgba(255,255,255,0.8)',
@@ -112,6 +117,7 @@ export default function PayrollStatement() {
             </Paper>
           ))}
         </Stack>
+      </Box>
       </Box>
     </>
   );

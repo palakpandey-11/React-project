@@ -59,11 +59,21 @@ export default function Form24Q() {
       {/* Breadcrumbs + Action bar */}
       <Box sx={{ px: 2, pt: 2, bgcolor: 'rgba(10,20,40,0.7)', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
         <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.5)' } }}>
-          <MuiLink component={RouterLink} to="/" sx={{ color: 'rgba(255,255,255,0.7)' }}>Home</MuiLink>
+          <MuiLink component={RouterLink} to="/welcome" sx={{ color: 'rgba(255,255,255,0.7)' }}>Home</MuiLink>
           <MuiLink component={RouterLink} to="/updatepayroll" sx={{ color: 'rgba(255,255,255,0.7)' }}>Payroll</MuiLink>
           <Typography sx={{ color: 'rgba(255,255,255,0.5)' }}>Form24Q</Typography>
         </Breadcrumbs>
 </Box>
+<Box
+ sx={{
+          maxWidth: 1000,          // ↓ narrower page
+          width: '100%',
+          mx: 'auto',              // center horizontally
+        //  px: { xs: 2, md: 3 },
+          py: 2,
+          display: 'flex',
+          flexDirection: 'column',}}
+          >
 <Box sx={{ display: 'flex',
       alignItems: 'center',
       gap: 1,
@@ -77,7 +87,7 @@ export default function Form24Q() {
           Challans
         </Button>
 
-        <FormControl size="small" sx={{ minWidth: 120, bgcolor: 'rgba(255,255,255,0.1)', borderRadius: 1 }}>
+        <FormControl size="small" sx={{ minWidth: 120, bgcolor: 'rgba(255, 255, 255, 0.25)', borderRadius: 1 }}>
           <Select sx={{ color: 'white' }} value={fy} onChange={e => setFy(e.target.value)}>
             <MenuItem value="2025-2026">2025 - 2026</MenuItem>
             {/* … */}
@@ -98,7 +108,7 @@ export default function Form24Q() {
             onChange={handleAccordion(q.key)}
             sx={{
               mb: 1,
-              bgcolor: expanded === q.key ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)',
+              bgcolor: expanded === q.key ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255,255,255,0.05)',
               color: 'white',
               '& .MuiAccordionSummary-content': { margin: 0 }
             }}
@@ -193,6 +203,7 @@ export default function Form24Q() {
             </AccordionDetails>
           </Accordion>
         ))}
+      </Box>
       </Box>
     </>
   );

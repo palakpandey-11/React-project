@@ -32,7 +32,7 @@ export default function BankTransfer() {
       {/* Breadcrumbs */}
       <Box sx={{ p: 2, bgcolor: 'rgba(10,20,40,0.7)' }}>
         <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.5)' } }}>
-          <MuiLink component={RouterLink} to="/" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+          <MuiLink component={RouterLink} to="/welcome" sx={{ color: 'rgba(255,255,255,0.7)' }}>
             Home
           </MuiLink>
           <MuiLink component={RouterLink} to="/updatepayroll" sx={{ color: 'rgba(255,255,255,0.7)' }}>
@@ -44,6 +44,19 @@ export default function BankTransfer() {
         </Breadcrumbs>
       </Box>
 
+{/* Centering container for the whole page */}
+      <Box
+        sx={{
+          maxWidth: 1300,          // ↓ narrower page
+          width: '100%',
+          mx: 'auto',              // center horizontally
+        //  px: { xs: 2, md: 3 },
+          py: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          overflow:'hidden',
+          gap: 16 / 8,             // ~2
+        }}>
       {/* Tabs */}
       <Paper
         square
@@ -84,6 +97,7 @@ export default function BankTransfer() {
             <Paper
               variant="outlined"
               sx={{
+                mt:-2,
                 flexGrow: 1,
                 display: 'flex',
                 alignItems: 'center',
@@ -103,6 +117,7 @@ export default function BankTransfer() {
               variant="contained"
               component={RouterLink}
               to="/updatepayroll/banktransfer/create"
+              sx={{mt:-2}}
             >
               Create New Bank Transfer
             </Button>
@@ -111,10 +126,10 @@ export default function BankTransfer() {
           {/* Dark, scrollable table */}
           <Paper
             sx={{
+              mt: -3,
               mx: 2,
-              mb: 3,
               height: 350,
-              overflow: 'auto',
+              overflow: 'hidden',
               bgcolor: 'rgba(255,255,255,0.05)'
             }}
           >
@@ -139,9 +154,10 @@ export default function BankTransfer() {
                       <TableCell
                         key={idx}
                         sx={{
-                          bgcolor: 'rgba(255,255,255,0.1)',
-                          color: 'rgba(255,255,255,0.8)',
-                          fontWeight: 600
+                        bgcolor: 'rgba(0, 0, 0, 1)',
+                          color: 'white',
+                          whiteSpace: 'nowrap',
+                          py:2
                          }}
                       >
                         {head}
@@ -161,7 +177,7 @@ export default function BankTransfer() {
           </Paper>
 
           {/* Footer summary */}
-          <Box sx={{ mx: 2, mb: 4, color: 'rgba(255,255,255,0.8)' }}>
+          <Box sx={{ mx: 2, color: 'rgba(255,255,255,0.8)' }}>
             <Typography>Employee Count: 0</Typography>
             <Typography>Total Amount: Rs 0.00</Typography>
           </Box>
@@ -196,9 +212,10 @@ export default function BankTransfer() {
                 <TableCell
                   key={idx}
                   sx={{
-                    bgcolor: 'rgba(255,255,255,0.1)',
-                    color: 'rgba(255,255,255,0.8)',
-                    fontWeight: 600
+                    bgcolor: 'rgba(0, 0, 0, 1)',
+                          color: 'white',
+                          whiteSpace: 'nowrap',
+                          py:2
                   }}
                 >
                   {head}
@@ -246,9 +263,10 @@ export default function BankTransfer() {
                 <TableCell
                   key={idx}
                   sx={{
-                    bgcolor: 'rgba(255,255,255,0.1)',
-                    color: 'rgba(255,255,255,0.8)',
-                    fontWeight: 600
+                    bgcolor: 'rgba(0, 0, 0, 1)',
+                          color: 'white',
+                          whiteSpace: 'nowrap',
+                          py:2
                   }}
                 >
                   {head}
@@ -272,7 +290,7 @@ export default function BankTransfer() {
     {/* VCompleted employee table */}
     <Paper
       sx={{
-        mt:3,
+        mt:1,
         mx: 2,
         mb: 3,
         height: 400,
@@ -301,10 +319,13 @@ export default function BankTransfer() {
               ].map((head, idx) => (
                 <TableCell
                   key={idx}
-                  sx={{
-                    bgcolor: 'rgba(255,255,255,0.1)',
-                    color: 'rgba(255,255,255,0.8)',
-                    fontWeight: 600
+                 
+                   sx={{
+                          bgcolor: 'rgba(0, 0, 0, 1)',
+                          color: 'white',
+                          whiteSpace: 'nowrap',
+                          py:2
+                  
                   }}
                 >
                   {head}
@@ -328,7 +349,7 @@ export default function BankTransfer() {
     {/* Transaction update table */}
     <Paper
       sx={{
-        mt:3,
+        mt:1,
         mx: 2,
         mb: 3,
         height: 400,
@@ -371,8 +392,10 @@ export default function BankTransfer() {
         </Table>
       </TableContainer>
     </Paper>
+   
   </>
 )}
+ </Box>
     </>
   );
 }

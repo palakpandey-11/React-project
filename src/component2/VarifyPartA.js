@@ -52,7 +52,7 @@ export default function VerifyPartA() {
           separator=">"
           sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.5)' } }}
         >
-          <MuiLink component={RouterLink} to="/" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+          <MuiLink component={RouterLink} to="/welcome" sx={{ color: 'rgba(255,255,255,0.7)' }}>
             Home
           </MuiLink>
           <MuiLink
@@ -75,6 +75,11 @@ export default function VerifyPartA() {
         </Breadcrumbs>
       </Box>
 
+<Box sx={{maxWidth:1200,
+        width:'100%',
+        mx:'auto',
+        pt:2,
+        pb:3 }}> 
       {/* Stepper */}
       <Paper
         elevation={0}
@@ -220,13 +225,14 @@ export default function VerifyPartA() {
           </Button>
           <Button
             component={RouterLink}
-            to="/form16/upload-part-b"
+            to=""
             variant="contained"
             sx={{ textTransform: 'none' }}
           >
             Next →
           </Button>
         </Box>
+      </Box>
       </Box>
     </>
   );

@@ -37,7 +37,7 @@ export default function FinalSettlement() {
       {/* Breadcrumbs */}
       <Box sx={{ p: 2, bgcolor: 'rgba(10,20,40,0.7)' }}>
         <Breadcrumbs separator=">">
-          <MuiLink component={RouterLink} to="/" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+          <MuiLink component={RouterLink} to="/welcome" sx={{ color: 'rgba(255,255,255,0.7)' }}>
             Home
           </MuiLink>
           <MuiLink component={RouterLink} to="/updatepayroll" sx={{ color: 'rgba(255,255,255,0.7)' }}>
@@ -52,6 +52,9 @@ export default function FinalSettlement() {
       {/* Top controls */}
       <Box
         sx={{
+          maxWidth: 800,
+          width: '100%',
+          mx: 'auto',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -144,12 +147,18 @@ export default function FinalSettlement() {
       </Box>
 
       {/* Settlement table */}
+      <Box
+    sx={{
+      // allow horizontal scroll on very small screens only
+      overflowX: { xs: 'auto', sm: 'visible' },
+      width: '100%',
+    }}
+  >
       <TableContainer
         component={Paper}
         sx={{
-          mx: 2,
-          mt: 1,
-          mb: 4,
+           mx: 'auto',
+        maxWidth: 800,
           bgcolor: 'rgba(226, 223, 223, 0.14)',
           boxShadow: 'none'
         }}
@@ -206,6 +215,7 @@ export default function FinalSettlement() {
           </TableBody>
         </Table>
       </TableContainer>
+      </Box>
     </>
   );
 }

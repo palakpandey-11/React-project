@@ -1408,7 +1408,7 @@ const TimesheetTable = ({ empID, projectId }) => {
         </div>
       )}
       <Grid item xs={10} className={`wrapper ${blurScreen ? "blur" : ""}`}>
-        <h1 className="title">Worksheet Tracker</h1>
+        <h1 className="title">Work Tracker</h1>
         <p style={{ display: "none" }}>Project ID: {projectId}</p>
         {results.map((item, index) => (
           <p style={{ display: "none" }} key={index}>
@@ -1701,7 +1701,7 @@ const TimesheetTable = ({ empID, projectId }) => {
                       paddingBottom: "1px",
                     }}
                   >
-                    Testing
+                   Testing 
                   </TableCell>
                   {testingValues.map((value, index) => (
                     <TableCell
@@ -1842,7 +1842,7 @@ const TimesheetTable = ({ empID, projectId }) => {
                             },
                           },
                           disableUnderline: true,
-                          disabled: isFutureDay(index + 1),
+                          disabled: isFutureDay(index + 1) 
                         }}
                       />
                     </TableCell>
@@ -1926,6 +1926,7 @@ const TimesheetTable = ({ empID, projectId }) => {
                       }}
                     />
                   </TableCell>
+                      
                 ))}
               </TableRow>
 
@@ -2638,16 +2639,16 @@ const TimesheetTable = ({ empID, projectId }) => {
               <TableRow>
                 <TableCell
                    size="small"  // This reduces default padding
-    sx={{ 
-      backgroundColor: "#676c71", 
-      color: "white", 
-      fontSize: "14px", 
-      textAlign: "center", 
-      fontFamily: "Arial", 
-      height: "20px",
-      lineHeight: "20px",
-      padding: "2px 4px",  // Minimal padding
-    }}
+      sx={{ 
+            backgroundColor: "#676c71", 
+            color: "white", 
+            fontSize: "14px", 
+            textAlign: "center", 
+            fontFamily: "Arial", 
+            height: "20px",
+            lineHeight: "20px",
+            padding: "2px 4px",  // Minimal padding
+          }}
                 >
                   Work Status
                 </TableCell>

@@ -10,10 +10,9 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { DataGrid } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import IconButton from '@mui/material/IconButton';
+import { Snackbar, Alert } from '@mui/material';
 
 
 const LeavePage = () => {
@@ -25,10 +24,20 @@ const LeavePage = () => {
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [showHistory, setShowHistory] = useState(false);
   // const [selectedRows, setSelectedRows] = useState([]);
-   const userGender='Male';
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userGender = user?.gender?.toLowerCase();  // "male" or "female"
  //const [userGender, setUserGender] = useState("");
   //const user = useSelector(state => state.auth.user);
 //const userGender = user?.gender; // e.g. "male" or "female"
+
+const [toastState, setToastState] = useState({ show: false, message: "", type: "" });
+
+const triggerToast = (message, type) => {
+  setToastState({ show: true, message, type });
+  setTimeout(() => {
+    setToastState({ show: false, message: "", type: "" });
+  }, 2500);
+};
 
 
   const [history, setHistory] = useState(() => {
@@ -36,14 +45,14 @@ const LeavePage = () => {
     return stored ? JSON.parse(stored) : [];
   });
 
-  const leaveBalances = [
-    { type: 'Annual', value: 0.75 },
-    { type: 'RH', value: 4 },
-    { type: 'LOP', value: 0 },
-    { type: 'PL', value: 5 },
-    { type: 'ML', value: 7 },
-    { type: 'SL', value: 6 }
-  ];
+ const [leaveBalances, setLeaveBalances] = useState([
+    { code:'Annual Leave',type: 'Annual', value: 0.75 },
+    { code:'Restricted Holiday',type: 'RH', value: 8 },
+    { code:'LOP',type: 'LOP', value: 5 },
+    { code:'Privilege Leave',type: 'PL', value: 5 },
+    { code:'Maternity Leave',type: 'ML', value: 7 },
+    { code:'Sick Leave',type: 'SL', value: 10 }
+  ]);
 
   const handleClear = () => {
     setLeaveType('');
@@ -54,33 +63,67 @@ const LeavePage = () => {
 
   const handleApply = () => {
     if (!startDate || !endDate || !leaveType || !applyTo) {
-      toast.error("Please fill all fields.");
+      triggerToast("Please fill all fields.", "error");
       return;
     }
 
     if (leaveType === "Maternity Leave" && userGender !== "female") {
-    toast.error("Maternity Leave can only be applied by female employees.");
+    triggerToast("Maternity Leave can only be applied by female employees.", "error");
+    return;
+  }
+    const isDateOverlap = history.some((entry) => {
+    const existingStart = dayjs(entry.startDate, 'DD-MM-YYYY');
+    const existingEnd = dayjs(entry.endDate, 'DD-MM-YYYY');
+    return (
+      dayjs(startDate).isBetween(existingStart, existingEnd, null, '[]') ||
+      dayjs(endDate).isBetween(existingStart, existingEnd, null, '[]') ||
+      existingStart.isBetween(dayjs(startDate), dayjs(endDate), null, '[]') ||
+      existingEnd.isBetween(dayjs(startDate), dayjs(endDate), null, '[]')
+    );
+  });
+
+  if (isDateOverlap) {
+    triggerToast("Leave already applied for selected date(s).", "error");
     return;
   }
 
-  if (dayjs(endDate).isBefore(dayjs(startDate).startOf('day'))) {
-  toast.error("End date cannot be before start date.");
-  return;
-}
+    const days = dayjs(endDate).diff(dayjs(startDate), 'day') + 1;
 
-   const newEntry = {
-    id: Date.now(), // unique ID
-    empId: "100214",
-    name: "Palak P", // 👈 Add employee name
+//Find both the picked bucket and the LOP bucket
+  const pick = leaveBalances.find(lb => lb.code === leaveType);
+  const lop  = leaveBalances.find(lb => lb.type === 'LOP');
+if (!pick || !lop) return; 
+  // How many days left after emptying the primary bucket?
+const overflow = Math.max(days - pick.value, 0);
+
+  setLeaveBalances(bs => bs.map(lb => {
+    if (lb.code === leaveType) {
+      // if it under-flowed, zero it out; otherwise subtract days normally
+      return { ...lb, value: Math.max(lb.value - days, 0) };
+    }
+    if (lb.type === 'LOP' && overflow> 0) {
+      // subtract any overflow from LOP
+      return { ...lb, value: lb.value - overflow };
+    }
+    return lb;
+  }));
+
+
+// now create your history entry with the updated balance
+  const newEntry = {
+    id: Date.now(),
+    empId: "10022",
+    name: "Palak",
     leaveType,
     startDate: dayjs(startDate).format('DD-MM-YYYY'),
-    endDate: dayjs(endDate).format('DD-MM-YYYY'),
-    days: dayjs(endDate).diff(dayjs(startDate), 'day') + 1,
+    endDate:   dayjs(endDate).format('DD-MM-YYYY'),
+    days,
     appliedOn: dayjs().format('DD-MM-YYYY'),
-    reason: "",
-    balance: 15,
-    status: "Withdraw Pending"
+    reason:    "",
+    balance:   Math.max(pick.value - days, 0),
+    status:    "Withdraw Pending"
   };
+
 
     const updatedHistory = [...history, newEntry];
     setHistory(updatedHistory);
@@ -91,7 +134,7 @@ const LeavePage = () => {
     localStorage.setItem("leaveApprovals", JSON.stringify(approvals));
 
     handleClear();
-    toast.success("Leave applied successfully!");
+    triggerToast("Leave applied successfully!", "success");
   };
 
 
@@ -111,7 +154,6 @@ const LeavePage = () => {
             <Button variant={showHistory ? "outlined" : "contained"} color="primary">APPLY</Button>
             <Button variant={showHistory ? "contained" : "outlined"} className="history-button" onClick={() => navigate('/history')}>HISTORY</Button>
           </Box>
-
 
             <Box className="leave-content">
               <Box className="left-panel">
@@ -156,7 +198,7 @@ const LeavePage = () => {
                         color: 'white',
                         fontSize: '1rem',
                         width: 40,
-                        height: 40,
+                        height: 35,
                       },
                       '.Mui-selected': {
                         backgroundColor: '#1976d2',
@@ -200,13 +242,12 @@ const LeavePage = () => {
                       <MenuItem value="Annual Leave">AL</MenuItem>
                       <MenuItem value="Restricted Holiday">RH</MenuItem>
                       <MenuItem value="LOP">LOP</MenuItem>
-                      <MenuItem value="Privilege Leave">PL</MenuItem>
-                       <MenuItem
-   value="Maternity Leave"
-   disabled={userGender !== "female"}
- >
-   ML
- </MenuItem>
+                      {userGender !== "female" && (
+                      <MenuItem value="Privilege Leave" >PL</MenuItem>
+                      )}
+                      {userGender === "female" && (
+                      <MenuItem value="Maternity Leave" >ML</MenuItem>
+                      )}
                       <MenuItem value="Sick Leave">SL</MenuItem>
                     </Select>
 
@@ -214,6 +255,7 @@ const LeavePage = () => {
                       label="Start Date"
                       value={startDate}
                       onChange={(newValue) => setStartDate(newValue)}
+                      format="DD-MM-YYYY"
                       enableAccessibleFieldDOMStructure={false}
                       slots={{
                         openPickerIcon: () => null,
@@ -233,6 +275,7 @@ const LeavePage = () => {
                       label="End Date"
                       value={endDate}
                       onChange={(newValue) => setEndDate(newValue)}
+                      format="DD-MM-YYYY"
                       enableAccessibleFieldDOMStructure={false}
                       slots={{
                         openPickerIcon: () => null,
@@ -272,11 +315,24 @@ const LeavePage = () => {
               </Card>
             </Box>
         </Box>
-        <ToastContainer position="top-right" autoClose={3000} />
+        <Snackbar
+  open={toastState.show}
+  autoHideDuration={3000}
+  onClose={() => setToastState({ show: false, message: "", type: "" })}
+  anchorOrigin={{ vertical: "top", horizontal: "right" }}
+>
+  <Alert
+    onClose={() => setToastState({ show: false, message: "", type: "" })}
+    severity={toastState.type}
+    variant="filled"
+    sx={{ width: "100%" }}
+  >
+    {toastState.message}
+  </Alert>
+</Snackbar>
       </Box>
     </Box>
   );
 };
 
 export default LeavePage;
-
