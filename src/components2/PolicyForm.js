@@ -12,6 +12,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { FormControl } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import Navbar from './Navbar.js';
 
 const PolicyForm = () => {
   const navigate = useNavigate();   
@@ -19,9 +20,11 @@ const PolicyForm = () => {
   const [employeeType, setEmployeeType] = useState("No Options");
 
   return (
-    <Box sx={{ p: 1.5 }}>
+    <Box>
+      <Navbar/>
+    <Box sx={{width:'80%',margin:'0 auto',mt:'65px' }}>
       {/* Breadcrumbs */}
-        <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' }, mb: 2 }}>
+        <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' }}}>
           <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>
           <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/updateemp">Employee</Link>
           <Link underline="hover" component={RouterLink} style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600 }} to="/company">Company Policies & Forms</Link>
@@ -107,18 +110,18 @@ const PolicyForm = () => {
        <Box sx={{
         border: '1px solid #cfd8dc',
         borderRadius: 2,
-        p: 2,
+        p: 1,
         bgcolor: 'transparent',
-        width:{md:'60%'},
+        width:{md:'75%'},
 
       }}>
-      <Typography variant="h5" fontWeight={600} gutterBottom sx={{color:'white'}}>
+      <Typography variant="h6" fontWeight={600} gutterBottom sx={{color:'white'}}>
         Create Company Policy
       </Typography>
 
       <Box sx={{ display: 'flex', gap: 2 }}>
         {/* Left Section */}
-        <Box sx={{ flex: 2, border: '1px solid gray', borderRadius: 1, p: 1.5, bgcolor: 'rgba(41, 38, 38, 0.49)' }}>
+        <Box sx={{ flex: 2, border: '1px solid gray', borderRadius: 1, p: 1, bgcolor: 'rgba(41, 38, 38, 0.49)' }}>
           <Typography fontWeight={600} fontSize={16} mb={1} color="white">Policy Information</Typography>
 
 <TextField
@@ -293,6 +296,7 @@ const PolicyForm = () => {
     </Box>
     </Box>    
     </Box>
+     </Box>
   );
 };
 

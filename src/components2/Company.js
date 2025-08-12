@@ -9,6 +9,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import GroupIcon from '@mui/icons-material/Group';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
+import Navbar from './Navbar.js';
 
 const Company = () => {
   const navigate = useNavigate();
@@ -17,7 +18,9 @@ const Company = () => {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box>
+      <Navbar/>
+    <Box sx={{ width:'80%',margin:'0 auto',mt:'65px' }}>
       {/* Breadcrumbs */}
       <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' } }}>
         <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>
@@ -123,7 +126,7 @@ const Company = () => {
             py: 6,
             textAlign: 'center',
             bgcolor: 'rgba(49, 47, 47, 0.57)',
-            minHeight: 400
+            minHeight: 300
           }}>
             <img
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQS_LiRVeB9FqtxVprOb16geHXhuveXlmqw0A&s"
@@ -147,7 +150,7 @@ const Company = () => {
             py: 6,
             textAlign: 'center',
             bgcolor: 'rgba(49, 47, 47, 0.57)',
-            minHeight: 400
+            minHeight: 300
           }}>
             <img
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQS_LiRVeB9FqtxVprOb16geHXhuveXlmqw0A&s"
@@ -167,6 +170,7 @@ const Company = () => {
       </Box>
       </Box>
     </Box>
+     </Box>
   );
 };
 

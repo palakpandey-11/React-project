@@ -7,6 +7,8 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import IconButton from '@mui/material/IconButton';
 
 export default function Timesheet() {
      const [selectedEmployee, setSelectedEmployee] = useState('');
@@ -20,7 +22,6 @@ export default function Timesheet() {
 
 
 return (
-    
     <Box sx={{
       minHeight: '90vh',
       display: 'flex',
@@ -30,7 +31,13 @@ return (
       py: 1,
       
     }}>
-       
+              <IconButton
+        onClick={() => navigate('/dashboard')}
+        sx={{ position: 'absolute', top: 16, left: 16, color: 'white' }}
+      >
+        <ArrowBackIosIcon />
+      </IconButton>
+
        <Typography variant="h5" className="reports-title" sx={{color:'white'}}>REPORTS</Typography>
     
   <Box className="random" sx={{    
@@ -85,8 +92,8 @@ return (
           width: '100%',
           maxWidth: 600,
           p: 4,
-          border: '3px solid rgba(255,255,255,0.7)',
-          backgroundColor: 'rgba(255,255,255,0.3)',
+          border: '3px solid black',
+          backgroundColor: 'rgba(255,255,255,0.4)',
         }}
       >
        {/* Employee Dropdown */}
@@ -100,28 +107,28 @@ return (
     mb: 3,
     mt: 5,
     '& .MuiInputBase-root': {
-      color: 'white',
+      color: 'black',
     },
     '& .MuiOutlinedInput-notchedOutline': {
-      borderColor: 'white',
+      borderColor: 'black',
     },
     '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-      borderColor: 'white', // ✅ hover fix
+      borderColor: 'black', // ✅ hover fix
     },
     '&:hover .MuiOutlinedInput-notchedOutline': {
-      borderColor: 'white',
+      borderColor: 'black',
     },
     '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-      borderColor: 'white',
+      borderColor: 'black',
     },
     '& .MuiInputLabel-root': {
-      color: 'white',
+      color: 'black',
     },
     '& .MuiInputLabel-root.Mui-focused': {
-      color: 'white',
+      color: 'black',
     },
     '& .MuiSvgIcon-root': {
-      color: 'white',
+      color: 'black',
     },
   }}
 >
@@ -145,28 +152,28 @@ return (
           width: '100%',
           mb: 3,
           '& .MuiInputBase-root': {
-            color: 'white',
+            color: 'black',
           },
           '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'white',
+            borderColor: 'black',
           },
           '&:hover fieldset': {
-              borderColor: 'white',
+              borderColor: 'black',
           },
           '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'white',
+            borderColor: 'black',
           },
           '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'white',
+            borderColor: 'black',
           },
           '& .MuiInputLabel-root': {
-            color: 'white',
+            color: 'black',
           },
           '& .MuiInputLabel-root.Mui-focused': {
-            color: 'white',
+            color: 'black',
           },
           '& .MuiSvgIcon-root': {
-            color: 'white',
+            color: 'black',
           },
         },
       },

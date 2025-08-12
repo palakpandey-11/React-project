@@ -30,8 +30,6 @@ export default function Reports() {
   };
 
   return (
-    
-
     <Box sx={{
       minHeight: '90vh',
       display: 'flex',
@@ -50,12 +48,11 @@ export default function Reports() {
 
        <Typography variant="h5" className="reports-title" sx={{color:'white'}}>REPORTS</Typography>
     
-
   <Box className="random" sx={{    
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'column', 
-    width: '80%',
+    width: '70%',
     height: '550px',
   }} >
 
@@ -69,17 +66,15 @@ export default function Reports() {
                       <Button variant="outlined" onClick={() => navigate('/timesheet')} >TIMESHEET</Button>
                     </Box>
        
-
       <Paper elevation={6} sx={{
         width: '100%',
-        maxWidth: 800,
+        maxWidth: 600,
         p: 4,
         mb: '50px',
         border: '3px solid rgba(255,255,255,0.7)',
         backgroundColor: 'rgba(255,255,255,0.6)'
       }}>
             
-
         <Typography variant="h6" sx={{ mb: 1,mt : 0,  textAlign: 'center' }}>
           Employee Leave Transaction
         </Typography>
@@ -120,13 +115,9 @@ export default function Reports() {
     <MenuItem value="ALL">All Employees</MenuItem>
   )}
   {/* Always present employee list */}
-  <MenuItem value="Pranali - 100245">Pranali - 100245</MenuItem>
-  <MenuItem value="Palak - 100214">Palak - 100214</MenuItem>
-  <MenuItem value="Om - 100214">Om - 100235</MenuItem>
+  <MenuItem value="Pranali - 100245">Pranali - 10023</MenuItem>
+  <MenuItem value="Palak - 100214">Palak - 10022</MenuItem>
 </TextField>
-
-
-
 
         <TextField
   select

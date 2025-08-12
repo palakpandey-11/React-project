@@ -39,7 +39,7 @@ const closeImage = () => {
 };
 
 const cards = [
-  { title: 'OptiTime', image: time, route: '/timesheettable' },
+  { title: 'Work Tracker', image: time, route: '/timesheettable' },
   { title: 'Reports', image: reports, route: '/reports', restrictedTo:  ['employee', 'manager'] },
   { title: 'Careers', image: careers },
   { title: 'Learning', image: learn},
@@ -61,7 +61,7 @@ const handleLogout = () => {
   return (
     <>
      <header className="dashboard-header">
-  <div className="logo-name">WorkNexus</div>
+  <div className="logo-name">FlowSync</div>
         <div className="user-info">
           <div className="role">
      <div className="name">{user?.name || "Employee"}</div>
@@ -79,13 +79,14 @@ const handleLogout = () => {
         </header>
     <div className="dashboard-container">
         {cards.map((card, idx) => {
-          const isHidden = Array.isArray(card.restrictedTo) && card.restrictedTo.includes(user?.role);
-if (isHidden) return null;
+          const isRestricted = Array.isArray(card.restrictedTo) && card.restrictedTo.includes(user?.role);
           return (
-          <div className="card" 
+          <div className={`card ${isRestricted ? 'disabled-card' : ''}`}
           key={idx}  
-           onClick={() => card.route && navigate(card.route)}
-          style={{ cursor: card.route ? 'pointer' : 'default' }}
+           onClick={() =>{
+      if (!isRestricted && card.route) navigate(card.route);
+    }}
+          style={{ cursor:!isRestricted && card.route ? 'pointer' : 'not-allowed' }}
         >
           <img src={card.image} alt={card.title} />
           <div className="title">{card.title}</div>

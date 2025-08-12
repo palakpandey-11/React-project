@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Slide from '@mui/material/Slide';
+import Navbar from './Navbar.js';
 
 const AnalyticsHub = () => {
   const [payrollMonth, setPayrollMonth] = useState("Jul'25");
@@ -161,8 +162,10 @@ const [employeeList, setEmployeeList] = useState(() => {
   });
 
   return (
-  
-<Box sx={{ p: 3, bgcolor: 'transparent', minHeight: '100vh', overflow: 'auto', transition: '0.3s ease'}}>
+<Box>  
+   <Navbar/>
+<Box sx={{  bgcolor: 'transparent', overflow: 'auto', transition: '0.3s ease',width:'80%',margin:'0 auto',mt:'70px'}}>
+
   {/* Breadcrumb */}
   <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': {color: 'rgba(255,255,255,0.4)' },fontSize:{xs:14,md:16} }}>
     <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>
@@ -244,8 +247,8 @@ const [employeeList, setEmployeeList] = useState(() => {
   </LocalizationProvider>
 
   {/* Cards */}
-  <Paper sx={{ p: 3, display: 'flex',mx: 'auto', alignItems: 'center', background: 'rgba(255, 255, 255, 0.08)',borderRadius: 2,backdropFilter: 'blur(10px)',border: '1px solid rgba(255, 255, 255, 0.2)', mb:3 }}>
-  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
+  <Paper sx={{ p: 2, display: 'flex',mx: 'auto', alignItems: 'center', background: 'rgba(255, 255, 255, 0.08)',borderRadius: 2,backdropFilter: 'blur(10px)',border: '1px solid rgba(255, 255, 255, 0.2)', mb:2 }}>
+  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
     {cards.map((card, i) => (
       <Box
         key={i}
@@ -262,7 +265,7 @@ const [employeeList, setEmployeeList] = useState(() => {
           border: selectedCard === card ? '1px solid #90caf9' : '1px solid white',
           borderRadius: 2,
           cursor: 'pointer',
-          minWidth: {xs:100,md:150},
+          minWidth: {xs:90,md:90},
           color: '#fff',
           backdropFilter: 'blur(6px)',
           transition: '0.3s',
@@ -284,7 +287,7 @@ const [employeeList, setEmployeeList] = useState(() => {
   backdropFilter: 'blur(10px)',
   border: '1px solid rgba(255, 255, 255, 0.2)',
 }}>
-  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
     <Typography fontWeight={600} color="white">All Employee Info</Typography>
     <Button variant="contained" component={RouterLink} to="/addemp">Add Employee</Button>
   </Box>
@@ -320,7 +323,7 @@ const [employeeList, setEmployeeList] = useState(() => {
   }}>
     <Table stickyHeader size="small" >
       <TableHead >
-        <TableRow sx={{height: 32}}>
+        <TableRow sx={{height: 25}}>
           {[
             "Emp ID", "Emp Name", "DOJ", "Gender", "DOB", "Email ID", "Status", "Confirmation Date", 
             "Age Range", "Manager ID", "Manager Name", "Phone No", "Blood Group", "Emp Status", 
@@ -1049,6 +1052,7 @@ const [employeeList, setEmployeeList] = useState(() => {
   </Slide>
 )}
 
+</Box>
 </Box>
   );
 };

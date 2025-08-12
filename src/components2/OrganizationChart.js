@@ -15,6 +15,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import GroupIcon from '@mui/icons-material/Group';
 import dayjs from 'dayjs';
 import InputAdornment from '@mui/material/InputAdornment';
+import Navbar from './Navbar.js';
 
 const EmployeeCard = ({ emp, highlight }) => (
   <Box sx={{
@@ -101,7 +102,8 @@ const OrganizationChart = () => {
 
   return (
     <Box sx={{ p: 0 }}>
-    <Box sx={{ p: 2, filter: openDialog ? 'blur(4px)' : 'none',transition: '0.3s ease' }}>
+      <Navbar/>
+    <Box sx={{ filter: openDialog ? 'blur(4px)' : 'none',transition: '0.3s ease',width:'80%',margin:'0 auto',mt:'70px' }}>
         {/* Breadcrumb */}
   <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': {color: 'rgba(255,255,255,0.4)' } }}>
     <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>

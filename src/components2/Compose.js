@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import GroupIcon from '@mui/icons-material/Group';
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from 'react-router-dom';
+import Navbar from './Navbar.js';
 
 const Compose = () => {
   const navigate = useNavigate();    
@@ -20,9 +21,11 @@ const Compose = () => {
   const [content, setContent] = useState("Hi [EMP_NAME_AND_NUMBER],");
 
   return (
-    <Box p={2}>
+    <Box>
+      <Navbar/>
+    <Box sx={{width:'80%',margin:'0 auto',mt:'65px'}}>
       {/* Breadcrumbs */}
-      <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' }, mb: 2 }}>
+      <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' } }}>
         <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>
         <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/updateemp">Employee</Link>
         <Link underline="hover" component={RouterLink} style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600 }} to="/masscom">Mass Communication</Link>
@@ -30,7 +33,7 @@ const Compose = () => {
 
       {/* Filters */}
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mb: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mb: 1 }}>
           {/* Payroll Month */}
           <Box sx={{
             display: 'flex',
@@ -100,7 +103,7 @@ const Compose = () => {
       </LocalizationProvider>
 
       {/* Compose Section */}
-      <Box p={2} sx={{ backgroundColor: 'rgba(46, 43, 43, 0.76)', maxWidth: '900px',mx: 'auto',borderRadius: 2,boxShadow: 3,border:'1px solid gray' }}>
+      <Box p={1} sx={{ backgroundColor: 'rgba(46, 43, 43, 0.76)', maxWidth: '1000px',mx: 'auto',borderRadius: 2,boxShadow: 3,border:'1px solid gray' }}>
         {/* Dropdowns */}
         <Grid container spacing={2} alignItems="center" mb={1}>
           <Box>
@@ -301,6 +304,7 @@ const Compose = () => {
           <Button variant="outlined" onClick={()=> navigate('/masscom')}>Close</Button>
         </Box>
       </Box>
+    </Box>
     </Box>
   );
 };

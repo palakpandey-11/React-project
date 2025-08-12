@@ -23,7 +23,6 @@ import {
   Add as AddIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import citylight from '../image/Citylight.png';
 
 
 export default function Welcome() {
@@ -65,7 +64,7 @@ export default function Welcome() {
           <Box>
             <IconButton sx={{ color: 'white' }}><SearchIcon /></IconButton>
             <IconButton sx={{ color: 'white' }}><SettingsIcon /></IconButton>
-            <IconButton sx={{ color: 'error.light' }} onClick={()=> navigate('/dashboard')}><LogoutIcon /></IconButton>
+            <IconButton sx={{ color: 'error.light' }}><LogoutIcon /></IconButton>
           </Box>
         </Toolbar>
       </AppBar>
@@ -88,7 +87,7 @@ export default function Welcome() {
           exclusive
           onChange={(_, v) => v && setView(v)}
           sx={{
-            bgcolor: 'rgba(33, 33, 33, 0.6)',
+           // bgcolor: 'rgba(33, 33, 33, 0.6)',
             borderRadius: 2,
             mb: 4,
             '& .MuiToggleButton-root': {
@@ -104,103 +103,21 @@ export default function Welcome() {
             },
           }}
         >
-          <ToggleButton value="welcome">Welcome</ToggleButton>
+          <ToggleButton value="welcome">Components</ToggleButton>
           <ToggleButton value="dashboard">Dashboard</ToggleButton>
         </ToggleButtonGroup>
 
         {/* Hero “Glass” Panel */}
-        <Paper
-          elevation={8}
-          sx={{
-            position:'relative',
-            width: '100%',
-            maxWidth: 1200,
-            minHeight:200,
-            textAlign: 'center',
-            p: 4,
-            mb: 5,
-            overflow:'hidden',
-            //bgcolor: 'rgba(0,0,0,0.4)',
-            //backdropFilter: 'blur(8px)',
-            borderRadius: 3,
-            //backgroundImage:`url(${citylight})`,
-            //backgroundSize:'cover',
-            //backgroundPosition:'center',
-            //border: '1px solid rgba(255,255,255,0.2)',
-          }}
-        >
-         {/* 1) Blurred background layer */}
-  <Box
-    sx={{
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundImage: `url(${citylight})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      filter: 'blur(3px)',
-      transform: 'scale(1.05)',
-      zIndex: 0,
-      border: "none",
-      borderRadius: 3,
-    }}
-  />
-  <Box
-    sx={{
-      position: 'absolute',
-      zIndex: 1,
-      width: '60%',
-      height: '50%',
-      top:'14%',
-      left:'16%',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      p: 4,
-      bgcolor: 'rgba(0,0,0,0.4)',
-      borderRadius: 2,
-    }}
-          >
-          <Typography variant="h2" gutterBottom sx={{ fontWeight: '300', color: 'common.white' }}>
-            Good Evening
-          </Typography>
-          <Typography variant="h6" sx={{ color: 'grey.400' }}>
-            Let's do great things together. 🚀
-          </Typography>
-          </Box>
-        </Paper>
+        
 
         {/* My Favourites */}
         <Box sx={{ width: '100%', maxWidth: 1200, mx:'auto', px:'12px', overflowX:"hidden" }}>
           <Typography variant="h5" gutterBottom sx={{ mb: 2, pl: 1 }}>
-            My Favourites
+            Components
           </Typography>
 
           <Grid container spacing={3}>
-            {/* “Add” Card */}
-            <Grid item xs={12} sm={6} md={4} lg={3}>
-              <Card
-                sx={{
-                  height: 160,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  border: '2px dashed',
-                  borderColor: 'primary.light',
-                  bgcolor: 'rgba(30,136,229,0.1)',
-                  transition: 'transform 0.2s, background-color 0.2s',
-                  '&:hover': {
-                    transform: 'scale(1.05)',
-                    bgcolor: 'rgba(30,136,229,0.2)',
-                  },
-                }}
-              >
-                <AddIcon sx={{ fontSize: 48, color: 'primary.light' }} />
-              </Card>
-            </Grid>
+            
 
             {favouriteItems.map((item, idx) => (
               <Grid key={idx} item xs={12} sm={6} md={4} lg={3}>
@@ -214,11 +131,6 @@ export default function Welcome() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     boxShadow: 4,
-                    transition: 'transform 0.2s, box-shadow 0.2s',
-                    '&:hover': {
-                      transform: 'translateY(-6px)',
-                      boxShadow: 8,
-                    },
                     cursor: item.route ? 'pointer' : 'default'
                   }}
                   onClick={() => item.route && navigate(item.route)}

@@ -10,6 +10,7 @@ import dayjs from 'dayjs';
 import { useLocation } from "react-router-dom";
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
+import Navbar from './Navbar.js';
 
 const steps = ["General", "Select Employees", "Preview", "Publish/Download"];
 
@@ -84,7 +85,9 @@ const filteredEmployees = originalEmployees.filter((emp) =>
   };
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box>
+      <Navbar/>
+    <Box sx={{ p: 2,width:'80%',margin:'0 auto',mt:'50px' }}>
       {/* Breadcrumbs */}
       <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' } }}>
         <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>
@@ -584,6 +587,7 @@ const filteredEmployees = originalEmployees.filter((emp) =>
         </Button>
   )}
       </Box>
+    </Box>
     </Box>
     </Box>
     </Box> 

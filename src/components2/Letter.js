@@ -23,6 +23,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Tooltip } from '@mui/material';
 import jsPDF from 'jspdf';
+import Navbar from './Navbar.js';
 
 
 const Letter = () => {
@@ -137,8 +138,9 @@ const Letter = () => {
     };
 
   return (
-    <Box sx={{ p: 2 }}>
-    
+    <Box>
+      <Navbar/>
+    <Box sx={{width:'80%',margin:'0 auto',mt:'70px' }}>
       {/* Breadcrumbs */}
         <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' }, mb: 2 }}>
           <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>
@@ -219,7 +221,7 @@ const Letter = () => {
         </LocalizationProvider>
 
       {/* Banner */}
-      <Paper sx={{ p: 1, mb: 2, display: 'flex', alignItems: 'center', backgroundColor: 'rgba(53, 49, 49, 0.63)', color: 'white',border: '1px solid white' }}>
+      <Paper sx={{ p: 1, mb: 1, display: 'flex', alignItems: 'center', backgroundColor: 'rgba(53, 49, 49, 0.63)', color: 'white',border: '1px solid white' }}>
         <img
           src="https://img.icons8.com/color/48/000000/document.png"
           alt="icon"
@@ -236,7 +238,7 @@ const Letter = () => {
 
     <Box sx={{border: '2px solid white', backgroundColor: 'rgba(53, 49, 49, 0.63)', p: 1}}>
       {/* Search & Export */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
         <TextField
           placeholder="Search"
           size="small"
@@ -344,7 +346,7 @@ const Letter = () => {
       </TableContainer>
 
       {/* Pagination */}
-<Box sx={{ display: 'flex',justifyContent: 'flex-end', alignItems: 'center', mt: 2 }}>
+<Box sx={{ display: 'flex',justifyContent: 'flex-end', alignItems: 'center', mt: 1 }}>
   <Pagination
     count={Math.ceil(filteredRows.length / rowsPerPage)}
     page={page}
@@ -451,9 +453,8 @@ BackdropProps={{
     Letter deleted successfully
   </Alert>
 </Snackbar>
-
 </Box>
-
+</Box>
   );
 };
 

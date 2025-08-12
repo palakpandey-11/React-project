@@ -25,6 +25,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import Navbar from './Navbar.js';
 
 const AddBulletin = () => {
   const navigate = useNavigate();  
@@ -69,12 +70,12 @@ const AddBulletin = () => {
   setCriteriaList(prev => prev.filter(item => item.id !== id));
 };
 
-  
-
   return (
-    <Box p={2}>
+    <Box>
+      <Navbar/>
+    <Box sx={{width:'80%',margin:'0 auto',mt:'70px'}}>
             {/* Breadcrumbs */}
-              <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' }, mb: 2 }}>
+              <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' }}}>
                 <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>
                 <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/updateemp">Employee</Link>
                 <Link underline="hover" component={RouterLink} style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600 }} to="/bulletin">Bulletin Board</Link>
@@ -83,7 +84,7 @@ const AddBulletin = () => {
       
               {/* Filters */}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mb: 2 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mb: 1 }}>
                   {/* Payroll Month Picker */}
                   <Box sx={{
                     display: 'flex',
@@ -151,7 +152,7 @@ const AddBulletin = () => {
                   </Box>
                 </Box>
               </LocalizationProvider>    
-    <Box p={2} sx={{backgroundColor:'rgba(255, 255, 255, 0.58)',border:'1px solid gray',borderRadius:'5px',width: { xs: '90vw', sm: '80vw', md: '70vw' },m:'20px auto'}}>
+    <Box p={1} sx={{backgroundColor:'rgba(255, 255, 255, 0.58)',border:'1px solid gray',borderRadius:'5px',width: { xs: '90vw', sm: '80vw', md: '70vw' },m:'20px auto'}}>
       <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={1} >
         <Box flex={0.5} mr={2} color="white" >
           <InputLabel >Category</InputLabel>
@@ -414,8 +415,7 @@ const AddBulletin = () => {
     </Box>
   </Box>
 </Dialog>
-
-
+    </Box>
     </Box>
   );
 };

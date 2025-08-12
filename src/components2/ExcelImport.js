@@ -29,6 +29,7 @@ import { useNavigate } from 'react-router-dom';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import GroupIcon from '@mui/icons-material/Group';
 import { Link as RouterLink } from 'react-router-dom';
+import Navbar from './Navbar.js';
 
 const ExcelImport = () => {
   const navigate = useNavigate();  
@@ -64,7 +65,7 @@ const ExcelImport = () => {
       type: 'Add/Revise Salary',
       status: 'COMPLETED',
     },
-    ...Array(8).fill({
+    ...Array(7).fill({
       file: 'Attendance Swipes.xlsx',
       importedOn: '02 Nov 2020 20:10:43',
       uploadedBy: 'Admin',
@@ -74,7 +75,9 @@ const ExcelImport = () => {
   ];
 
   return (
-    <Box p={2}>
+    <Box>
+      <Navbar/>
+    <Box p={1} sx={{width:'80%',margin:'0 auto',mt:'50px'}}>
       {/* Breadcrumbs */}
         <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' }, mb: 2 }}>
           <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>
@@ -154,7 +157,7 @@ const ExcelImport = () => {
           </Box>
         </LocalizationProvider>
 
-      <FormControl sx={{ minWidth: 200,height:40,'& .MuiOutlinedInput-root': {  height: 40, 
+      <FormControl sx={{ minWidth: 200,height:40,'& .MuiOutlinedInput-root': {  height: 35, 
         '& fieldset': {   
         borderColor: 'white',
     },
@@ -202,7 +205,7 @@ const ExcelImport = () => {
         Import From Excel
       </Button>
 
-    <Box mt={1} sx={{ bgcolor: 'rgba(255, 255, 255, 0.1)',
+    <Box sx={{ bgcolor: 'rgba(255, 255, 255, 0.1)',
             backdropFilter: 'blur(10px)',
             border: '1px solid rgba(255, 255, 255, 0.2)',
             borderRadius: 2,
@@ -215,7 +218,7 @@ const ExcelImport = () => {
       <TableContainer component={Paper} sx={{backgroundColor: 'rgba(255,255,255,0.6)'}}>
         <Table size="small">
           <TableHead>
-            <TableRow sx={{ height: 40 }}>
+            <TableRow sx={{ height: 38 }}>
               <TableCell><b>File</b></TableCell>
               <TableCell><b>Type</b></TableCell>
               <TableCell><b>Status</b></TableCell>
@@ -233,7 +236,7 @@ const ExcelImport = () => {
                   </Typography>
                 </TableCell>
                 <TableCell sx={{ py: 0.5 }}>{row.type}</TableCell>
-                <TableCell sx={{ py: 0.5,color: 'lightgreen' }}>{row.status}</TableCell>
+                <TableCell sx={{ py: 0.5,color: 'green' }}>{row.status}</TableCell>
                 <TableCell sx={{ py: 0.5 }}>
                   <Button
                     onClick={handleOpenErrorDialog}
@@ -351,8 +354,7 @@ const ExcelImport = () => {
     <Button variant="outlined" onClick={handleCloseErrorDialog}>OK</Button>
   </DialogActions>
 </Dialog>
-
-
+</Box>
 </Box>
   );
 };

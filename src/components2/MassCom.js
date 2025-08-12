@@ -24,6 +24,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import GroupIcon from '@mui/icons-material/Group';
 import { useNavigate } from 'react-router-dom';
+import Navbar from './Navbar.js';
 
 const MassCom = () => {
   const navigate = useNavigate();
@@ -57,9 +58,11 @@ const MassCom = () => {
   ];
 
   return (
-    <Box p={2} sx={{ backgroundColor: 'transparent', maxHeight: '100vh' }}>
+    <Box>
+      <Navbar/>
+    <Box sx={{ backgroundColor: 'transparent', maxHeight: '100vh',width:'80%',margin:'0 auto',mt:'70px' }}>
             {/* Breadcrumbs */}
-              <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' }, mb: 2 }}>
+              <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' } }}>
                 <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>
                 <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/updateemp">Employee</Link>
                 <Link underline="hover" component={RouterLink} style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600 }} to="/masscom">Mass Communication</Link>
@@ -136,7 +139,7 @@ const MassCom = () => {
                   </Box>
                 </Box>
               </LocalizationProvider>        
-      <Box mb={2} mt={5}>
+      <Box mb={1} mt={2}>
         <Button variant="contained" color="primary" onClick={()=> navigate('/compose')} >
           Compose
         </Button>
@@ -179,6 +182,7 @@ const MassCom = () => {
         <Box>
         </Box>
       </Box>
+    </Box>
     </Box>
   );
 };

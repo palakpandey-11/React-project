@@ -24,7 +24,8 @@ const LeavePage = () => {
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [showHistory, setShowHistory] = useState(false);
   // const [selectedRows, setSelectedRows] = useState([]);
-   const userGender='Male';
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userGender = user?.gender?.toLowerCase();  // "male" or "female"
  //const [userGender, setUserGender] = useState("");
   //const user = useSelector(state => state.auth.user);
 //const userGender = user?.gender; // e.g. "male" or "female"
@@ -35,7 +36,7 @@ const triggerToast = (message, type) => {
   setToastState({ show: true, message, type });
   setTimeout(() => {
     setToastState({ show: false, message: "", type: "" });
-  }, 1500);
+  }, 2500);
 };
 
 
@@ -44,14 +45,14 @@ const triggerToast = (message, type) => {
     return stored ? JSON.parse(stored) : [];
   });
 
-  const leaveBalances = [
-    { type: 'Annual', value: 0.75 },
-    { type: 'RH', value: 4 },
-    { type: 'LOP', value: 0 },
-    { type: 'PL', value: 5 },
-    { type: 'ML', value: 7 },
-    { type: 'SL', value: 6 }
-  ];
+ const [leaveBalances, setLeaveBalances] = useState([
+    { code:'Annual Leave',type: 'Annual', value: 0.75 },
+    { code:'Restricted Holiday',type: 'RH', value: 8 },
+    { code:'LOP',type: 'LOP', value: 5 },
+    { code:'Privilege Leave',type: 'PL', value: 5 },
+    { code:'Maternity Leave',type: 'ML', value: 7 },
+    { code:'Sick Leave',type: 'SL', value: 10 }
+  ]);
 
   const handleClear = () => {
     setLeaveType('');
@@ -70,24 +71,53 @@ const triggerToast = (message, type) => {
     triggerToast("Maternity Leave can only be applied by female employees.", "error");
     return;
   }
+    const isDateOverlap = history.some((entry) => {
+    const existingStart = dayjs(entry.startDate, 'DD-MM-YYYY');
+    const existingEnd = dayjs(entry.endDate, 'DD-MM-YYYY');
+    return (
+      dayjs(startDate).isBetween(existingStart, existingEnd, null, '[]') ||
+      dayjs(endDate).isBetween(existingStart, existingEnd, null, '[]') ||
+      existingStart.isBetween(dayjs(startDate), dayjs(endDate), null, '[]') ||
+      existingEnd.isBetween(dayjs(startDate), dayjs(endDate), null, '[]')
+    );
+  });
 
-  if (dayjs(endDate).isBefore(dayjs(startDate).startOf('day'))) {
-  triggerToast("End date cannot be before start date.", "error");
-  return;
-}
+  if (isDateOverlap) {
+    triggerToast("Leave already applied for selected date(s).", "error");
+    return;
+  }
 
-   const newEntry = {
-    id: Date.now(), // unique ID
+    const days = dayjs(endDate).diff(dayjs(startDate), 'day') + 1;
+
+// find the matching balance slot
+  const slot = leaveBalances.find(lb => lb.code === leaveType);
+  if (!slot) return; // guard
+
+// subtract the days taken
+  const newBalance = slot.value - days;
+
+// update state so your blue buttons immediately show the new number
+  setLeaveBalances(balances =>
+    balances.map(lb =>
+      lb.code === leaveType
+        ? { ...lb, value: newBalance }
+        : lb
+    )
+  );
+
+// now create your history entry with the updated balance
+  const newEntry = {
+    id: Date.now(),
     empId: "10022",
-    name: "Palak", // 👈 Add employee name
+    name: "Palak",
     leaveType,
     startDate: dayjs(startDate).format('DD-MM-YYYY'),
-    endDate: dayjs(endDate).format('DD-MM-YYYY'),
-    days: dayjs(endDate).diff(dayjs(startDate), 'day') + 1,
+    endDate:   dayjs(endDate).format('DD-MM-YYYY'),
+    days,
     appliedOn: dayjs().format('DD-MM-YYYY'),
-    reason: "",
-    balance: 15,
-    status: "Withdraw Pending"
+    reason:    "",
+    balance:   newBalance,
+    status:    "Withdraw Pending"
   };
 
     const updatedHistory = [...history, newEntry];
@@ -207,13 +237,12 @@ const triggerToast = (message, type) => {
                       <MenuItem value="Annual Leave">AL</MenuItem>
                       <MenuItem value="Restricted Holiday">RH</MenuItem>
                       <MenuItem value="LOP">LOP</MenuItem>
-                      <MenuItem value="Privilege Leave">PL</MenuItem>
-                       <MenuItem
-   value="Maternity Leave"
-   disabled={userGender !== "female"}
- >
-   ML
- </MenuItem>
+                      {userGender !== "female" && (
+                      <MenuItem value="Privilege Leave" >PL</MenuItem>
+                      )}
+                      {userGender === "female" && (
+                      <MenuItem value="Maternity Leave" >ML</MenuItem>
+                      )}
                       <MenuItem value="Sick Leave">SL</MenuItem>
                     </Select>
 
@@ -302,4 +331,3 @@ const triggerToast = (message, type) => {
 };
 
 export default LeavePage;
-

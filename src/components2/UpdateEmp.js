@@ -448,7 +448,7 @@ const handleSendMessage = () => {
 </Drawer>
 
         {/* Page Content */}
-        <Box p={3} pt={10}  >
+        <Box pt={7}  >
           <Box sx={{ p:3, maxWidth: '1200px',mx: 'auto'}}>
           {/* Breadcrumb and Filters in One Row */}
           <Box
@@ -457,7 +457,7 @@ const handleSendMessage = () => {
   justifyContent="space-between"
   alignItems={{ xs: 'stretch', sm: 'center' }}
   gap={2}
-  sx={{ mb: 2 }}
+  sx={{ mb: 1}}
 >
             <Breadcrumbs aria-label="breadcrumb" separator=">" sx={{ '& .MuiBreadcrumbs-separator': {color: 'rgba(255,255,255,0.4)' },fontSize:{xs:13,md:16} }}>
               <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>
@@ -538,7 +538,7 @@ const handleSendMessage = () => {
           </Box>
 
           {/* Search Section */}
-          <Paper sx={{ p: 2, display: 'flex', justifyContent: 'space-between',maxWidth: '1100px',mx: 'auto', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.3)', mt: 1 }}>
+          <Paper sx={{ p: 2, display: 'flex', justifyContent: 'space-between',width:'80%',maxWidth: '900px',mx: 'auto', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.3)'}}>
             <Box width="100%" maxWidth="500px">
               <Typography fontWeight="bold" fontSize={{xs:12,md:18}} mb={1} color="white">
                 Start searching to see specific employee details here
@@ -565,7 +565,7 @@ const handleSendMessage = () => {
   </Select>
 </Box>
 
-              <TextField
+  <TextField
   fullWidth
   placeholder="Search by Emp No/ Name"
   variant="outlined"
@@ -629,13 +629,13 @@ const handleSendMessage = () => {
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmxvVgUbUVuW7In4M3VxZYEuGl29BoYeO9QA&s"
                 alt="illustration"
-                style={{ maxWidth: '80%', height: 'auto' }}
+                style={{ maxWidth: '75%', height: 'auto' }}
               />
             </Box>
           </Paper>
         </Box>
         {showInfo && (
-  <Box maxWidth="1155px"  mx="auto">
+  <Box maxWidth="1000px"  mx="auto">
     <Info  />
   </Box>
 )}

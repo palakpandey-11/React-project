@@ -60,16 +60,17 @@ const [selected, setSelected]   = useState([])
 }
   // APPROVE logic
 const handleApprove = () => {
-    if (!selected.length) return
+  if (!selected.length) return;
 
-    const approvedItems = activeRows
-      .filter(r => selected.includes(r.id))
+  // 1) Build the newly‐approved items with updated balances
+  const approvedItems = activeRows
+    .filter(r => selected.includes(r.id))
     .map(r => ({
       ...r,
       status:  'Approved',
-      reason:  r.reason  || 'SickLeave',  // or whatever default you like
-      balance: r.balance || 10.0      //else whatever defaukt you like to give
-    }))
+      reason:  r.reason || 'SickLeave',
+      balance: r.balance
+    }));
 
  const updatedActiveRows = activeRows.filter(r => !selected.includes(r.id));
 setActiveRows(updatedActiveRows);
@@ -78,8 +79,9 @@ localStorage.setItem("leaveApprovals", JSON.stringify(updatedActiveRows));
     const existing = JSON.parse(localStorage.getItem('closedRows')||'[]')
     localStorage.setItem('closedRows', JSON.stringify([...existing, ...approvedItems]))
 
-     const updatedHistory = JSON.parse(localStorage.getItem("leaveHistory") || "[]").map(entry =>
-      selected.includes(entry.empId) ? { ...entry, status: "Approved" } : entry
+    const history = JSON.parse(localStorage.getItem("leaveHistory") || "[]");
+     const updatedHistory = history.map(entry =>
+      selected.includes(entry.id) ? { ...entry, status: "Approved", balance: entry.balance } : entry
     );
     localStorage.setItem("leaveHistory", JSON.stringify(updatedHistory));
 
@@ -337,7 +339,7 @@ localStorage.setItem("leaveApprovals", JSON.stringify(updatedActive));
                     />
                   </TableCell>
                   {[
-                    'Emp Id','Emp Name','Leave Type',
+                    'Employee ID','Emp Name','Leave Type',
                     'Start Date','End Date','Days',
                     'Applied On','Reason','Status'
                   ].map(h => (
@@ -381,7 +383,7 @@ localStorage.setItem("leaveApprovals", JSON.stringify(updatedActive));
               }}
                         />
                       </TableCell>
-                      <TableCell sx={{ color: 'white', py:1.3, px:2, }}>{row.id}</TableCell>
+                      <TableCell sx={{ color: 'white', py:1.3, px:2, }}>{row.empId}</TableCell>
                       <TableCell sx={{ color: 'white', py:0.5, px:2, }}>{row.name}</TableCell>
                       <TableCell sx={{ color: 'white', py:0.5, px:2, }}>{row.leaveType}</TableCell>
                       <TableCell sx={{ color: 'white', py:0.5, px:2,}}>{row.startDate}</TableCell>

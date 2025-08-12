@@ -8,6 +8,8 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import IconButton from '@mui/material/IconButton';
 
 export default function Timesheet() {
   
@@ -68,6 +70,12 @@ const handleReset = () => {
       py: 1,
       
     }}>
+       <IconButton
+        onClick={() => navigate('/timesheettable')}
+        sx={{ position: 'absolute', top: 16, left: 16, color: 'white' }}
+      >
+        <ArrowBackIosIcon />
+      </IconButton>
 
        <Typography variant="h5" className="reports-title" sx={{color:'white'}}>REPORTS</Typography>
 

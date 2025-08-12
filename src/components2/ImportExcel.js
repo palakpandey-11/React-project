@@ -25,6 +25,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useNavigate } from 'react-router-dom';
 import DownloadIcon from '@mui/icons-material/Download';
+import Navbar from './Navbar.js';
 
 const steps = [
   'Excel Importer',
@@ -57,9 +58,11 @@ const ImportExcel = () => {
   };
 
   return (
-    <Box p={1} sx={{  minHeight: '91vh' }}>
+    <Box>
+      <Navbar/>
+    <Box sx={{  width:'80%',margin:'0 auto',mt:'70px' }}>
             {/* Breadcrumbs */}
-              <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' }, mb: 2 }}>
+              <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' }, mb: 1 }}>
                 <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>
                 <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/updateemp">Employee</Link>
                 <Link underline="hover" component={RouterLink} style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600 }} to="/excelimport">Excel Import</Link>
@@ -68,7 +71,7 @@ const ImportExcel = () => {
       
               {/* Filters */}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mb: 1 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
                   {/* Payroll Month Picker */}
                   <Box sx={{
                     display: 'flex',
@@ -136,7 +139,7 @@ const ImportExcel = () => {
                   </Box>
                 </Box>
               </LocalizationProvider>
-     <Box mt={4}>         
+     <Box mt={2}>         
       {/* Stepper */}
       <Stepper activeStep={activeStep} alternativeLabel>
         {steps.map((label) => (
@@ -150,7 +153,7 @@ const ImportExcel = () => {
 
       {/* Step 1 UI */}
 {activeStep === 0 && (
-  <Box mt={2} sx={{
+  <Box mt={1} sx={{
             bgcolor: 'rgba(255, 255, 255, 0.1)',
             backdropFilter: 'blur(10px)',
             border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -494,6 +497,7 @@ const ImportExcel = () => {
         )}
         </Box>
       </Box>
+         </Box>
   );
 };
 

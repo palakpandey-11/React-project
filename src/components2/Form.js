@@ -11,6 +11,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { Link as RouterLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import Navbar from './Navbar.js';
 
 const Form = () => {
   const navigate = useNavigate();  
@@ -18,9 +19,11 @@ const Form = () => {
   const [employeeType, setEmployeeType] = useState("No Options");
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box>
+      <Navbar/>
+    <Box sx={{ width:'80%',margin:'0 auto',mt:'65px' }}>
       {/* Breadcrumbs */}
-      <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' }, mb: 2 }}>
+      <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' }}}>
         <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>
         <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/updateemp">Employee</Link>
         <Link underline="hover" component={RouterLink} style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600 }} to="/company">Company Policies & Forms</Link>
@@ -29,7 +32,7 @@ const Form = () => {
 
       {/* Filters */}
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mb: 3 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mb: 2 }}>
           {/* Payroll Month Picker */}
           <Box sx={{
             display: 'flex',
@@ -262,6 +265,7 @@ const Form = () => {
       </Box>
       </Box>
     </Box>
+     </Box>
   );
 };
 

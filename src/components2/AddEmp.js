@@ -12,6 +12,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import GroupIcon from '@mui/icons-material/Group';
 import { Link as RouterLink } from 'react-router-dom';
+import Navbar from './Navbar.js';
 
 const AddEmp = () => {
   const navigate = useNavigate();
@@ -89,9 +90,11 @@ const handleSnackbarClose = () => {
   
 
   return (
-    <Box sx={{ p: 3, minHeight: '100vh' }}>
+    <Box>
+      <Navbar/>
+    <Box sx={{ width:'80%',margin:'0 auto',mt:'70px'  }}>
             {/* Breadcrumbs */}
-              <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' }, mb: 2 }}>
+              <Breadcrumbs separator=">" sx={{'& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' }, mb: 1 }}>
                 <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>
                 <Link underline="hover" component={RouterLink} style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600 }} to="/addemp">Add Employee</Link>
                 {/* <span style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>Company Policies & Forms</span> */}
@@ -170,16 +173,19 @@ const handleSnackbarClose = () => {
       {/* Bulk Upload Section */}
       <Box
         sx={{
+          width: '70%', 
+          maxWidth: '900px',
           backdropFilter: 'blur(10px)',
           border: '1px solid rgba(255, 255, 255, 0.2)',
           bgcolor: 'rgba(255, 255, 255, 0.1)',
           borderRadius: 2,
           p: 3,
-          mb: 3,
+          mb: 2,
           boxShadow: 1,
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
+          margin: '0 auto',
         }}
       >
         <Box>
@@ -208,12 +214,16 @@ const handleSnackbarClose = () => {
       {/* Employee Detail Form */}
       <Box
         sx={{
+          width: '70%', 
+          maxWidth: '900px', 
           backdropFilter: 'blur(10px)',
           border: '1px solid rgba(255, 255, 255, 0.2)',
           bgcolor: 'rgba(255, 255, 255, 0.1)',
           borderRadius: 2,
           p: 3,
           boxShadow: 1,
+          mt: 2,
+          margin: '10px auto',
         }}
       >
         <Typography variant="h6" fontWeight={600} gutterBottom sx={{color:'white'}}>
@@ -557,7 +567,7 @@ const handleSnackbarClose = () => {
     </Grid>
   </Box>
 )}
-
+    </Box>
     </Box>
   );
 };
