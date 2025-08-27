@@ -17,6 +17,8 @@ import Info from './Info';
 import MenuIcon from '@mui/icons-material/Menu';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useTheme } from '@mui/material/styles';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+
 
 const UpdateEmp = () => {
   const navigate = useNavigate();
@@ -449,7 +451,14 @@ const handleSendMessage = () => {
 
         {/* Page Content */}
         <Box pt={7}  >
+                <IconButton
+                  onClick={() => navigate('/welcome')}
+                  sx={{ position: 'absolute',top:70,left:15, color: 'white' }}
+                >
+                  <ArrowBackIosIcon />
+                </IconButton>
           <Box sx={{ p:3, maxWidth: '1200px',mx: 'auto'}}>
+            
           {/* Breadcrumb and Filters in One Row */}
           <Box
   display="flex"

@@ -166,7 +166,7 @@ function HolidayCalendar() {
   setToastState({ show: true, message, type });
   setTimeout(() => {
     setToastState({ show: false, message: "", type: "" });
-  }, 2500);
+  }, 1000);
 };
 
   const handleExport = () => {
@@ -324,7 +324,7 @@ function HolidayCalendar() {
       </Box>
       <Snackbar
   open={toastState.show}
-  autoHideDuration={3000}
+  autoHideDuration={1000}
   onClose={() => setToastState({ show: false, message: "", type: "" })}
   anchorOrigin={{ vertical: "top", horizontal: "right" }}
 >
@@ -332,7 +332,7 @@ function HolidayCalendar() {
     onClose={() => setToastState({ show: false, message: "", type: "" })}
     severity={toastState.type}
     variant="filled"
-    sx={{ width: "100%" }}
+    sx={{ width: "90%" }}
   >
     {toastState.message}
   </Alert>

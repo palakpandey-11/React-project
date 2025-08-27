@@ -16,6 +16,8 @@ import GroupIcon from '@mui/icons-material/Group';
 import dayjs from 'dayjs';
 import InputAdornment from '@mui/material/InputAdornment';
 import Navbar from './Navbar.js';
+import { useNavigate } from 'react-router-dom';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const EmployeeCard = ({ emp, highlight }) => (
   <Box sx={{
@@ -38,7 +40,7 @@ const EmployeeCard = ({ emp, highlight }) => (
 );
 
 const OrganizationChart = () => {
-
+  const navigate = useNavigate();  
   const [orgData, setOrgData] = useState(
   {
     id: 'T0041',
@@ -104,6 +106,13 @@ const OrganizationChart = () => {
     <Box sx={{ p: 0 }}>
       <Navbar/>
     <Box sx={{ filter: openDialog ? 'blur(4px)' : 'none',transition: '0.3s ease',width:'80%',margin:'0 auto',mt:'70px' }}>
+                        <IconButton
+                          onClick={() => navigate('/updateemp')}
+                          sx={{ position: 'absolute',top:65,left:15, color: 'white' }}
+                        >
+                          <ArrowBackIosIcon />
+                        </IconButton>
+      
         {/* Breadcrumb */}
   <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': {color: 'rgba(255,255,255,0.4)' } }}>
     <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>

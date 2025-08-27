@@ -9,8 +9,11 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Slide from '@mui/material/Slide';
 import Navbar from './Navbar.js';
+import { useNavigate } from 'react-router-dom';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const AnalyticsHub = () => {
+  const navigate = useNavigate();  
   const [payrollMonth, setPayrollMonth] = useState("Jul'25");
   const [employeeType, setEmployeeType] = useState('All');
   const [selectedCard, setSelectedCard] = useState(() => {
@@ -165,6 +168,12 @@ const [employeeList, setEmployeeList] = useState(() => {
 <Box>  
    <Navbar/>
 <Box sx={{  bgcolor: 'transparent', overflow: 'auto', transition: '0.3s ease',width:'80%',margin:'0 auto',mt:'70px'}}>
+                  <IconButton
+                    onClick={() => navigate('/updateemp')}
+                    sx={{ position: 'absolute',top:65,left:15, color: 'white' }}
+                  >
+                    <ArrowBackIosIcon />
+                  </IconButton>
 
   {/* Breadcrumb */}
   <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': {color: 'rgba(255,255,255,0.4)' },fontSize:{xs:14,md:16} }}>

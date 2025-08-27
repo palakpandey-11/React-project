@@ -1411,7 +1411,7 @@ const TimesheetTable = ({ empID, projectId }) => {
         </div>
       )}
       <Grid item xs={10} className={`wrapper ${blurScreen ? "blur" : ""}`}>
-        <h1 className="title">Work Tracker</h1>
+        <h1 className="title">Worksheet Tracker</h1>
         <p style={{ display: "none" }}>Project ID: {projectId}</p>
         {results.map((item, index) => (
           <p style={{ display: "none" }} key={index}>

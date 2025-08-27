@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import IconButton from '@mui/material/IconButton';
 
-export default function Timesheet() {
+export default function ClientReport() {
      const [selectedEmployee, setSelectedEmployee] = useState('');
      const [selectedMonth, setSelectedMonth] = useState(dayjs());
      const navigate = useNavigate();
@@ -22,6 +22,7 @@ export default function Timesheet() {
 
 
 return (
+    
     <Box sx={{
       minHeight: '90vh',
       display: 'flex',
@@ -31,13 +32,13 @@ return (
       py: 1,
       
     }}>
-              <IconButton
+      <IconButton
         onClick={() => navigate('/dashboard')}
         sx={{ position: 'absolute', top: 16, left: 16, color: 'white' }}
       >
         <ArrowBackIosIcon />
-      </IconButton>
-
+      </IconButton>      
+       
        <Typography variant="h5" className="reports-title" sx={{color:'white'}}>REPORTS</Typography>
     
   <Box className="random" sx={{    
@@ -89,11 +90,11 @@ return (
         elevation={6}
         sx={{
           height: '300px',
-          width: '100%',
+          width: '80%',
           maxWidth: 600,
           p: 4,
-          border: '3px solid black',
-          backgroundColor: 'rgba(255,255,255,0.4)',
+          border: '3px solid rgba(99, 95, 95, 0.58)',
+          backgroundColor: 'rgba(58, 52, 52, 0.57)',
         }}
       >
        {/* Employee Dropdown */}
@@ -107,34 +108,38 @@ return (
     mb: 3,
     mt: 5,
     '& .MuiInputBase-root': {
-      color: 'black',
+      color: 'white',
     },
     '& .MuiOutlinedInput-notchedOutline': {
-      borderColor: 'black',
+      borderColor: 'rgba(99, 95, 95, 0.58)',
     },
     '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-      borderColor: 'black', // ✅ hover fix
+      borderColor: 'rgba(99, 95, 95, 0.58)', // ✅ hover fix
     },
     '&:hover .MuiOutlinedInput-notchedOutline': {
-      borderColor: 'black',
+      borderColor: 'rgba(99, 95, 95, 0.58)',
     },
     '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-      borderColor: 'black',
+      borderColor: 'rgba(99, 95, 95, 0.58)',
     },
     '& .MuiInputLabel-root': {
-      color: 'black',
+      color: 'white',
     },
     '& .MuiInputLabel-root.Mui-focused': {
-      color: 'black',
+      color: 'white',
     },
     '& .MuiSvgIcon-root': {
-      color: 'black',
+      color: 'white',
     },
   }}
 >
   <MenuItem value="" disabled>Select Employee</MenuItem>
   <MenuItem value="Pranali- 10021">Pranali- 10021</MenuItem>
   <MenuItem value="Palak - 10022">Palak - 10022</MenuItem>
+  <MenuItem value="Pankaj - emp001">Pankaj - emp001</MenuItem>
+  <MenuItem value="Shivam - emp004">Shivam - emp004</MenuItem>
+  <MenuItem value="Aditya - emp006">Aditya - emp006</MenuItem>
+  <MenuItem value="Saurabh - emp005">Saurabh - emp005</MenuItem>  
 </TextField>
 
 {/* Month Picker */}
@@ -152,28 +157,28 @@ return (
           width: '100%',
           mb: 3,
           '& .MuiInputBase-root': {
-            color: 'black',
+            color: 'white',
           },
           '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'black',
+            borderColor: 'rgba(99, 95, 95, 0.58)',
           },
           '&:hover fieldset': {
-              borderColor: 'black',
+              borderColor: 'rgba(99, 95, 95, 0.58)',
           },
           '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'black',
+            borderColor: 'rgba(99, 95, 95, 0.58)',
           },
           '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'black',
+            borderColor: 'rgba(99, 95, 95, 0.58)',
           },
           '& .MuiInputLabel-root': {
-            color: 'black',
+            color: 'white',
           },
           '& .MuiInputLabel-root.Mui-focused': {
-            color: 'black',
+            color: 'white',
           },
           '& .MuiSvgIcon-root': {
-            color: 'black',
+            color: 'white',
           },
         },
       },
@@ -192,9 +197,7 @@ return (
           </Button>
         </Box>
       </Paper>
-
-
-                    
+                   
 </Box>
 </Box>
 

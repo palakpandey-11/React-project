@@ -25,6 +25,7 @@ import dayjs from 'dayjs';
 import GroupIcon from '@mui/icons-material/Group';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar.js';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const Bulletin = () => {
   const navigate = useNavigate();
@@ -43,11 +44,16 @@ const handleDelete = (id) => {
   localStorage.setItem('bulletins', JSON.stringify(updatedBulletins)); // Update storage
 };
 
-
   return (
     <Box>
       <Navbar/>
     <Box sx={{ backgroundColor: 'transparent', maxHeight: '100vh',width:'80%',margin:'0 auto',mt:'70px' }}>
+                              <IconButton
+                                onClick={() => navigate('/updateemp')}
+                                sx={{ position: 'absolute',top:60,left:15, color: 'white' }}
+                              >
+                                <ArrowBackIosIcon />
+                              </IconButton>       
             {/* Breadcrumbs */}
               <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' } }}>
                 <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>
