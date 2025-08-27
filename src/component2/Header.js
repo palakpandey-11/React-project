@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -34,6 +34,7 @@ export default function Header({ onMenuItemClick = () => {}, /* …rest… */ })
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [anchorEl, setAnchorEl] = useState({});
+  const navigate =useNavigate();
 
   const handleOpen = key => e =>
     setAnchorEl(prev => ({ ...prev, [key]: e.currentTarget }));
@@ -217,9 +218,9 @@ export default function Header({ onMenuItemClick = () => {}, /* …rest… */ })
         </Stack>
 
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton sx={{ color: "white" }}><SearchIcon /></IconButton>
-          <IconButton sx={{ color: "white" }}><SettingsIcon /></IconButton>
-          <IconButton sx={{ color: "error.light" }}><PowerIcon /></IconButton>
+          {/* <IconButton sx={{ color: "white" }}><SearchIcon /></IconButton>
+          <IconButton sx={{ color: "white" }}><SettingsIcon /></IconButton> */}
+          <IconButton onClick={() => navigate('/')} sx={{ color: "error.light" }}><PowerIcon /></IconButton>
         </Box>
       </Toolbar>
     </AppBar>

@@ -54,7 +54,7 @@ export default function Form24Q() {
 
   return (
     <>
-      <Header />
+    <Header />
 
       {/* Breadcrumbs + Action bar */}
       <Box sx={{ px: 2, pt: 2, bgcolor: 'rgba(10,20,40,0.7)', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>

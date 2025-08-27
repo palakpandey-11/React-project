@@ -27,24 +27,54 @@ const HistoryPage = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [page, setPage] = useState(0);
 
-  // Load leaveHistory from localStorage
+  // Get logged-in user and directory data from localStorage
+  const user = JSON.parse(localStorage.getItem("user"));
+  const isHr = user?.role === "hr";
+
   useEffect(() => {
-    const storedHistory = JSON.parse(localStorage.getItem("leaveHistory") || "[]");
-    setRowsData(storedHistory);
-  }, []);
+    const storedHistory = JSON.parse(localStorage.getItem("History") || "[]");
+    
+    let filteredHistory = [];
+    if (isHr) {
+      // If user is HR, show all entries
+      filteredHistory = storedHistory;
+    } else {
+      // For all other users (employees/managers), show only their own entries
+      filteredHistory = storedHistory.filter(entry => entry.empId === user.empId);
+    }
+    setRowsData(filteredHistory);
+  }, [isHr, user?.empId]);
 
   const handleSelectRow = (id) => {
     setSelectedRows((prev) =>
       prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
     );
   };
-
+  
   const handleWithdraw = () => {
+    // Check if user is HR; if so, prevent withdrawal
+    if (isHr) {
+      triggerToast("You do not have permission to withdraw leaves.", "error");
+      setSelectedRows([]);
+      return;
+    }
+    
+    // Check if all selected leaves are in "Withdraw Pending" status
+    const canWithdraw = selectedRows.every(id => {
+      const row = rowsData.find(r => r.id === id);
+      return row && row.status === "Withdraw Pending";
+    });
+
+    if (!canWithdraw) {
+      triggerToast("Only 'Withdraw Pending' leaves can be withdrawn.", "error");
+      return;
+    }
+
     const updatedRows = rowsData.filter((row) => !selectedRows.includes(row.id));
     setRowsData(updatedRows);
     localStorage.setItem("leaveHistory", JSON.stringify(updatedRows));
 
-    // Also remove from leaveApprovals (if needed)
+    // Also remove from leaveApprovals
     const approvals = JSON.parse(localStorage.getItem("leaveApprovals") || "[]");
     const updatedApprovals = approvals.filter((row) => !selectedRows.includes(row.id));
     localStorage.setItem("leaveApprovals", JSON.stringify(updatedApprovals));
@@ -61,12 +91,18 @@ const HistoryPage = () => {
 
   const [toastState, setToastState] = useState({ show: false, message: "", type: "" });
 
-const triggerToast = (message, type) => {
-  setToastState({ show: true, message, type });
-  setTimeout(() => {
-    setToastState({ show: false, message: "", type: "" });
-  }, 2500);
-};
+  const triggerToast = (message, type) => {
+    setToastState({ show: true, message, type });
+    setTimeout(() => {
+      setToastState({ show: false, message: "", type: "" });
+    }, 2500);
+  };
+
+  // Disable withdraw button if no rows are selected, or if the user is HR, or if any selected row is not "Withdraw Pending"
+  const isWithdrawDisabled = selectedRows.length === 0 || isHr || selectedRows.some(id => {
+    const row = rowsData.find(r => r.id === id);
+    return row.status !== "Withdraw Pending";
+  });
 
   return (
     <Box className="leave-container" sx={{ p: 3 }}>
@@ -94,11 +130,22 @@ const triggerToast = (message, type) => {
           >
             
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
-              <Button variant="contained" color="error" onClick={handleWithdraw}>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleWithdraw}
+                disabled={isWithdrawDisabled}
+                sx={{
+                  "&.Mui-disabled": {
+                    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                    color: 'rgba(0, 0, 0, 0.26)'
+                  }
+                }}
+              >
                 WITHDRAW
               </Button>
             </Box>
-             
+              
             <TableContainer component={Paper} sx={{ backgroundColor: '#1b1a1aff', height: "350px",border:'1px solid rgba(255, 255, 255, 0.85)' }}>
               <Table>
                 <TableHead>
@@ -120,6 +167,7 @@ const triggerToast = (message, type) => {
                         <Checkbox
                           checked={selectedRows.includes(row.id)}
                           onChange={() => handleSelectRow(row.id)}
+                          disabled={row.status !== "Withdraw Pending" || isHr} // Disable checkbox for HR and non-"Withdraw Pending" statuses
                           sx={{ color: 'white', p: 0.5 }}
                         />
                       </TableCell>
@@ -150,24 +198,24 @@ const triggerToast = (message, type) => {
                 mt:'4px'
               }}
             />
-            </Box>
+          </Box>
         </Box>
       </Box>
       <Snackbar
-  open={toastState.show}
-  autoHideDuration={3000}
-  onClose={() => setToastState({ show: false, message: "", type: "" })}
-  anchorOrigin={{ vertical: "top", horizontal: "right" }}
->
-  <Alert
-    onClose={() => setToastState({ show: false, message: "", type: "" })}
-    severity={toastState.type}
-    variant="filled"
-    sx={{ width: "100%" }}
-  >
-    {toastState.message}
-  </Alert>
-</Snackbar>
+        open={toastState.show}
+        autoHideDuration={3000}
+        onClose={() => setToastState({ show: false, message: "", type: "" })}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={() => setToastState({ show: false, message: "", type: "" })}
+          severity={toastState.type}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {toastState.message}
+        </Alert>
+      </Snackbar>
 
     </Box>
   );

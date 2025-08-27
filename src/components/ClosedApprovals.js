@@ -23,28 +23,32 @@ const closedSampleRows = [
 
 export default function ClosedApprovals() {
   const navigate = useNavigate()
-// 1️ State
-const [closedRows, setClosedRows] = useState([])
+ // 1) State
+  const [closedRows, setClosedRows] = useState([]);
+  const [page, setPage]           = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(5)
 
-// 2 On mount, merge built-in defaults + newly approved
-useEffect(() => {
-  // Check if we have anything saved already
-  const stored = localStorage.getItem('closedRows')
-  if (stored) {
-    // Load exactly what was approved in Active
-    setClosedRows(JSON.parse(stored))
-  } else {
-    // First‐time only: seed with our built‐in defaults
-    localStorage.setItem('closedRows', JSON.stringify(closedSampleRows))
-    setClosedRows(closedSampleRows)
-  }
-}, [])
+  // 2) Load from localStorage once
+  useEffect(() => {
+    const stored = JSON.parse(localStorage.getItem('closedRows') || '[]');
+    if (stored.length) {
+      setClosedRows(stored);
+    } else {
+      localStorage.setItem('closedRows', JSON.stringify(closedSampleRows));
+      setClosedRows(closedSampleRows);
+    }
+  }, []);
+
+// 3) Who is viewing?
+  const viewer = JSON.parse(localStorage.getItem('user') || '{}');
+  const isHr = viewer?.role === 'hr';
+
+  // 4) Only now use closedRows to derive what this user can see
+  const visibleRows = isHr
+    ? closedRows
+    : closedRows.filter((r) => r.approverId === viewer.empId);
 
 // 3️ Pagination state (if you need it here too)
-const [page, setPage]           = useState(0)
-const [rowsPerPage, setRowsPerPage] = useState(5)
-
-
   return (
     <div style={{
       position: 'relative',
@@ -127,7 +131,7 @@ const [rowsPerPage, setRowsPerPage] = useState(5)
             </TableHead>
 
             <TableBody>
-              {closedRows
+             {visibleRows
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(row => (
                   <TableRow key={row.id} sx={{ backgroundColor: 'rgba(255, 253, 253, 0.11)' }}>
@@ -150,7 +154,7 @@ const [rowsPerPage, setRowsPerPage] = useState(5)
           <Box sx={{ flexShrink: 0, mt: 2 }}>
             <TablePagination
               component="div"
-              count={closedRows.length}
+              count={visibleRows.length}
               page={page}
               rowsPerPage={rowsPerPage}
               onPageChange={(e,newPage) => setPage(newPage)}

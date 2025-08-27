@@ -11,7 +11,6 @@ import {
   Paper,
   Grid,
   Card,
-
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -23,7 +22,7 @@ import {
   Add as AddIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 export default function Welcome() {
   const [view, setView] = useState('welcome');
@@ -62,13 +61,19 @@ export default function Welcome() {
             FlowSync
           </Typography>
           <Box>
-            <IconButton sx={{ color: 'white' }}><SearchIcon /></IconButton>
-            <IconButton sx={{ color: 'white' }}><SettingsIcon /></IconButton>
-            <IconButton sx={{ color: 'error.light' }}><LogoutIcon /></IconButton>
+            {/* //<IconButton sx={{ color: 'white' }}><SearchIcon /></IconButton>
+            //<IconButton sx={{ color: 'white' }}><SettingsIcon /></IconButton> */}
+                         
+            <IconButton onClick={() => navigate('/')} sx={{ color: 'error.light' }}><LogoutIcon /></IconButton>
           </Box>
         </Toolbar>
+          <IconButton
+                            onClick={() => navigate('/dashboard')}
+                            sx={{ position: 'absolute', top: 80, left: 30, color: 'white' }}
+                          >
+                            <ArrowBackIosIcon />
+                          </IconButton>
       </AppBar>
-
       <Container
         maxWidth="lg"
         disableGutters

@@ -15,17 +15,16 @@ import {
   TableCell,
   Checkbox,
   Paper,
-  TablePagination
+  TablePagination,
+  Snackbar, Alert,
 } from '@mui/material'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import SearchIcon from '@mui/icons-material/Search'
-
-
+import RejectButtonReconcilation from './RejectButtonReconcilation'
 
 // sample data for Reconciliation tab
 const reconSampleRows = [
-    { id: 100146, name: 'pranali',reason: 'okkkk fill',          date: '16-10-2024', status: 'Pending' },
-  // …add more as needed…
+  { id: "10023", name: 'pranali', reason: 'okkkk fill', date: '16-10-2024', status: 'Pending' },
 ]
 
 export default function ReconciliationApproval() {
@@ -36,27 +35,60 @@ export default function ReconciliationApproval() {
   const [selected, setSelected]       = useState([])
   const [page, setPage]               = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
-   // new state for rows coming from your API
- const [reconRows,  setReconRows]    = useState([])
 
-useEffect(() => {
-  const stored = localStorage.getItem('reconciliationData');
-  if (stored) {
-    setReconRows(JSON.parse(stored));
+  // rows coming from localStorage (dynamic)
+  const [reconRows, setReconRows] = useState([])
+
+  const [openReject, setOpenReject] = useState(false)
+  const [rowsForReject, setRowsForReject] = useState([])
+
+  useEffect(() => {
+    const stored = localStorage.getItem('reconciliationData')
+    if (stored) {
+      setReconRows(JSON.parse(stored))
+    }
+  }, [])
+
+  // Normalize a reconciliation row to the "history/closed" shape
+  const mapReconToHistory = (row, status, reasonOverride) => {
+    const empId = row.empID || row.empId || row.id
+    const date  = row.date || row.startDate || row.endDate || ''
+    return {
+      id: `${empId}-${Date.now()}`,
+      empId: row.empId || empId || '',
+      name: row.name || '',
+      leaveType: row.leaveType || 'Reconciliation',
+      startDate: row.startDate || date,
+      endDate: row.endDate || date,
+      days: row.days ?? 1,
+      reason: reasonOverride ?? row.reason ?? '',
+      appliedOn: row.appliedOn || date || '',
+      balance: row.balance ?? '-',
+      status,
+      approverId: row.approverId || row.approverID || null, // 👈 keep who owns this row
+     approverName: row.approverName || "",  
+    }
   }
-}, []);
 
+  // ===== Manager/HR view filter (Option 3) =====
+  const viewer = JSON.parse(localStorage.getItem("user") || "{}")
+  const isHr   = viewer?.role === "hr"
 
-//merge yoyr static sample+dynamic api rows
-  // filter by id or name 
- const allRows      = [...reconSampleRows, ...reconRows]
- const filteredRows = allRows.filter(r => {
+  // Merge static + dynamic rows
+  const allRows = [...reconSampleRows, ...reconRows]
+
+  // Only show rows where this viewer is the approver (HR sees all)
+  const myRows = isHr
+    ? allRows
+    : allRows.filter(r => (r.approverId || r.approverID) === viewer.empId)
+
+  // Search filter inside allowed rows
+  const filteredRows = myRows.filter(r => {
     const t = searchTerm.trim().toLowerCase()
     if (!t) return true
-    return (
-      r.id.toString().includes(t) ||
-      r.name.toLowerCase().includes(t)
-    )
+    const idStr = String(r.empID || r.empId || r.id).toLowerCase()
+    const nmStr = (r.name || "").toLowerCase()
+    return idStr.includes(t) || nmStr.includes(t)
   })
 
   const allSelected  = selected.length === filteredRows.length && filteredRows.length > 0
@@ -70,36 +102,59 @@ useEffect(() => {
     )
   }
 
+  // toast/snackbar state
+  const [toast, setToast] = useState({
+    open: false,
+    msg: '',
+    severity: 'success',
+  })
+
+  const handleRejected = (rejectedItems) => {
+    const toWrite = rejectedItems.map((r) =>
+      mapReconToHistory(r, "Rejected", r.rejectReason ?? r.reason ?? "")
+    )
+
+    // history
+    const hist = JSON.parse(localStorage.getItem("leaveHistory") || "[]")
+    localStorage.setItem("leaveHistory", JSON.stringify([...hist, ...toWrite]))
+
+    // closed
+    const closed = JSON.parse(localStorage.getItem("closedRows") || "[]")
+    localStorage.setItem("closedRows", JSON.stringify([...closed, ...toWrite]))
+
+    // remove from reconciliation
+    const rejectedIds = new Set(rejectedItems.map((r) => r.id))
+    const remaining = reconRows.filter((r) => !rejectedIds.has(r.id))
+    setReconRows(remaining)
+    localStorage.setItem("reconciliationData", JSON.stringify(remaining))
+
+    setSelected([])
+    setToast({ open: true, msg: "Rejected successfully", severity: "success" })
+  }
+
   const handleStatusChange = (newStatus) => {
-  // Get existing history
-  const existingHistory = JSON.parse(localStorage.getItem("leaveHistory") || "[]");
+    //  use myRows (not allRows) so actions only affect what this viewer is allowed to see
+    const picked = myRows.filter((r) => selected.includes(r.id))
+    if (!picked.length) return
 
-  // Update selected rows with new status
-  const updatedRows = allRows
-    .filter((row) => selected.includes(row.id))
-    .map((row) => ({
-      ...row,
-      status: newStatus,
-      empId: row.empID || row.empId || row.id,  // ensure key match
-      leaveType: "Reconciliation",              // optional: mark it
-      startDate: row.date || "",                // map date if needed
-      endDate: row.date || "",
-      balance: "-",                             // or keep it blank if not relevant
-    }));
+    const toWrite = picked.map((r) => mapReconToHistory(r, newStatus))
 
-  // Add updated rows to leaveHistory
-  const newHistory = [...existingHistory, ...updatedRows];
-  localStorage.setItem("leaveHistory", JSON.stringify(newHistory));
+    // 1) history
+    const hist = JSON.parse(localStorage.getItem("leaveHistory") || "[]")
+    localStorage.setItem("leaveHistory", JSON.stringify([...hist, ...toWrite]))
 
-  // Remove updated rows from reconciliationData
-  const remainingRecon = reconRows.filter((row) => !selected.includes(row.id));
-  localStorage.setItem("reconciliationData", JSON.stringify(remainingRecon));
-  setReconRows(remainingRecon);
+    // 2) closed
+    const closed = JSON.parse(localStorage.getItem("closedRows") || "[]")
+    localStorage.setItem("closedRows", JSON.stringify([...closed, ...toWrite]))
 
-  // Clear selection
-  setSelected([]);
-};
+    // 3) remove only those from dynamic store
+    const remainingRecon = reconRows.filter((r) => !selected.includes(r.id))
+    setReconRows(remainingRecon)
+    localStorage.setItem("reconciliationData", JSON.stringify(remainingRecon))
 
+    setSelected([])
+    setToast({ open: true, msg: `${newStatus} successfully`, severity: "success" })
+  }
 
   return (
     <div style={{ position: 'relative', textAlign: 'center', color: 'white', fontFamily: 'Arial', paddingTop: 16 }}>
@@ -135,7 +190,8 @@ useEffect(() => {
         </Stack>
 
         {/* search + actions */}
-        <Box sx={{ border: '1px solid rgba(255, 255, 255, 0.3)',
+        <Box sx={{
+          border: '1px solid rgba(255, 255, 255, 0.3)',
           borderRadius: 1,
           overflow: 'hidden',
           width:'90%',
@@ -144,23 +200,23 @@ useEffect(() => {
           mt:2,
           display:'flex',
           flexDirection:'column',
-          height:460, //
+          height:460,
+        }}>
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            flexShrink:0,
+            justifyContent: 'space-between',
+            mb: 2
           }}>
-            <Box sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        flexShrink:0,
-                        justifyContent: 'space-between',
-                        mb: 2
-                      }}>
-          <TextField
-            variant="filled"
-            placeholder="Search By Name or ID"
-            size="small"
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
+            <TextField
+              variant="filled"
+              placeholder="Search By Name or ID"
+              size="small"
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
               sx={{
-                flex: 1, 
+                flex: 1,
                 maxWidth: '400px',
                 bgcolor: 'rgba(255,255,255,0.1)',
                 '& .MuiFilledInput-root': {
@@ -178,17 +234,16 @@ useEffect(() => {
                   </InputAdornment>
                 )
               }}
-          />
+            />
 
-          <Stack direction="row" spacing={1} sx={{ flexShrink: 0}}>
-            <Button
-              variant="outlined"
-              disabled={!selected.length}
-              onClick={() => handleStatusChange("Approved")}
+            <Stack direction="row" spacing={1} sx={{ flexShrink: 0}}>
+              <Button
+                variant="outlined"
+                disabled={!selected.length}
+                onClick={() => handleStatusChange("Approved")}
                 sx={{
                   color: 'white',
                   borderColor: 'rgba(255,255,255,0.5)',
-                   
                   '&:not(.Mui-disabled):hover': {
                     borderColor: 'green',
                     backgroundColor: 'rgba(255,255,255,0.1)'
@@ -199,13 +254,19 @@ useEffect(() => {
                     bgcolor: 'rgba(255, 255, 255, 0.25)',
                   }
                 }}
-            >
-              APPROVE
-            </Button>
-            <Button
-              variant="outlined"
-              disabled={!selected.length}
-              onClick={() => handleStatusChange("Rejected")}
+              >
+                APPROVE
+              </Button>
+              <Button
+                variant="outlined"
+                disabled={!selected.length}
+                onClick={() => {
+                  // 🔁 use myRows here so you never pick rows the viewer shouldn't act on
+                  const picked = myRows.filter(r => selected.includes(r.id))
+                  if (!picked.length) return
+                  setRowsForReject(picked)
+                  setOpenReject(true)
+                }}
                 sx={{
                   color: 'white',
                   borderColor: 'rgba(255,255,255,0.5)',
@@ -219,14 +280,14 @@ useEffect(() => {
                     bgcolor: 'rgba(255, 255, 255, 0.25)',
                   }
                 }}
-            >
-              REJECT
-            </Button>
-          </Stack>
-        </Box>
+              >
+                REJECT
+              </Button>
+            </Stack>
+          </Box>
 
-        {/* table */}
-        <TableContainer component={Paper} sx={{
+          {/* table */}
+          <TableContainer component={Paper} sx={{
             maxHeight: 380,
             overflowY: 'auto',
             flex:1,
@@ -234,19 +295,19 @@ useEffect(() => {
             backgroundColor: 'rgba(0,0,0,0.26)',
             border: '1px solid rgba(255,255,255,0.9)',
             borderRadius: 1,
-        }}>
-          <Table size="small" >
-            <TableHead>
-              <TableRow sx={{ backgroundColor: 'rgba(0,0,0,0.12)' }}>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={allSelected}
-                    indeterminate={someSelected}
-                    onChange={e =>
-                      e.target.checked
-                        ? setSelected(filteredRows.map(r => r.id))
-                        : setSelected([])
-                    }
+          }}>
+            <Table size="small">
+              <TableHead>
+                <TableRow sx={{ backgroundColor: 'rgba(0,0,0,0.12)' }}>
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      checked={allSelected}
+                      indeterminate={someSelected}
+                      onChange={e =>
+                        e.target.checked
+                          ? setSelected(filteredRows.map(r => r.id))
+                          : setSelected([])
+                      }
                     sx={{  color: 'white',
                 '& .MuiSvgIcon-root': {
                   backgroundColor: 'rgba(255,255,255,0.15)',
@@ -321,6 +382,28 @@ useEffect(() => {
         />
         </Box>
       </Box>
+      <RejectButtonReconcilation
+  openReject={openReject}
+  onCloseReject={() => setOpenReject(false)}
+  leaveRows={rowsForReject}
+  onRejected={handleRejected}
+/>
+<Snackbar
+  open={toast.open}
+  autoHideDuration={2500}
+  onClose={() => setToast((t) => ({ ...t, open: false }))}
+  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+>
+  <Alert
+    onClose={() => setToast((t) => ({ ...t, open: false }))}
+    severity={toast.severity}
+    variant="filled"
+    sx={{ width: '100%' }}
+  >
+    {toast.msg}
+  </Alert>
+</Snackbar>
+
     </div>
   )
 }

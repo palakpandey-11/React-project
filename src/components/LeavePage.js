@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import {
   Button, Card, CardContent, MenuItem, Select, Typography, Box, Grid, TextField
 } from '@mui/material';
@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import IconButton from '@mui/material/IconButton';
 import { Snackbar, Alert } from '@mui/material';
+import { ListSubheader } from "@mui/material";
 
 
 const LeavePage = () => {
@@ -25,10 +26,19 @@ const LeavePage = () => {
   const [showHistory, setShowHistory] = useState(false);
   // const [selectedRows, setSelectedRows] = useState([]);
   const user = JSON.parse(localStorage.getItem("user"));
+  const directory  = JSON.parse(localStorage.getItem("directory") || "[]");
   const userGender = user?.gender?.toLowerCase();  // "male" or "female"
- //const [userGender, setUserGender] = useState("");
+  //const [userGender, setUserGender] = useState("");
   //const user = useSelector(state => state.auth.user);
 //const userGender = user?.gender; // e.g. "male" or "female"
+// Find assigned manager from directory
+const myManager = user?.managerId ? directory.find(u => u.empId === user.managerId):null;
+const isHr = user?.role === "hr";
+const isManager = user?.role === "manager";
+const assignedManagerName =  (isHr && "HR") ||
+  (isManager && (directory.find(u => u.role === "hr")?.name || "HR")) ||
+    (myManager?.name || "");
+const extraPeople = ["Aditya", "Saurabh", "Pankaj","Shivam"];
 
 const [toastState, setToastState] = useState({ show: false, message: "", type: "" });
 
@@ -44,8 +54,11 @@ const triggerToast = (message, type) => {
     const stored = localStorage.getItem("leaveHistory");
     return stored ? JSON.parse(stored) : [];
   });
+useEffect(() => {
+  if (assignedManagerName) setApplyTo(assignedManagerName);
+}, [assignedManagerName]);
 
- const [leaveBalances, setLeaveBalances] = useState([
+  const [leaveBalances, setLeaveBalances] = useState([
     { code:'Annual Leave',type: 'Annual', value: 0.75 },
     { code:'Restricted Holiday',type: 'RH', value: 8 },
     { code:'LOP',type: 'LOP', value: 5 },
@@ -65,6 +78,11 @@ const triggerToast = (message, type) => {
     if (!startDate || !endDate || !leaveType || !applyTo) {
       triggerToast("Please fill all fields.", "error");
       return;
+    }
+    //enforce correct manager
+    if (applyTo !== assignedManagerName) {
+        triggerToast("Please select your assigned manager.", "error");
+        return;
     }
 
     if (leaveType === "Maternity Leave" && userGender !== "female") {
@@ -112,8 +130,9 @@ const overflow = Math.max(days - pick.value, 0);
 // now create your history entry with the updated balance
   const newEntry = {
     id: Date.now(),
-    empId: "10022",
-    name: "Palak",
+   // empId: user?.empId || "10022",
+    empId:user?.empId  || "",
+    name: user?.name  || "",
     leaveType,
     startDate: dayjs(startDate).format('DD-MM-YYYY'),
     endDate:   dayjs(endDate).format('DD-MM-YYYY'),
@@ -121,7 +140,9 @@ const overflow = Math.max(days - pick.value, 0);
     appliedOn: dayjs().format('DD-MM-YYYY'),
     reason:    "",
     balance:   Math.max(pick.value - days, 0),
-    status:    "Withdraw Pending"
+    status:    "Withdraw Pending",
+    approverName: assignedManagerName,
+    approverId:   myManager?.empId || null
   };
 
 
@@ -181,18 +202,18 @@ const overflow = Math.max(days - pick.value, 0);
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DateCalendar
                     value={selectedDate}
+                    minDate={dayjs()} // ✅ This line restricts past dates
                    onChange={(newValue) => {
-  setSelectedDate(newValue);
-  if (!startDate || (startDate && endDate)) {
-    setStartDate(newValue);
-    setEndDate(null);
-  } else if (!endDate && (newValue.isSame(startDate) || newValue.isAfter(startDate))) {
-    // ✅ Allow same day or future date
-    setEndDate(newValue);
-  } else {
-    
-  }
-}}
+                      setSelectedDate(newValue);
+                      if (!startDate || (startDate && endDate)) {
+                        setStartDate(newValue);
+                        setEndDate(null);
+                      } else if (!endDate && (newValue.isSame(startDate) || newValue.isAfter(startDate))) {
+                        setEndDate(newValue);
+                      } else {
+                        // Do nothing if a past date is selected after the start date
+                      }
+                    }}
                     sx={{
                       '.MuiPickersDay-root': {
                         color: 'white',
@@ -213,6 +234,9 @@ const overflow = Math.max(days - pick.value, 0);
                         width: 40,
                         height: 40,
                       },
+                      '.MuiPickersDay-root.Mui-disabled': { // ✅ This is the new style
+                        color: 'rgba(250, 250, 250, 0.8)',
+                      },                      
                       '.MuiPickersCalendarHeader-label': {
                         color: 'white',
                         fontSize: '1.2rem',
@@ -256,6 +280,7 @@ const overflow = Math.max(days - pick.value, 0);
                       value={startDate}
                       onChange={(newValue) => setStartDate(newValue)}
                       format="DD-MM-YYYY"
+                      minDate={dayjs()} // ✅ This line restricts past dates
                       enableAccessibleFieldDOMStructure={false}
                       slots={{
                         openPickerIcon: () => null,
@@ -276,6 +301,7 @@ const overflow = Math.max(days - pick.value, 0);
                       value={endDate}
                       onChange={(newValue) => setEndDate(newValue)}
                       format="DD-MM-YYYY"
+                      minDate={startDate || dayjs()} // ✅ This line restricts past dates relative to start date
                       enableAccessibleFieldDOMStructure={false}
                       slots={{
                         openPickerIcon: () => null,
@@ -285,7 +311,7 @@ const overflow = Math.max(days - pick.value, 0);
                             fullWidth
                             inputProps={{
                               ...params.inputProps,
-                         
+                            
                             }}
                           />
                         ),
@@ -299,7 +325,16 @@ const overflow = Math.max(days - pick.value, 0);
                       fullWidth
                     >
                       <MenuItem value="" disabled>Apply To</MenuItem>
-                      <MenuItem value="Niranjan Achutharam">Pankaj</MenuItem>
+                      {assignedManagerName && ( 
+                        <MenuItem value={assignedManagerName}>{assignedManagerName}</MenuItem>
+                      )}
+                      
+                      {/* <ListSubheader>Others</ListSubheader> */}
+                      {extraPeople
+                        .filter(name => name && name !== assignedManagerName) // avoid duplicate
+                        .map(name => (
+                          <MenuItem key={name} value={name}>{name}</MenuItem>
+                        ))}
                     </Select>
                     <br /><br />
                     <Grid container spacing={1} sx={{ justifyContent: 'center' }}>
@@ -316,20 +351,20 @@ const overflow = Math.max(days - pick.value, 0);
             </Box>
         </Box>
         <Snackbar
-  open={toastState.show}
-  autoHideDuration={3000}
-  onClose={() => setToastState({ show: false, message: "", type: "" })}
-  anchorOrigin={{ vertical: "top", horizontal: "right" }}
->
-  <Alert
-    onClose={() => setToastState({ show: false, message: "", type: "" })}
-    severity={toastState.type}
-    variant="filled"
-    sx={{ width: "100%" }}
-  >
-    {toastState.message}
-  </Alert>
-</Snackbar>
+          open={toastState.show}
+          autoHideDuration={3000}
+          onClose={() => setToastState({ show: false, message: "", type: "" })}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <Alert
+            onClose={() => setToastState({ show: false, message: "", type: "" })}
+            severity={toastState.type}
+            variant="filled"
+            sx={{ width: "100%" }}
+          >
+            {toastState.message}
+          </Alert>
+        </Snackbar>
       </Box>
     </Box>
   );

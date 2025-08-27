@@ -31,6 +31,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 const TimesheetTable = ({ empID, projectId }) => {
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
   const [codingValues, setCodingValues] = useState([0, 0, 0, 0, 0, 0, 0]);
   const [testingValues, setTestingValues] = useState([0, 0, 0, 0, 0, 0, 0]);
   const [devopsValues, setDevopsValues] = useState([0, 0, 0, 0, 0, 0, 0]);
@@ -995,7 +996,6 @@ const TimesheetTable = ({ empID, projectId }) => {
       },
     },
   });
-
   const handleEffort = (date, intValue, index) => {
     const matchingEntry = results.find(
       (entry) => entry.effortDate === date && entry.taskId === intValue
@@ -1358,6 +1358,7 @@ const TimesheetTable = ({ empID, projectId }) => {
           <ArrowBackIosIcon fontSize="30" />
         </IconButton>
 
+{user?.role !== "employee" && (
         <Button
           variant="outlined"
           className="sidebar-button"
@@ -1369,6 +1370,7 @@ const TimesheetTable = ({ empID, projectId }) => {
         >
           APPROVALS
         </Button>
+)}
         <Button variant="outlined" 
         className="sidebar-button"
         onClick={() => navigate("/leaveReconcilation")}
@@ -1408,7 +1410,7 @@ const TimesheetTable = ({ empID, projectId }) => {
         </div>
       )}
       <Grid item xs={10} className={`wrapper ${blurScreen ? "blur" : ""}`}>
-        <h1 className="title">Work Tracker</h1>
+        <h1 className="title">Worksheet Tracker</h1>
         <p style={{ display: "none" }}>Project ID: {projectId}</p>
         {results.map((item, index) => (
           <p style={{ display: "none" }} key={index}>
@@ -1701,7 +1703,7 @@ const TimesheetTable = ({ empID, projectId }) => {
                       paddingBottom: "1px",
                     }}
                   >
-                   Testing 
+                    Testing
                   </TableCell>
                   {testingValues.map((value, index) => (
                     <TableCell
@@ -1842,7 +1844,7 @@ const TimesheetTable = ({ empID, projectId }) => {
                             },
                           },
                           disableUnderline: true,
-                          disabled: isFutureDay(index + 1) 
+                          disabled: isFutureDay(index + 1),
                         }}
                       />
                     </TableCell>
@@ -1926,7 +1928,6 @@ const TimesheetTable = ({ empID, projectId }) => {
                       }}
                     />
                   </TableCell>
-                      
                 ))}
               </TableRow>
 
@@ -2010,7 +2011,6 @@ const TimesheetTable = ({ empID, projectId }) => {
                   ))}
                 </TableRow>
               )}
-
               {projectId !== Taskname.stibiumProjectId &&
                 projectId !== Taskname.aomaDeliveryProjectId &&
                 projectId !== Taskname.aomaPromoProjectId &&
@@ -2639,16 +2639,16 @@ const TimesheetTable = ({ empID, projectId }) => {
               <TableRow>
                 <TableCell
                    size="small"  // This reduces default padding
-      sx={{ 
-            backgroundColor: "#676c71", 
-            color: "white", 
-            fontSize: "14px", 
-            textAlign: "center", 
-            fontFamily: "Arial", 
-            height: "20px",
-            lineHeight: "20px",
-            padding: "2px 4px",  // Minimal padding
-          }}
+    sx={{ 
+      backgroundColor: "#676c71", 
+      color: "white", 
+      fontSize: "14px", 
+      textAlign: "center", 
+      fontFamily: "Arial", 
+      height: "20px",
+      lineHeight: "20px",
+      padding: "2px 4px",  // Minimal padding
+    }}
                 >
                   Work Status
                 </TableCell>

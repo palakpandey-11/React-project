@@ -9,19 +9,27 @@ import Box from '@mui/material/Box';
 import { Link } from "react-router-dom";
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
 
-function Signup () {
+function Signup() {
   const [empId, setEmpId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [toastState, setToastState] = useState({ show: false, message: "", type: "" });
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  // ✅ Employees + Manager Mapping
   const employees = [
-    { empId: "emp000", password: "pass000", name: "HR", role: "hr" },
-    { empId: "emp001", password: "pass001", name: "Pankaj Sir", role: "manager" },
-    { empId: "emp002", password: "pass002", name: "Pranali Bagul", role: "employee" },
-    { empId: "emp003", password: "pass003", name: "Palak Pandey", role: "employee" },
+    { empId: "hr000", password: "pass000", name: "HR", role: "hr", gender: "male" },
+  //  { empId: "emp006", password: "pass006", name: "Aditya", role: "manager", gender: "male" },
+    { empId: "emp001", password: "pass001", name: "Pankaj", role: "manager", gender: "male", managerId:"hr000" },
+    { empId: "emp004", password: "pass004", name: "Shivam", role: "manager", gender: "male",managerId:"hr000" },
+   // { empId: "emp005", password: "pass005", name: "Saurabh", role: "manager", gender: "male" },
+    { empId: "10023", password: "pass002", name: "Pranali Bagul", role: "employee", gender: "female", managerId: "emp001" },
+    { empId: "10022", password: "pass003", name: "Palak Pandey", role: "employee", gender: "female", managerId: "emp004" },
+   // { empId: "10024", password: "pass023", name: "Shruti", role: "employee", gender: "female", managerId: "emp005" },
+   // { empId: "10025", password: "pass024", name: "Om", role: "employee", gender: "male", managerId: "emp006" },
   ];
 
   const handleSignup = (e) => {
@@ -33,11 +41,17 @@ function Signup () {
     } else if (user.password !== password) {
       triggerToast("Incorrect password", "error");
     } else {
+      // ✅ Store user data with managerId
       localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("directory",JSON.stringify(employees.map(({ password, ...rest }) => rest)));
       triggerToast("Signed in successfully!", "success");
+
+
+      setIsLoading(true);
       setTimeout(() => {
+        setIsLoading(false);
         navigate("/dashboard");
-      }, 1500);
+      }, 1000);
     }
   };
 
@@ -50,7 +64,29 @@ function Signup () {
 
   return (
     <>
-      <div className="signup-container">
+      <div className="signup-container" style={{ position: "relative" }}>
+        {isLoading && (
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              background: "rgba(255, 255, 255, 0.11)",
+              backdropFilter: "blur(5px)",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 10,
+            }}
+          >
+            <CircularProgress size={60} thickness={4.0} />
+            <p style={{ marginTop: "12px", fontWeight: "500", color: "#333" }}>Redirecting to Dashboard...</p>
+          </div>
+        )}
+
         <div className="form-box">
           <div className="logo">Stibium</div>
           <h2>Sign In</h2>

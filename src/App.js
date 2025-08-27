@@ -85,7 +85,7 @@ function App() {
         <Route path="/form16" element={<FormSixteen />}/>
         <Route path="/form16/procced" element={<ProceedBtn/>} />
         <Route path="/form16/generateForm" element={<GenerateForm16 />} />
-        <Route path="/form16/verify-part-a" element={<VarifyPartA/>} />
+       <Route path="/form16/verify-part-a" element={<VarifyPartA/>} />
         <Route path="/form24q" element={< Form24Q />} />
         <Route path="/form24q/challans" element={<ChallansPage/>}/>
         <Route path="/employeeitdeclaration" element={<EmployeeITDeclaration/>}/>

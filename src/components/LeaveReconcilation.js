@@ -92,6 +92,7 @@ export default function LeaveReconcilation({ empID, projectId }) {
   const [results, setResults] = useState(null);
   const [taskId, setTaskId] = useState(null);
   const [successSnackbarOpen, setSuccessSnackbarOpen] = React.useState(false);
+
   const handleSnackbarClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -115,7 +116,15 @@ export default function LeaveReconcilation({ empID, projectId }) {
   const [loading, setLoading] = useState(true);
   const [noRowSelectedSnackbarOpen, setNoRowSelectedSnackbarOpen] =
     useState(false);
+// Who is applying?
+  const viewer    = JSON.parse(localStorage.getItem("user") || "{}");
+  const directory = JSON.parse(localStorage.getItem("directory") || "[]");
 
+  // Find their manager (approver)
+  const myManager = viewer?.managerId
+    ? directory.find(p => p.empId === viewer.managerId)
+    : null;
+    
 useEffect(() => {
   setLoading(false); // simulate fetch complete
 
@@ -379,38 +388,46 @@ const style = {
   };
 
 const handleSubmitModal = async () => {
-  setLoading(true);
+  if (!viewer?.empId) {
+    console.error('Missing logged-in user');
+    return;
+  }
+  if (!myManager) {
+    console.error('No manager found for this user.');
+    return;
+  }
+  if (!reconciliationDate || enabledRows.length === 0) {
+    setNoRowSelectedSnackbarOpen(true);
+    return;
+  }
+  const hasEmptyReason = leaveDays.some(
+    (ld, idx) => enabledRows.includes(idx) && !ld.reason
+  );
+  if (hasEmptyReason) {
+    setEmptyReasonSnackbarOpen(true);
+    return;
+  }
 
-const newEntries = enabledRows.map(index => ({
-    empID: '10022', // or use a unique taskId if needed
-    name: "Palak", // replace with actual name if available
+  // Build entries from the *selected* rows for the logged-in user
+  const newEntries = enabledRows.map((index) => ({
+    id: `${viewer.empId}-${Date.now()}-${index}`,
+    empID: viewer.empId,          // keep both keys for safety
+    empId: viewer.empId,
+    name: viewer.name,
     reason: leaveDays[index].reason,
     date: leaveDays[index].reconciliation_date,
-    status: "Pending"
+    status: "Pending",
+    leaveType: "Reconciliation",
+    approverId: myManager.empId,  // <— THIS is the key bit
+    approverName: myManager.name,
   }));
 
-  // ✅ Save to localStorage
-  const existingData = JSON.parse(localStorage.getItem('reconciliationData')) || [];
-  const updatedData = [...existingData, ...newEntries];
-  localStorage.setItem('reconciliationData', JSON.stringify(updatedData));
-
-  // ✅ You can still log the output if needed
-  newEntries.forEach(entry => {
-    console.log("Simulated POST: ", entry);
-  });
-
-  const dataToSubmit = leaveDays.reduce((result, { reason }, index) => {
-    const oldReason = oldReasons[index];
-    if (reason !== oldReason) {
-      result[index] = reason;
-    }
-    return result;
-  }, {});
-  console.log("Simulated PUT: updateReasons", dataToSubmit);
+  // Save into reconciliation inbox
+  const existing = JSON.parse(localStorage.getItem('reconciliationData') || '[]');
+  localStorage.setItem('reconciliationData', JSON.stringify([...existing, ...newEntries]));
 
   handleClose();
   setSuccessSnackbarOpen(true);
-  setLoading(false);
 };
 
 
