@@ -13,6 +13,7 @@ import dayjs from 'dayjs';
 import GroupIcon from '@mui/icons-material/Group';
 import { Link as RouterLink } from 'react-router-dom';
 import Navbar from './Navbar.js';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const AddEmp = () => {
   const navigate = useNavigate();
@@ -93,6 +94,13 @@ const handleSnackbarClose = () => {
     <Box>
       <Navbar/>
     <Box sx={{ width:'80%',margin:'0 auto',mt:'70px'  }}>
+                        <IconButton
+                          onClick={() => navigate('/updateemp')}
+                          sx={{ position: 'absolute',top:65,left:15, color: 'white' }}
+                        >
+                          <ArrowBackIosIcon />
+                        </IconButton>
+      
             {/* Breadcrumbs */}
               <Breadcrumbs separator=">" sx={{'& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' }, mb: 1 }}>
                 <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>

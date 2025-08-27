@@ -15,16 +15,18 @@ import {
   TableCell,
   Checkbox,
   Paper,
-  TablePagination
+  TablePagination,
+  Snackbar, Alert,
+  
 } from '@mui/material'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import SearchIcon from '@mui/icons-material/Search'
-
+import RejectButtonReconcilation from './RejectButtonReconcilation'
 
 
 // sample data for Reconciliation tab
 const reconSampleRows = [
-    { id: 100146, name: 'pranali',reason: 'okkkk fill',          date: '16-10-2024', status: 'Pending' },
+    { id: "10023", name: 'pranali',reason: 'okkkk fill', date: '16-10-2024', status: 'Pending' },
   // …add more as needed…
 ]
 
@@ -39,6 +41,9 @@ export default function ReconciliationApproval() {
    // new state for rows coming from your API
  const [reconRows,  setReconRows]    = useState([])
 
+ const [openReject, setOpenReject] = useState(false);
+const [rowsForReject, setRowsForReject] = useState([]);
+
 useEffect(() => {
   const stored = localStorage.getItem('reconciliationData');
   if (stored) {
@@ -46,6 +51,25 @@ useEffect(() => {
   }
 }, []);
 
+// Normalize a reconciliation row to the "history/closed" shape
+const mapReconToHistory = (row, status, reasonOverride) => {
+  const empId = row.empID || row.empId || row.id;      // tolerate different keys
+  const date  = row.date || row.startDate || row.endDate || '';
+
+  return {
+    id: `${empId}-${Date.now()}`,       // unique id for history/closed tables
+    empId: row.empId || '',
+    name: row.name || '',
+    leaveType: row.leaveType || 'Reconciliation',
+    startDate: row.startDate || date,
+    endDate: row.endDate || date,
+    days: row.days ?? 1,
+    reason: reasonOverride ?? row.reason ?? '',
+    appliedOn: row.appliedOn || date || '',
+    balance: row.balance ?? '-',
+    status,
+  };
+};
 
 //merge yoyr static sample+dynamic api rows
   // filter by id or name 
@@ -69,35 +93,64 @@ useEffect(() => {
         : [...prev, id]
     )
   }
+  // toast/snackbar state
+const [toast, setToast] = useState({
+  open: false,
+  msg: '',
+  severity: 'success', // 'success' | 'error' | 'info' | 'warning'
+});
+const handleRejected = (rejectedItems) => {
+  // rejectedItems should carry a reason (e.g., r.rejectReason or r.reason)
+  const toWrite = rejectedItems.map((r) =>
+    mapReconToHistory(r, "Rejected", r.rejectReason ?? r.reason ?? "")
+  );
 
-  const handleStatusChange = (newStatus) => {
-  // Get existing history
-  const existingHistory = JSON.parse(localStorage.getItem("leaveHistory") || "[]");
+  // history
+  const hist = JSON.parse(localStorage.getItem("leaveHistory") || "[]");
+  localStorage.setItem("leaveHistory", JSON.stringify([...hist, ...toWrite]));
 
-  // Update selected rows with new status
-  const updatedRows = allRows
-    .filter((row) => selected.includes(row.id))
-    .map((row) => ({
-      ...row,
-      status: newStatus,
-      empId: row.empID || row.empId || row.id,  // ensure key match
-      leaveType: "Reconciliation",              // optional: mark it
-      startDate: row.date || "",                // map date if needed
-      endDate: row.date || "",
-      balance: "-",                             // or keep it blank if not relevant
-    }));
+  // closed
+  const closed = JSON.parse(localStorage.getItem("closedRows") || "[]");
+  localStorage.setItem("closedRows", JSON.stringify([...closed, ...toWrite]));
 
-  // Add updated rows to leaveHistory
-  const newHistory = [...existingHistory, ...updatedRows];
-  localStorage.setItem("leaveHistory", JSON.stringify(newHistory));
+  // remove from reconciliation
+  const rejectedIds = new Set(rejectedItems.map((r) => r.id));
+  const remaining = reconRows.filter((r) => !rejectedIds.has(r.id));
+  setReconRows(remaining);
+  localStorage.setItem("reconciliationData", JSON.stringify(remaining));
 
-  // Remove updated rows from reconciliationData
-  const remainingRecon = reconRows.filter((row) => !selected.includes(row.id));
-  localStorage.setItem("reconciliationData", JSON.stringify(remainingRecon));
-  setReconRows(remainingRecon);
-
-  // Clear selection
   setSelected([]);
+  setToast({ open: true, msg: "Rejected successfully", severity: "success" });
+};
+
+const handleStatusChange = (newStatus) => {
+  // the rows the approver selected
+  const picked = allRows.filter((r) => selected.includes(r.id));
+  if (!picked.length) return;
+
+  // map to history/closed shape
+  const toWrite = picked.map((r) => mapReconToHistory(r, newStatus));
+
+  // 1) append to leaveHistory (used by "History" tab)
+  const hist = JSON.parse(localStorage.getItem("leaveHistory") || "[]");
+  localStorage.setItem("leaveHistory", JSON.stringify([...hist, ...toWrite]));
+
+  // 2) append to closedRows (used by "Closed" tab)
+  const closed = JSON.parse(localStorage.getItem("closedRows") || "[]");
+  localStorage.setItem("closedRows", JSON.stringify([...closed, ...toWrite]));
+
+  // 3) remove from reconciliation list (only from dynamic recon store)
+  const remainingRecon = reconRows.filter((r) => !selected.includes(r.id));
+  setReconRows(remainingRecon);
+  localStorage.setItem("reconciliationData", JSON.stringify(remainingRecon));
+
+  // 4) clear selection + toast
+  setSelected([]);
+  setToast({
+    open: true,
+    msg: `${newStatus} successfully`,
+    severity: "success",
+  });
 };
 
 
@@ -205,7 +258,11 @@ useEffect(() => {
             <Button
               variant="outlined"
               disabled={!selected.length}
-              onClick={() => handleStatusChange("Rejected")}
+              onClick={() => {  const picked = allRows.filter(r => selected.includes(r.id)); 
+                if (!picked.length) return;
+                setRowsForReject(picked);
+                setOpenReject(true);
+              }}
                 sx={{
                   color: 'white',
                   borderColor: 'rgba(255,255,255,0.5)',
@@ -321,6 +378,28 @@ useEffect(() => {
         />
         </Box>
       </Box>
+      <RejectButtonReconcilation
+  openReject={openReject}
+  onCloseReject={() => setOpenReject(false)}
+  leaveRows={rowsForReject}
+  onRejected={handleRejected}
+/>
+<Snackbar
+  open={toast.open}
+  autoHideDuration={2500}
+  onClose={() => setToast((t) => ({ ...t, open: false }))}
+  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+>
+  <Alert
+    onClose={() => setToast((t) => ({ ...t, open: false }))}
+    severity={toast.severity}
+    variant="filled"
+    sx={{ width: '100%' }}
+  >
+    {toast.msg}
+  </Alert>
+</Snackbar>
+
     </div>
   )
 }

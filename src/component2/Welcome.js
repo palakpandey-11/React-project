@@ -64,7 +64,7 @@ export default function Welcome() {
           <Box>
             <IconButton sx={{ color: 'white' }}><SearchIcon /></IconButton>
             <IconButton sx={{ color: 'white' }}><SettingsIcon /></IconButton>
-            <IconButton sx={{ color: 'error.light' }}><LogoutIcon /></IconButton>
+            <IconButton sx={{ color: 'error.light' }}onClick={() => navigate('/dashboard')}><LogoutIcon /></IconButton>
           </Box>
         </Toolbar>
       </AppBar>

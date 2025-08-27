@@ -16,6 +16,7 @@ import {
   InputLabel,
   Link,
   Dialog,
+  IconButton,
   DialogTitle,
   DialogContent,
   DialogActions,
@@ -30,6 +31,7 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 import GroupIcon from '@mui/icons-material/Group';
 import { Link as RouterLink } from 'react-router-dom';
 import Navbar from './Navbar.js';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const ExcelImport = () => {
   const navigate = useNavigate();  
@@ -77,9 +79,15 @@ const ExcelImport = () => {
   return (
     <Box>
       <Navbar/>
-    <Box p={1} sx={{width:'80%',margin:'0 auto',mt:'50px'}}>
+    <Box p={1} sx={{width:'80%',margin:'0 auto',mt:'55px'}}>
+                        <IconButton
+                          onClick={() => navigate('/updateemp')}
+                          sx={{ position: 'absolute',top:60,left:15, color: 'white' }}
+                        >
+                          <ArrowBackIosIcon />
+                        </IconButton>        
       {/* Breadcrumbs */}
-        <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' }, mb: 2 }}>
+        <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' }, mb: 1 }}>
           <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>
           <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/updateemp">Employee</Link>
           <Link underline="hover" component={RouterLink} style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 600 }} to="/excelimport">Excel Import</Link>

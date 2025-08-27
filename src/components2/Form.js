@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   Box, Typography, TextField, Select, MenuItem,
-  InputLabel, FormControl, Button, Divider, Breadcrumbs, Link
+  InputLabel, FormControl, Button, Divider, Breadcrumbs, Link,IconButton,
 } from '@mui/material';
 import AttachmentIcon from '@mui/icons-material/Attachment';
 import GroupIcon from '@mui/icons-material/Group';
@@ -12,6 +12,7 @@ import dayjs from 'dayjs';
 import { Link as RouterLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar.js';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const Form = () => {
   const navigate = useNavigate();  
@@ -22,6 +23,12 @@ const Form = () => {
     <Box>
       <Navbar/>
     <Box sx={{ width:'80%',margin:'0 auto',mt:'65px' }}>
+                              <IconButton
+                                onClick={() => navigate('/company')}
+                                sx={{ position: 'absolute',top:60,left:15, color: 'white' }}
+                              >
+                                <ArrowBackIosIcon />
+                              </IconButton>      
       {/* Breadcrumbs */}
       <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' }}}>
         <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>

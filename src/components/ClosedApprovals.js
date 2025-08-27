@@ -18,8 +18,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 
 // only CLOSED rows here
 const closedSampleRows = [
-  { id: 1245, name: 'Pranali B', leaveType: 'Restricted', startDate: '09-06-2025', endDate: '09-06-2025', days: 1, reason: 'Holiday', appliedOn: '30-05-2025', balance: 4, status: 'Approved' },
-  { id: 1246, name: 'Palak P',  leaveType: 'Annual Leave', startDate: '21-10-2024', endDate: '21-10-2024', days: 1, reason: 'Personal', appliedOn: '21-05-2025', balance: 9.5, status: 'Approved' }
+  { id: 10021, name: 'Pranali ', leaveType: 'Restricted', startDate: '09-06-2025', endDate: '09-06-2025', days: 1, reason: 'Holiday', appliedOn: '30-05-2025', balance: 4, status: 'Approved' },
 ]
 
 export default function ClosedApprovals() {
@@ -121,7 +120,7 @@ const [rowsPerPage, setRowsPerPage] = useState(5)
               <TableRow sx={{           "& .MuiTableCell-stickyHeader": {
       backgroundColor: "rgb(6, 6, 6)",  // your translucent blue
       color: "white",   } }}>
-                {['Emp Id','Emp Name','Leave Type','From','To','Days','Reason','Applied On','Balance','Status'].map(h => (
+                {['Employee ID','Emp Name','Leave Type','From','To','Days','Reason','Applied On','Balance','Status'].map(h => (
                   <TableCell key={h} sx={{ color: 'white', fontWeight: 'bold', py:1.3, px:1 }}>{h}</TableCell>
                 ))}
               </TableRow>
@@ -132,7 +131,7 @@ const [rowsPerPage, setRowsPerPage] = useState(5)
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(row => (
                   <TableRow key={row.id} sx={{ backgroundColor: 'rgba(255, 253, 253, 0.11)' }}>
-                    <TableCell sx={{ color: 'white',py:1.3, px:1,  }}>{row.id}</TableCell>
+                    <TableCell sx={{ color: 'white',py:1.3, px:1,  }}>{row.empId}</TableCell>
                     <TableCell sx={{ color: 'white', py:1.3, px:1}}>{row.name}</TableCell>
                     <TableCell sx={{ color: 'white',  py:1.3,px:1 }}>{row.leaveType}</TableCell>
                     <TableCell sx={{ color: 'white', py:1.3, px:1 }}>{row.startDate}</TableCell>

@@ -24,7 +24,7 @@ import { saveAs } from 'file-saver';
 import { Tooltip } from '@mui/material';
 import jsPDF from 'jspdf';
 import Navbar from './Navbar.js';
-
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const Letter = () => {
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -141,6 +141,12 @@ const Letter = () => {
     <Box>
       <Navbar/>
     <Box sx={{width:'80%',margin:'0 auto',mt:'70px' }}>
+                        <IconButton
+                          onClick={() => navigate('/updateemp')}
+                          sx={{ position: 'absolute',top:65,left:15, color: 'white' }}
+                        >
+                          <ArrowBackIosIcon />
+                        </IconButton>      
       {/* Breadcrumbs */}
         <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' }, mb: 2 }}>
           <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>

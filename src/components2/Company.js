@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Box, Breadcrumbs, Link, Select, MenuItem, Tabs, Tab, Typography, Button
+  Box, Breadcrumbs, Link, Select, MenuItem, Tabs, Tab, Typography, Button,IconButton,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -10,6 +10,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar.js';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const Company = () => {
   const navigate = useNavigate();
@@ -21,6 +22,12 @@ const Company = () => {
     <Box>
       <Navbar/>
     <Box sx={{ width:'80%',margin:'0 auto',mt:'65px' }}>
+                              <IconButton
+                                onClick={() => navigate('/updateemp')}
+                                sx={{ position: 'absolute',top:60,left:15, color: 'white' }}
+                              >
+                                <ArrowBackIosIcon />
+                              </IconButton>      
       {/* Breadcrumbs */}
       <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' } }}>
         <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>

@@ -11,6 +11,7 @@ import { useLocation } from "react-router-dom";
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar.js';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const steps = ["General", "Select Employees", "Preview", "Publish/Download"];
 
@@ -88,6 +89,12 @@ const filteredEmployees = originalEmployees.filter((emp) =>
     <Box>
       <Navbar/>
     <Box sx={{ p: 2,width:'80%',margin:'0 auto',mt:'50px' }}>
+                        <IconButton
+                          onClick={() => navigate('/letter')}
+                          sx={{ position: 'absolute',top:65,left:15, color: 'white' }}
+                        >
+                          <ArrowBackIosIcon />
+                        </IconButton>      
       {/* Breadcrumbs */}
       <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' } }}>
         <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>

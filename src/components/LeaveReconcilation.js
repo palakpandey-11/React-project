@@ -219,19 +219,17 @@ useEffect(() => {
     });
   };
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: '90%',
-  maxWidth: 550,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
-
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
 
   if (!empID) {
   console.error("empID is missing. Cannot proceed.");
@@ -382,7 +380,7 @@ const handleSubmitModal = async () => {
   setLoading(true);
 
 const newEntries = enabledRows.map(index => ({
-    empID: '10022', // or use a unique taskId if needed
+    id: empID, // or use a unique taskId if needed
     name: "Palak", // replace with actual name if available
     reason: leaveDays[index].reason,
     date: leaveDays[index].reconciliation_date,
@@ -739,11 +737,7 @@ const newEntries = enabledRows.map(index => ({
           <Table>
             <TableHead>
               <TableRow>
-   <TableCell colSpan={3} align="center" sx={{
-      py: 0.5,      // reduce vertical padding
-      fontSize: "13px",
-      fontWeight: 500,
-    }}>
+   <TableCell colSpan={3} align="center">
      <Typography>Date: {formatDate(reconciliationDate)}</Typography>
    </TableCell>
  </TableRow>
@@ -1193,8 +1187,6 @@ const newEntries = enabledRows.map(index => ({
                             padding: "10px 0px",
                             fontSize: "13px",
                             height: "16px",
-                            backgroundColor: '#e8e9e7'
-
                           },
                         }}
                         onKeyPress={(event) => {
@@ -1766,18 +1758,20 @@ const newEntries = enabledRows.map(index => ({
             </TableBody>
           </Table>
 
-          <Box className="buttonContainer"   sx={{ mt: 1, display: "flex", justifyContent: "center" }} >
+          <Box className="buttonContainer" style={{ position: "relative" }}>
             <Button
               variant="contained"
               color="primary"
               className="customButton"
               onClick={handleSubmitModal}
               style={{
-      width: "30%",
-      height: "36px",
-      fontSize: "13px",
-      boxShadow: "2px 2px 4px rgba(0, 0, 0, 0.85)",
-    }}
+                
+                fontFamily: "Arial",
+                width: "20%",
+                height: "40px",
+                fontSize: "13px",
+                boxShadow: "2px 2px 4px rgba(0, 0, 0, 0.85)",
+              }}
               disabled={loading}
             >
               Submit
@@ -1805,21 +1799,21 @@ const newEntries = enabledRows.map(index => ({
 
       <Snackbar
         open={openSnackbar}
-        autoHideDuration={3000}
+        autoHideDuration={1000}
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
         <Alert
           onClose={handleCloseSnackbar}
           severity="error"
-          sx={{ width: "100%" }}
+          sx={{ width: "90%" }}
         >
           Value cannot be greater than 24
         </Alert>
       </Snackbar>
       <Snackbar
         open={successSnackbarOpen}
-        autoHideDuration={3000}
+        autoHideDuration={1000}
         onClose={handleSuccessSnackbarClose}
         anchorOrigin={{
           vertical: "top",
@@ -1829,9 +1823,8 @@ const newEntries = enabledRows.map(index => ({
         <MuiAlert
           onClose={handleSuccessSnackbarClose}
           severity="success"
-          variant="filled"
           sx={{
-            width: "100%",
+            width: "90%",
             height: "70%",
             backgroundColor: "#2e7d32",
             color: "#ffffff",
@@ -1842,7 +1835,7 @@ const newEntries = enabledRows.map(index => ({
       </Snackbar>
       <Snackbar
         open={emptyReasonSnackbarOpen}
-        autoHideDuration={6000}
+        autoHideDuration={1000}
         onClose={() => setEmptyReasonSnackbarOpen(false)}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >

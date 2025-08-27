@@ -9,6 +9,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar.js';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const Compose = () => {
   const navigate = useNavigate();    
@@ -24,6 +25,12 @@ const Compose = () => {
     <Box>
       <Navbar/>
     <Box sx={{width:'80%',margin:'0 auto',mt:'65px'}}>
+                              <IconButton
+                                onClick={() => navigate('/masscom')}
+                                sx={{ position: 'absolute',top:60,left:15, color: 'white' }}
+                              >
+                                <ArrowBackIosIcon />
+                              </IconButton>      
       {/* Breadcrumbs */}
       <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' } }}>
         <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>

@@ -11,6 +11,7 @@ import {
   FormControl,
   InputLabel,
   Alert,
+  IconButton,
   Paper
 } from '@mui/material';
 import { Breadcrumbs, Link } from '@mui/material';
@@ -26,6 +27,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useNavigate } from 'react-router-dom';
 import DownloadIcon from '@mui/icons-material/Download';
 import Navbar from './Navbar.js';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const steps = [
   'Excel Importer',
@@ -61,6 +63,12 @@ const ImportExcel = () => {
     <Box>
       <Navbar/>
     <Box sx={{  width:'80%',margin:'0 auto',mt:'70px' }}>
+                              <IconButton
+                                onClick={() => navigate('/excelimport')}
+                                sx={{ position: 'absolute',top:60,left:15, color: 'white' }}
+                              >
+                                <ArrowBackIosIcon />
+                              </IconButton>    
             {/* Breadcrumbs */}
               <Breadcrumbs separator=">" sx={{ '& .MuiBreadcrumbs-separator': { color: 'rgba(255,255,255,0.4)' }, mb: 1 }}>
                 <Link underline="hover" component={RouterLink} color="rgba(255,255,255,0.4)" to="/welcome">Home</Link>
