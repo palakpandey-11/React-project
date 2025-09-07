@@ -18,6 +18,15 @@ export default function Timesheet() {
   setSelectedMonth(dayjs()); // Reset to current month
 };
 
+const handleReport = () => {
+  if (!selectedEmployee || !selectedMonth) return; // basic guard
+  const payload = {
+    employee: selectedEmployee,
+    monthISO: selectedMonth.startOf("month").toISOString(), // keep a stable month
+  };
+  localStorage.setItem("clientReportParams", JSON.stringify(payload));
+  navigate("/clientreport/document"); // open the print page
+};
 
 return (
     
@@ -178,9 +187,9 @@ return (
 
         {/* Buttons */}
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-          <Button variant="contained" color="primary">
-            REPORT
-          </Button>
+          <Button variant="contained" color="primary" onClick={handleReport}>
+  REPORT
+</Button>
           <Button variant="outlined" color="error" onClick={handleReset}>
             RESET
           </Button>

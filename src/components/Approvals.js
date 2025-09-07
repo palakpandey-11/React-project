@@ -23,141 +23,120 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import SearchIcon from '@mui/icons-material/Search';
 import RejectButton from './RejectButton';
 
-    // Normalize any active row into the shape Closed expects
-const toClosedRow = (r, status, reasonOverride) => ({
-  id: r.id,
-  empId: String(r.empId ?? r.empID ?? r.id),
-  name: r.name || "",
-  leaveType: r.leaveType || "Reconciliation",
-  startDate: r.startDate || r.date || "",
-  endDate: r.endDate || r.date || "",
-  days: r.days ?? 1,
-  reason: reasonOverride ?? r.reason ?? "",
-  appliedOn: r.appliedOn || r.date || "",
-  balance: r.balance ?? "-",
-  status,
-  approverId: r.approverId, // keep for manager scoping
-});
-
 export default function Approvals() {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
+    const [searchTerm, setSearchTerm] = useState('');
+    const [activeTab, setActiveTab] = useState('ACTIVE');
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeTab, setActiveTab] = useState('ACTIVE');
+    const loggedInUser = JSON.parse(localStorage.getItem("user") || "{}");
+    const loggedInUserRole = loggedInUser.role;
+    const loggedInUserEmpId = loggedInUser.empId;
 
-  const loggedInUser = JSON.parse(localStorage.getItem('user') || '{}');
-  const loggedInUserRole = loggedInUser.role;
-  const loggedInUserEmpId = loggedInUser.empId;
-
-  const [activeRows, setActiveRows] = useState(() => {
-    const stored = localStorage.getItem('leaveApprovals');
-    return stored ? JSON.parse(stored) : [];
-  });
-  const [selected, setSelected] = useState([]);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [openReject, setOpenReject] = useState(false);
-  const [toRejectRows, setToRejectRows] = useState([]);
-
-  const filteredRows = activeRows.filter((r) => {
-    const term = searchTerm.trim().toLowerCase();
-    const matchesSearch =
-      term === '' ||
-      r.empId?.toString().includes(term) ||
-      r.name?.toLowerCase().includes(term);
-
-    if (loggedInUserRole === 'hr') {
-      return matchesSearch;
-    }
-    if (loggedInUserRole === 'manager') {
-      return matchesSearch && r.approverId === loggedInUserEmpId;
-    }
-    return false;
-  });
-
-  function handleSelect(id) {
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((rid) => rid !== id) : [...prev, id]
-    );
-  }
-
-  const handleApprove = () => {
-    if (!selected.length) return;
- // 1) payload for CLOSED
-    const approvedItems = activeRows
-      .filter((r) => selected.includes(r.id))
-      .map((r) => toClosedRow(r, 'Approved', r.reason || 'Approved'));
-
-    // 2) remove from ACTIVE
-    const updatedActiveRows = activeRows.filter((r) => !selected.includes(r.id));
-    setActiveRows(updatedActiveRows);
-    localStorage.setItem('leaveApprovals', JSON.stringify(updatedActiveRows));
-
-    // 3) append to CLOSED
-    const existingClosed = JSON.parse(localStorage.getItem('closedRows') || '[]');
-    localStorage.setItem('closedRows', JSON.stringify([...existingClosed, ...approvedItems]));
-
-    // 4) update HISTORY
-    const history = JSON.parse(localStorage.getItem('leaveHistory') || '[]');
-    const updatedHistory = history.map((entry) =>
-      selected.includes(entry.id) ? { ...entry, status: 'Approved' } : entry
-    );
-    localStorage.setItem('leaveHistory', JSON.stringify(updatedHistory));
-
-    setSelected([]);
-    setActiveTab('CLOSED');
-    setSnackbarOpen(true);
-  };
-
-  const handleOpenReject = () => {
-    setToRejectRows(filteredRows.filter((r) => selected.includes(r.id)));
-    setOpenReject(true);
-  };
-  const handleCloseReject = () => setOpenReject(false);
-
-  const onRowsRejected = (rejectedItems) => {
-    const closed = JSON.parse(localStorage.getItem("closedRows") || "[]");
-    const closedRejected =rejectedItems.map((r) => toClosedRow(r, "Rejected", r.reason));
-localStorage.setItem("closedRows", JSON.stringify([...closed, ...closedRejected]));
-
-    // 1) remove from ACTIVE
-    const updatedActive = activeRows.filter(
-      (r) => !rejectedItems.some((x) => x.id === r.id)
-    );
-    setActiveRows(updatedActive);
-    localStorage.setItem('leaveApprovals', JSON.stringify(updatedActive));
-    setSelected([]);
-
-    // 2) update HISTORY
-    const history = JSON.parse(localStorage.getItem('leaveHistory') || '[]');
-    const updatedHistory = history.map((entry) => {
-      const rj = rejectedItems.find((item) => item.id === entry.id);
-      return rj ? { ...entry, status: 'Rejected', reason: rj.reason } : entry;
+    const [activeRows, setActiveRows] = useState(() => {
+        const stored = localStorage.getItem("leaveApprovals");
+        return stored ? JSON.parse(stored) : [];
     });
-    localStorage.setItem('leaveHistory', JSON.stringify(updatedHistory));
+    const [selected, setSelected] = useState([]);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [openReject, setOpenReject] = useState(false);
+    const [toRejectRows, setToRejectRows] = useState([]);
 
-    // // 3) also write to CLOSED
-    // const rejectedForClosed = activeRows
-    //   .filter((r) => rejectedItems.some((x) => x.id === r.id))
-    //   .map((r) => {
-    //     const reason =
-    //       rejectedItems.find((x) => x.id === r.id)?.reason || r.reason || 'Rejected';
-    //     return toClosedRow(r, 'Rejected', reason);
-    //   });
+    const filteredRows = activeRows.filter(r => {
+        const term = searchTerm.trim().toLowerCase();
+        const matchesSearch = term === '' ||
+                                         r.empId.toString().includes(term) ||
+                                         r.name.toLowerCase().includes(term);
 
-    // const existingClosed = JSON.parse(localStorage.getItem('closedRows') || '[]');
-    // localStorage.setItem('closedRows', JSON.stringify([...existingClosed, ...rejectedForClosed]));
+        if (loggedInUserRole === "hr") {
+            return matchesSearch;
+        } else if (loggedInUserRole === "manager") {
+            return matchesSearch && r.approverId === loggedInUserEmpId;
+        }
+        return false;
+    });
 
-    setActiveTab('CLOSED');
-  };
+    function handleSelect(id) {
+        setSelected(prev =>
+            prev.includes(id)
+                ? prev.filter(rid => rid !== id)
+                : [...prev, id]
+        );
+    }
 
-  const allSelected =
-    selected.length === filteredRows.length && filteredRows.length > 0;
-  const someSelected =
-    selected.length > 0 && selected.length < filteredRows.length;
+    const handleApprove = () => {
+        if (!selected.length) return;
 
-  return(
+        const approvedItems = activeRows
+            .filter(r => selected.includes(r.id))
+            .map(r => ({
+                ...r,
+                status: 'Approved',
+                reason: r.reason || 'Approved',
+            }));
+
+        const updatedActiveRows = activeRows.filter(r => !selected.includes(r.id));
+        setActiveRows(updatedActiveRows);
+        localStorage.setItem("leaveApprovals", JSON.stringify(updatedActiveRows));
+
+        const existingClosed = JSON.parse(localStorage.getItem('closedRows') || '[]');
+        localStorage.setItem('closedRows', JSON.stringify([...existingClosed, ...approvedItems]));
+
+        const history = JSON.parse(localStorage.getItem("leaveHistory") || "[]");
+        const updatedHistory = history.map(entry =>
+            selected.includes(entry.id) ? { ...entry, status: "Approved" } : entry
+        );
+        localStorage.setItem("leaveHistory", JSON.stringify(updatedHistory));
+
+        setSelected([]);
+        setActiveTab('CLOSED');
+        setSnackbarOpen(true);
+    };
+
+    const handleOpenReject = () => {
+        setToRejectRows(
+            filteredRows.filter(r => selected.includes(r.id))
+        );
+        setOpenReject(true);
+    };
+
+    const handleCloseReject = () => setOpenReject(false);
+
+    const onRowsRejected = (rejectedItems) => {
+        // Leave balances ko recover karein
+        rejectedItems.forEach(rejectedLeave => {
+            const leaveBalances = JSON.parse(localStorage.getItem(`leaveBalances_${rejectedLeave.empId}`) || "[]");
+            const updatedBalances = leaveBalances.map(balance => {
+                if (balance.code === rejectedLeave.leaveType) {
+                    return { ...balance, value: balance.value + rejectedLeave.days };
+                }
+                return balance;
+            });
+            localStorage.setItem(`leaveBalances_${rejectedLeave.empId}`, JSON.stringify(updatedBalances));
+        });
+
+        const updatedActive = activeRows.filter(r => !rejectedItems.some(x => x.id === r.id));
+        setActiveRows(updatedActive);
+        localStorage.setItem("leaveApprovals", JSON.stringify(updatedActive));
+        setSelected([]);
+
+        const history = JSON.parse(localStorage.getItem("leaveHistory") || "[]");
+        const updatedHistory = history.map(entry => {
+            const rejectedItem = rejectedItems.find(item => item.id === entry.id);
+            if (rejectedItem) {
+                return { ...entry, status: "Rejected", reason: rejectedItem.reason };
+            }
+            return entry;
+        });
+        localStorage.setItem("leaveHistory", JSON.stringify(updatedHistory));
+        setActiveTab('CLOSED');
+    };
+
+    const allSelected = selected.length === filteredRows.length && filteredRows.length > 0;
+    const someSelected = selected.length > 0 && selected.length < filteredRows.length;
+
+    return (
         <div style={{
             position: 'relative',
             textAlign: 'center',
@@ -269,7 +248,6 @@ localStorage.setItem("closedRows", JSON.stringify([...closed, ...closedRejected]
                                 sx={{
                                     color: 'white',
                                     borderColor: 'rgba(255,255,255,0.5)',
-
                                     '&:not(.Mui-disabled):hover': {
                                         borderColor: 'green',
                                         backgroundColor: 'rgba(255,255,255,0.1)'

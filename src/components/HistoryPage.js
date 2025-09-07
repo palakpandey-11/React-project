@@ -32,7 +32,7 @@ const HistoryPage = () => {
   const isHr = user?.role === "hr";
 
   useEffect(() => {
-    const storedHistory = JSON.parse(localStorage.getItem("History") || "[]");
+    const storedHistory = JSON.parse(localStorage.getItem("leaveHistory") || "[]");
     
     let filteredHistory = [];
     if (isHr) {
@@ -60,19 +60,39 @@ const HistoryPage = () => {
     }
     
     // Check if all selected leaves are in "Withdraw Pending" status
-    const canWithdraw = selectedRows.every(id => {
-      const row = rowsData.find(r => r.id === id);
-      return row && row.status === "Withdraw Pending";
-    });
+    const leavesToWithdraw = rowsData.filter(row => selectedRows.includes(row.id));
+    const canWithdraw = leavesToWithdraw.every(row => row.status === "Withdraw Pending");
 
     if (!canWithdraw) {
       triggerToast("Only 'Withdraw Pending' leaves can be withdrawn.", "error");
       return;
     }
+    
+    // Leave balances ko recover karein
+    const storedBalances = JSON.parse(localStorage.getItem(`leaveBalances_${user.empId}`) || "[]");
+    const updatedBalances = [...storedBalances];
+    
+    leavesToWithdraw.forEach(leave => {
+      const leaveTypeToUpdate = updatedBalances.find(lb => lb.code === leave.leaveType);
+      if (leaveTypeToUpdate) {
+        leaveTypeToUpdate.value += leave.days;
+      }
+    });
 
-    const updatedRows = rowsData.filter((row) => !selectedRows.includes(row.id));
-    setRowsData(updatedRows);
-    localStorage.setItem("leaveHistory", JSON.stringify(updatedRows));
+    localStorage.setItem(`leaveBalances_${user.empId}`, JSON.stringify(updatedBalances));
+
+    // Fetch the full leave history from localStorage
+    const storedHistory = JSON.parse(localStorage.getItem("leaveHistory") || "[]");
+    
+    // Filter the full history to remove the withdrawn leaves
+    const updatedHistory = storedHistory.filter((row) => !selectedRows.includes(row.id));
+
+    // Update localStorage with the new, complete history
+    localStorage.setItem("leaveHistory", JSON.stringify(updatedHistory));
+    
+    // Update the local state (rowsData) to reflect the changes
+    const newRowsData = rowsData.filter((row) => !selectedRows.includes(row.id));
+    setRowsData(newRowsData);
 
     // Also remove from leaveApprovals
     const approvals = JSON.parse(localStorage.getItem("leaveApprovals") || "[]");
@@ -80,7 +100,7 @@ const HistoryPage = () => {
     localStorage.setItem("leaveApprovals", JSON.stringify(updatedApprovals));
 
     setSelectedRows([]);
-    triggerToast("Leave withdrawn!", "success");
+    triggerToast("Leave withdrawn successfully and balance recovered!", "success");
   };
 
   const handleChangePage = (_, newPage) => setPage(newPage);
@@ -161,7 +181,13 @@ const HistoryPage = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rowsData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                  {rowsData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                     // Calculate the balance to display based on the status
+                     let balanceToDisplay = row.balance;
+                     if (row.status === "Withdraw Pending" || row.status === "Rejected") {
+                       balanceToDisplay = row.balance + row.days;
+                     }
+                     return (
                     <TableRow key={row.id} sx={{ height: '36px' }}>
                       <TableCell sx={{ color: 'white', py: 0.5 }}>
                         <Checkbox
@@ -176,10 +202,11 @@ const HistoryPage = () => {
                       <TableCell sx={{ color: 'white', p: 0.5 }}>{row.startDate}</TableCell>
                       <TableCell sx={{ color: 'white', p: 0.5 }}>{row.endDate}</TableCell>
                       <TableCell sx={{ color: 'white', p: 0.5 }}>{row.reason}</TableCell>
-                      <TableCell sx={{ color: 'white', p: 0.5 }}>{row.balance}</TableCell>
+                      <TableCell sx={{ color: 'white', p: 0.5 }}>{balanceToDisplay}</TableCell>
                       <TableCell sx={{ color: 'white', p: 0.5 }}>{row.status}</TableCell>
                     </TableRow>
-                  ))}
+                     );
+                  })}
                 </TableBody>
               </Table>
             </TableContainer>

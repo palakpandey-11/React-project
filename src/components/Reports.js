@@ -128,7 +128,7 @@ export default function Reports() {
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'column',
-        width: '80%',
+        width: '60%',
         height: '550px',
       }} >
 
@@ -144,8 +144,8 @@ export default function Reports() {
 
 
         <Paper elevation={6} sx={{
-          width: '100%',
-          maxWidth: 800,
+          width: '80%',
+          maxWidth: 600,
           p: 4,
           mb: '50px',
           border: '3px solid rgba(255,255,255,0.7)',
@@ -184,14 +184,17 @@ export default function Reports() {
             disabled={employeeType === 'all'}
           >
             {employeeType === 'employee' && (
-              <MenuItem value="">Select Employee</MenuItem>
+              <MenuItem value="" disabled>Select Employee</MenuItem>
             )}
             {employeeType === 'all' && (
               <MenuItem value="ALL">All Employees</MenuItem>
             )}
             <MenuItem value="Pranali - 10023">Pranali - 10023</MenuItem>
             <MenuItem value="Palak - 10022">Palak - 10022</MenuItem>
-            <MenuItem value="Om - 100214">Om - 100235</MenuItem>
+            <MenuItem value="Pankaj - emp001">Pankaj - emp001</MenuItem>
+            <MenuItem value="Shivam - emp004">Shivam - emp004</MenuItem>
+            <MenuItem value="Aditya - emp006">Aditya - emp006</MenuItem>
+            <MenuItem value="Saurabh - emp005">Saurabh - emp005</MenuItem>
           </TextField>
 
 

@@ -18,6 +18,7 @@ import UpdatePayrollData from "./component2/UpdatePayrollData.js";
 import Reports from './components/Reports.js';
 import Timesheet from './components/Timesheet.js';
 import ClientReport from './components/ClientReport.js';
+import ClientReportDocument from "./components/ClientReportDocument.js";
 import UpdateEmp from './components2/UpdateEmp.js';
 import Analytics from './components2/Analytics.js';
 import OrganizationChart from './components2/OrganizationChart.js';
@@ -101,6 +102,7 @@ function App() {
         <Route path="/reports" element={<Reports />} />
         <Route path="/timesheet" element={<Timesheet />} />
         <Route path='/clientreport' element={<ClientReport />} />
+        <Route path="/clientreport/document" element={<ClientReportDocument />} />
         <Route path='/updateemp' element={<UpdateEmp />} />
         <Route path='/analytics' element={<Analytics />} />
         <Route path='/organizationchart' element={<OrganizationChart />} />

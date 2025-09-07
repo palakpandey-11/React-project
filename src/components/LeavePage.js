@@ -14,7 +14,21 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import IconButton from '@mui/material/IconButton';
 import { Snackbar, Alert } from '@mui/material';
 import { ListSubheader } from "@mui/material";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+const theme = createTheme({
+  components: {
+    MuiPickersDay: {
+      styleOverrides: {
+        root: {
+          '&.Mui-disabled': {
+            color: 'grey !important',
+          },
+        },
+      },
+    },
+  },
+});
 
 const LeavePage = () => {
   const navigate = useNavigate();
@@ -46,26 +60,25 @@ const triggerToast = (message, type) => {
   setToastState({ show: true, message, type });
   setTimeout(() => {
     setToastState({ show: false, message: "", type: "" });
-  }, 2500);
+  }, 1000);
 };
-
 
   const [history, setHistory] = useState(() => {
     const stored = localStorage.getItem("leaveHistory");
     return stored ? JSON.parse(stored) : [];
   });
-useEffect(() => {
-  if (assignedManagerName) setApplyTo(assignedManagerName);
-}, [assignedManagerName]);
 
-  const [leaveBalances, setLeaveBalances] = useState([
+  const [leaveBalances, setLeaveBalances] = useState(() => {
+    const storedBalances = localStorage.getItem(`leaveBalances_${user.empId}`);
+    return storedBalances ? JSON.parse(storedBalances) : [
     { code:'Annual Leave',type: 'Annual', value: 0.75 },
     { code:'Restricted Holiday',type: 'RH', value: 8 },
     { code:'LOP',type: 'LOP', value: 5 },
     { code:'Privilege Leave',type: 'PL', value: 5 },
     { code:'Maternity Leave',type: 'ML', value: 7 },
     { code:'Sick Leave',type: 'SL', value: 10 }
-  ]);
+  ]
+});
 
   const handleClear = () => {
     setLeaveType('');
@@ -107,24 +120,31 @@ useEffect(() => {
 
     const days = dayjs(endDate).diff(dayjs(startDate), 'day') + 1;
 
-//Find both the picked bucket and the LOP bucket
-  const pick = leaveBalances.find(lb => lb.code === leaveType);
-  const lop  = leaveBalances.find(lb => lb.type === 'LOP');
-if (!pick || !lop) return; 
-  // How many days left after emptying the primary bucket?
-const overflow = Math.max(days - pick.value, 0);
+// 1. Find the selected leave type in balances
+  const selectedLeave = leaveBalances.find(lb => lb.code === leaveType);
+  if (!selectedLeave) return;
 
-  setLeaveBalances(bs => bs.map(lb => {
-    if (lb.code === leaveType) {
-      // if it under-flowed, zero it out; otherwise subtract days normally
-      return { ...lb, value: Math.max(lb.value - days, 0) };
-    }
-    if (lb.type === 'LOP' && overflow> 0) {
-      // subtract any overflow from LOP
-      return { ...lb, value: lb.value - overflow };
-    }
-    return lb;
-  }));
+// 2. Check if sufficient balance is available
+  if (selectedLeave.value < days) {
+    triggerToast("Cannot apply this leave as you don't have sufficient leave available.", "error");
+    return;
+  }
+
+
+        // Update balances in a new array
+        const updatedBalances = leaveBalances.map(lb => {
+            if (lb.code === leaveType) {
+                // if it under-flowed, zero it out; otherwise subtract days normally
+                return { ...lb, value: lb.value - days };
+            }
+            return lb;
+        });
+
+        // Update the state with the new balances
+        setLeaveBalances(updatedBalances);
+
+        // 3. Updated balances ko local storage mein save karein
+        localStorage.setItem(`leaveBalances_${user.empId}`, JSON.stringify(updatedBalances));
 
 
 // now create your history entry with the updated balance
@@ -139,7 +159,7 @@ const overflow = Math.max(days - pick.value, 0);
     days,
     appliedOn: dayjs().format('DD-MM-YYYY'),
     reason:    "",
-    balance:   Math.max(pick.value - days, 0),
+    balance:   updatedBalances.find(b => b.code === leaveType)?.value || 0,
     status:    "Withdraw Pending",
     approverName: assignedManagerName,
     approverId:   myManager?.empId || null
@@ -160,13 +180,14 @@ const overflow = Math.max(days - pick.value, 0);
 
 
   return (
+      <ThemeProvider theme={theme}>
     <Box className="leave-container">
       <IconButton
-              onClick={() => navigate('/timesheettable')}
-              sx={{ position: 'absolute', top: 16, left: 16, color: 'white' }}
-            >
-              <ArrowBackIosIcon />
-            </IconButton>
+            onClick={() => navigate('/timesheettable')}
+            sx={{ position: 'absolute', top: 16, left: 16, color: 'white' }}
+          >
+            <ArrowBackIosIcon />
+          </IconButton>
       <Box className="leave-header">
         <Typography variant="h5" className="leave-title">LEAVE</Typography>
 
@@ -235,12 +256,12 @@ const overflow = Math.max(days - pick.value, 0);
                         height: 40,
                       },
                       '.MuiPickersDay-root.Mui-disabled': { // ✅ This is the new style
-                        color: 'rgba(250, 250, 250, 0.8)',
-                      },                      
+                        color: 'grey',
+                      },                   
                       '.MuiPickersCalendarHeader-label': {
                         color: 'white',
                         fontSize: '1.2rem',
-                      },
+                        },
                       '.MuiPickersCalendarHeader-switchViewIcon, .MuiSvgIcon-root': {
                         color: 'white',
                       },
@@ -325,13 +346,12 @@ const overflow = Math.max(days - pick.value, 0);
                       fullWidth
                     >
                       <MenuItem value="" disabled>Apply To</MenuItem>
-                      {assignedManagerName && ( 
+                      {assignedManagerName && assignedManagerName !== user?.name &&  ( 
                         <MenuItem value={assignedManagerName}>{assignedManagerName}</MenuItem>
                       )}
                       
-                      {/* <ListSubheader>Others</ListSubheader> */}
                       {extraPeople
-                        .filter(name => name && name !== assignedManagerName) // avoid duplicate
+                        .filter(name => name && name !== assignedManagerName && name !== user?.name) // avoid duplicate
                         .map(name => (
                           <MenuItem key={name} value={name}>{name}</MenuItem>
                         ))}
@@ -352,7 +372,7 @@ const overflow = Math.max(days - pick.value, 0);
         </Box>
         <Snackbar
           open={toastState.show}
-          autoHideDuration={3000}
+          autoHideDuration={1500}
           onClose={() => setToastState({ show: false, message: "", type: "" })}
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
         >
@@ -360,13 +380,14 @@ const overflow = Math.max(days - pick.value, 0);
             onClose={() => setToastState({ show: false, message: "", type: "" })}
             severity={toastState.type}
             variant="filled"
-            sx={{ width: "100%" }}
+            sx={{ width: "90%" , fontSize:'14px'}}
           >
             {toastState.message}
           </Alert>
         </Snackbar>
       </Box>
     </Box>
+  </ThemeProvider>
   );
 };
 

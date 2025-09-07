@@ -49,6 +49,12 @@ export default function ReconciliationApproval() {
     }
   }, [])
 
+  const rowKey = (r) =>
+  r.recordId ??
+  r.reconciliationId ??
+  r.id ??                                   // if backend sends a unique id, great
+  `${r.empID || r.empId || 'noEmp'}_${r.date || 'noDate'}_${r.reason || ''}`;
+
   // Normalize a reconciliation row to the "history/closed" shape
   const mapReconToHistory = (row, status, reasonOverride) => {
     const empId = row.empID || row.empId || row.id
@@ -94,13 +100,10 @@ export default function ReconciliationApproval() {
   const allSelected  = selected.length === filteredRows.length && filteredRows.length > 0
   const someSelected = selected.length > 0 && selected.length < filteredRows.length
 
-  const handleSelect = id => {
-    setSelected(prev =>
-      prev.includes(id)
-        ? prev.filter(x => x !== id)
-        : [...prev, id]
-    )
-  }
+// toggle one using the key
+const handleSelect = (key) => {
+  setSelected((prev) => (prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]));
+};
 
   // toast/snackbar state
   const [toast, setToast] = useState({
@@ -108,33 +111,53 @@ export default function ReconciliationApproval() {
     msg: '',
     severity: 'success',
   })
+const closedKey = r =>
+  `${r.empId}|${r.startDate}|${r.endDate}|${r.leaveType}|Rejected|${r.reason}`;
 
-  const handleRejected = (rejectedItems) => {
-    const toWrite = rejectedItems.map((r) =>
-      mapReconToHistory(r, "Rejected", r.rejectReason ?? r.reason ?? "")
-    )
-
-    // history
-    const hist = JSON.parse(localStorage.getItem("leaveHistory") || "[]")
-    localStorage.setItem("leaveHistory", JSON.stringify([...hist, ...toWrite]))
-
-    // closed
-    const closed = JSON.parse(localStorage.getItem("closedRows") || "[]")
-    localStorage.setItem("closedRows", JSON.stringify([...closed, ...toWrite]))
-
-    // remove from reconciliation
-    const rejectedIds = new Set(rejectedItems.map((r) => r.id))
-    const remaining = reconRows.filter((r) => !rejectedIds.has(r.id))
-    setReconRows(remaining)
-    localStorage.setItem("reconciliationData", JSON.stringify(remaining))
-
-    setSelected([])
-    setToast({ open: true, msg: "Rejected successfully", severity: "success" })
+const dedupAppend = (storeKey, items, keyFn) => {
+  const existing = JSON.parse(localStorage.getItem(storeKey) || '[]');
+  const seen = new Set(existing.map(keyFn));
+  const merged = [...existing];
+  for (const it of items) {
+    const k = keyFn(it);
+    if (!seen.has(k)) {
+      seen.add(k);
+      merged.push(it);
+    }
   }
+  localStorage.setItem(storeKey, JSON.stringify(merged));
+  return merged;
+};
+ const handleRejected = (rejectedFromModal) => {
+  // use current selection to identify the actual rows
+  const selectedKeys = new Set(selected);
+  const picked = myRows.filter(r => selectedKeys.has(rowKey(r)));
+  if (!picked.length) return;
 
+  // map to closed/history; prefer modal reason if provided
+  const toWrite = picked.map(r =>
+    mapReconToHistory(
+      r,
+      "Rejected",
+      rejectedFromModal.find(x => rowKey(x) === rowKey(r))?.rejectReason ?? r.reason
+    )
+  );
+
+  // write ONCE with de-dup
+  dedupAppend("leaveHistory", toWrite, closedKey);
+  dedupAppend("closedRows",   toWrite, closedKey);
+
+  // remove from reconciliation using the stable keys
+  const remaining = reconRows.filter(r => !selectedKeys.has(rowKey(r)));
+  setReconRows(remaining);
+  localStorage.setItem("reconciliationData", JSON.stringify(remaining));
+
+  setSelected([]);
+  setToast({ open: true, msg: "Rejected successfully", severity: "success" });
+};
   const handleStatusChange = (newStatus) => {
     //  use myRows (not allRows) so actions only affect what this viewer is allowed to see
-    const picked = myRows.filter((r) => selected.includes(r.id))
+    const picked = myRows.filter((r) => selected.includes(rowKey(r)));
     if (!picked.length) return
 
     const toWrite = picked.map((r) => mapReconToHistory(r, newStatus))
@@ -148,7 +171,7 @@ export default function ReconciliationApproval() {
     localStorage.setItem("closedRows", JSON.stringify([...closed, ...toWrite]))
 
     // 3) remove only those from dynamic store
-    const remainingRecon = reconRows.filter((r) => !selected.includes(r.id))
+    const remainingRecon = reconRows.filter((r) => !selected.includes(rowKey(r)));
     setReconRows(remainingRecon)
     localStorage.setItem("reconciliationData", JSON.stringify(remainingRecon))
 
@@ -262,7 +285,7 @@ export default function ReconciliationApproval() {
                 disabled={!selected.length}
                 onClick={() => {
                   // 🔁 use myRows here so you never pick rows the viewer shouldn't act on
-                  const picked = myRows.filter(r => selected.includes(r.id))
+                  const picked = myRows.filter(r => selected.includes(rowKey(r)))
                   if (!picked.length) return
                   setRowsForReject(picked)
                   setOpenReject(true)
@@ -305,7 +328,7 @@ export default function ReconciliationApproval() {
                       indeterminate={someSelected}
                       onChange={e =>
                         e.target.checked
-                          ? setSelected(filteredRows.map(r => r.id))
+                          ? setSelected(filteredRows.map(rowKey))
                           : setSelected([])
                       }
                     sx={{  color: 'white',
@@ -327,12 +350,16 @@ export default function ReconciliationApproval() {
             </TableHead>
 
             <TableBody>
-              {filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(row => (
+              {filteredRows
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row) => {
+    const key = rowKey(row);
+    const isChecked = selected.includes(key);
+    return (
                   <TableRow
-                    key={row.id}
+                    key={key}
                     hover
-                    selected={selected.includes(row.id)}
+                    selected={isChecked}
                     sx={{
                          cursor: 'default',
                       backgroundColor: 'rgba(255,255,255,0.11)',
@@ -341,8 +368,8 @@ export default function ReconciliationApproval() {
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
-                        checked={selected.includes(row.id)}
-                        onChange={() => handleSelect(row.id)}
+            checked={isChecked}
+            onChange={() => handleSelect(key)}
                         sx={{  
                         color: 'white',
                 '& .MuiSvgIcon-root': {
@@ -357,8 +384,9 @@ export default function ReconciliationApproval() {
                     <TableCell sx={{ color: 'white', py:1.3, px:2 }}>{row.date}</TableCell>
                     <TableCell sx={{ color: 'white', py:1.3, px:2 }}>{row.status}</TableCell>
                   </TableRow>
-                ))
-              }
+                );
+              })}
+              
             </TableBody>
           </Table>
         </TableContainer>

@@ -109,13 +109,15 @@ export default function LeaveReconcilation({ empID, projectId }) {
       reason: "Missed Timesheet",
     },
   ]);
-  
+  // state
+const [modalKey, setModalKey] = useState(0);
 
-  const [oldReasons, setOldReasons] = useState([]);
-  const [formData, setFormData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [noRowSelectedSnackbarOpen, setNoRowSelectedSnackbarOpen] =
-    useState(false);
+const resetEffortFields = () => {
+  setCodingValues(0); setTestingValues(0); setDevopsValues(0); setMeetingValues(0);
+  setDataValues(0);   setTaValues(0);     setTdValues(0);     setEeValues(0);
+  setPmValues(0);     setCbValues(0);     setAcValues(0);     setMisValues(0);
+  setTotal(0);
+};
 // Who is applying?
   const viewer    = JSON.parse(localStorage.getItem("user") || "{}");
   const directory = JSON.parse(localStorage.getItem("directory") || "[]");
@@ -125,28 +127,57 @@ export default function LeaveReconcilation({ empID, projectId }) {
     ? directory.find(p => p.empId === viewer.managerId)
     : null;
     
+  // top of file (under imports)
+const RECON_TABLE_KEY = `leaveReconTable_${viewer.empId}`;
+
+// write + set in one place
+const saveLeaveDays = (rows) => {
+  localStorage.setItem(RECON_TABLE_KEY, JSON.stringify(rows));
+  setLeaveDays(rows);
+  // keep the text inputs in sync with whatever is in rows
+  setReasons(rows.map(ld => ld.reason || ''));
+};
+
+  const [oldReasons, setOldReasons] = useState([]);
+  const [formData, setFormData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [noRowSelectedSnackbarOpen, setNoRowSelectedSnackbarOpen] =
+    useState(false);
+
 useEffect(() => {
-  setLoading(false); // simulate fetch complete
+  setLoading(false);
 
-  const mockLeaveDays = [
-    { reconciliation_date: "01-07-25", status: "Open", reason: "" },
-    { reconciliation_date: "28-06-25", status: "Resolved", reason: "Missed Timesheet" },
-    
-  ];
+  // 1) try to restore the table from storage
+  const saved = JSON.parse(localStorage.getItem(RECON_TABLE_KEY) || 'null');
 
+  // 2) if nothing saved yet, seed with your mocks (once)
+  const seed = saved && Array.isArray(saved) && saved.length
+    ? saved
+    : [
+        { reconciliation_date: "01-07-25", status: "Open",     reason: "" },
+        { reconciliation_date: "28-06-25", status: "Resolved", reason: "Missed Timesheet" },
+      ];
+
+  // hydrate state
+  setLeaveDays(seed);
+  setOldReasons(seed.map(ld => ld.reason || ""));
+  // keep reason input empty only for Open rows; show text for non-Open (e.g., Resolved)
+  setReasons(seed.map(ld => ld.reason || ''));
+
+  // persist initial seed the first time so it survives navigation
+  if (!saved) {
+    localStorage.setItem(RECON_TABLE_KEY, JSON.stringify(seed));
+  }
+
+  // your mock results (unchanged)
   const mockResults = [
     { effortDate: "01-07-25", taskId: 1, effort: 2 },
     { effortDate: "01-07-25", taskId: 2, effort: 3 },
     { effortDate: "01-07-25", taskId: 3, effort: 1 },
   ];
-
-  setLeaveDays(mockLeaveDays);
-  setOldReasons(mockLeaveDays.map((ld) => ld.reason));
-  setReasons(mockLeaveDays.map((ld) =>
-    ld.status === "Rejected" || ld.status === "Pending" ? ld.reason : ""
-  ));
   setResults(mockResults);
 }, []);
+
 
 
   const [reasons, setReasons] = useState(leaveDays.map(() => ""));
@@ -156,9 +187,10 @@ useEffect(() => {
     leaveDays.map(() => false)
   );
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {resetEffortFields();
+   setModalKey(k => k + 1);   // force fresh mount of the form
+   setOpen(true);}
   const handleClose = () => {
-    setReasons(leaveDays.map(() => ""));
     setEnabledRows([]);
     setAppbarChecked(false);
     setResetButtonsVisible(leaveDays.map(() => false));
@@ -215,12 +247,21 @@ useEffect(() => {
   };
 
   const handleReasonChange = (index) => (event) => {
-    const updatedReasons = [...reasons];
-    updatedReasons[index] = event.target.value;
-    setReasons(updatedReasons);
-    const updatedLeaveDays = [...leaveDays];
-    updatedLeaveDays[index].reason = event.target.value;
-    setLeaveDays(updatedLeaveDays);
+const value = event.target.value;
+  // live update the input state
+  setReasons(prev => {
+    const next = [...prev];
+    next[index] = value;
+    return next;
+  });
+
+  // keep the table data in sync + persist
+  const updated = [...leaveDays];
+  updated[index] = { ...updated[index], reason: value };
+  saveLeaveDays(updated);
+//  saveLeaveDays(updated, setLeaveDays, setReasons);
+
+
     setResetButtonsVisible((prevResetButtonsVisible) => {
       const updatedButtonsVisible = [...prevResetButtonsVisible];
       updatedButtonsVisible[index] = true;
@@ -400,34 +441,73 @@ const handleSubmitModal = async () => {
     setNoRowSelectedSnackbarOpen(true);
     return;
   }
-  const hasEmptyReason = leaveDays.some(
-    (ld, idx) => enabledRows.includes(idx) && !ld.reason
-  );
-  if (hasEmptyReason) {
+  const selectedIdx = enabledRows[0];
+  const openRow = leaveDays[selectedIdx];
+
+  if (!openRow.reason || openRow.reason.trim() === "") {
     setEmptyReasonSnackbarOpen(true);
     return;
   }
 
-  // Build entries from the *selected* rows for the logged-in user
-  const newEntries = enabledRows.map((index) => ({
-    id: `${viewer.empId}-${Date.now()}-${index}`,
-    empID: viewer.empId,          // keep both keys for safety
+  // Send to manager inbox (NO temp id)
+  const inboxItem = {
+    empID: viewer.empId,
     empId: viewer.empId,
     name: viewer.name,
-    reason: leaveDays[index].reason,
-    date: leaveDays[index].reconciliation_date,
+    reason: openRow.reason,
+    date: openRow.reconciliation_date,
     status: "Pending",
     leaveType: "Reconciliation",
-    approverId: myManager.empId,  // <— THIS is the key bit
+    approverId: myManager.empId,
     approverName: myManager.name,
-  }));
+  };
+  const existing = JSON.parse(localStorage.getItem("reconciliationData") || "[]");
+  localStorage.setItem("reconciliationData", JSON.stringify([...existing, inboxItem]));
 
-  // Save into reconciliation inbox
-  const existing = JSON.parse(localStorage.getItem('reconciliationData') || '[]');
-  localStorage.setItem('reconciliationData', JSON.stringify([...existing, ...newEntries]));
+  // 1) Insert a resolved row right below with the reason
+  // 2) Keep the original row Open and clear its reason (so it’s ready for the next one)
+  const next = [...leaveDays];
+   const original = next[selectedIdx];
+next[selectedIdx] = { ...original, status: "Open", reason: "" };  // clear open row
+   next.splice(selectedIdx + 1, 0, {   
+    reconciliation_date: original.reconciliation_date,
+   status: "Resolved",
+   reason: original.reason
+ });
+saveLeaveDays(next);  // writes localStorage, setLeaveDays(next)
 
-  handleClose();
-  setSuccessSnackbarOpen(true);
+  // reset selection and close modal
+  setEnabledRows([]);
+  setReconciliationDate(null);
+   resetEffortFields();
+   setModalKey(k => k + 1);
+  setOpen(false);                // closes your modal & resets modal inputs
+  setSuccessSnackbarOpen(true);  // “Details submitted successfully!”
+};
+
+//This only deletes that resolved line (original open row is untouched).
+// Deletes only a "Resolved" line. The original Open row stays.
+const removeResolvedRow = (rowIndex) => {
+  setLeaveDays(prev => {
+    // guard: only allow deleting resolved rows
+    if (!prev[rowIndex] || prev[rowIndex].status !== 'Resolved') return prev;
+
+    const next = prev.filter((_, i) => i !== rowIndex);
+
+    // 🔐 persist the table so it survives navigation
+    localStorage.setItem(RECON_TABLE_KEY, JSON.stringify(next));
+    return next;
+  });
+
+  // keep the reasons array in sync with the table shape
+  setReasons(prev => prev.filter((_, i) => i !== rowIndex));
+
+  // if you track selected/active rows by index, keep that in sync too
+  setEnabledRows(prev =>
+    prev
+      .map(i => (i > rowIndex ? i - 1 : i))
+      .filter(i => i !== rowIndex)
+  );
 };
 
 
@@ -490,9 +570,12 @@ const handleSubmitModal = async () => {
 
   const handleCloseIcon = () => {
     setReasons(leaveDays.map(() => ""));
+    //setReasons(leaveDays.map(ld => ld.reason || ''));
     setEnabledRows([]);
     setAppbarChecked(false);
     setResetButtonsVisible(leaveDays.map(() => false));
+    resetEffortFields();
+    setModalKey(k => k + 1);
     setOpen(false);
   };
 
@@ -611,7 +694,7 @@ const handleSubmitModal = async () => {
       <Grid item xs={4} textAlign="right">
         <IconButton
           component={Link}
-          to="/approvals/reconcilation"
+          to="/timesheettable"
           sx={{ color: "white" }}
         >
           <CloseIcon />
@@ -677,45 +760,58 @@ const handleSubmitModal = async () => {
             <TableCell sx={{pl:2}}>Date</TableCell>
             <TableCell  sx={{pl:2}}>Status</TableCell>
             <TableCell sx={{ textAlign: "left" }}>Reason</TableCell>
+            <TableCell align="center" sx={{ width: 56 }} /> {/* Actions */}
           </TableRow>
         </TableHead>
 
-        <TableBody>
-          {leaveDays.map((leaveDay, index) => (
-            <TableRow key={leaveDay.reconciliation_date} hover>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  checked={enabledRows.includes(index) || appbarChecked}
-                  onChange={handleCheckboxChange(index)}
-                  disabled={leaveDay.status !== "Open"}
-                  sx={{ color: "white" }}
-                />
-              </TableCell>
-              <TableCell align="left"  sx={{pl:2}}>
-                {leaveDay.reconciliation_date}
-              </TableCell>
-              <TableCell align="left" sx={{pl:2}}>{leaveDay.status}</TableCell>
-              <TableCell>
-                <TextField
-                  fullWidth
-                  size="small"
-                  variant="filled"
-                  placeholder="Reason"
-                  value={reasons[index] || ""}
-                  onChange={handleReasonChange(index)}
-                  disabled={
-                    !enabledRows.includes(index) || leaveDay.status !== "Open"
-                  }
-                  sx={{
-                    bgcolor: "rgba(255,255,255,0.1)",
-                    paddingTop:'2px',
-                    "& .MuiInputBase-input": { color: "white" },
-                  }}
-                />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
+<TableBody>
+  {leaveDays.map((leaveDay, index) => (
+    <TableRow key={`${leaveDay.reconciliation_date}-${index}`} hover>
+      <TableCell padding="checkbox">
+        <Checkbox
+          checked={enabledRows.includes(index) || appbarChecked}
+          onChange={handleCheckboxChange(index)}
+          disabled={leaveDay.status !== 'Open'}
+          sx={{ color: 'white' }}
+        />
+      </TableCell>
+
+      <TableCell sx={{ pl: 2 }}>{leaveDay.reconciliation_date}</TableCell>
+      <TableCell sx={{ pl: 2 }}>{leaveDay.status}</TableCell>
+
+      <TableCell>
+        <TextField
+          fullWidth
+          size="small"
+          variant="filled"
+          placeholder="Reason"
+          value={reasons[index] || ''}
+          onChange={handleReasonChange(index)}
+          disabled={!enabledRows.includes(index) || leaveDay.status !== 'Open'}
+          sx={{ bgcolor: 'rgba(255,255,255,0.1)', '& .MuiInputBase-input': { color: 'white' } }}
+        />
+      </TableCell>
+
+      {/* ✖ column */}
+      <TableCell align="center">
+        {leaveDay.status === 'Resolved' && (
+          <IconButton
+            size="small"
+            onClick={() => removeResolvedRow(index)}
+            sx={{
+              color: 'rgba(255,255,255,0.9)',
+              '&:hover': { color: '#ff8a80' }
+            }}
+            aria-label="remove resolved row"
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        )}
+      </TableCell>
+    </TableRow>
+  ))}
+</TableBody>
+
       </Table>
     </TableContainer>
 
@@ -744,6 +840,7 @@ const handleSubmitModal = async () => {
   }}
       >
         <Box
+        key={modalKey}
           sx={style}
           style={{
             maxHeight: "calc(100vh - 75px)",

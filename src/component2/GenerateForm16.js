@@ -305,9 +305,9 @@ const GenerateForm16 = () => {
               onChange={(e) => handleInputChange("financialYear", String(e.target.value))}
               sx={fieldSx}
             >
-              <MenuItem value="2023-24">2023-24</MenuItem>
-              <MenuItem value="2022-23">2022-23</MenuItem>
-              <MenuItem value="2021-22">2021-22</MenuItem>
+              <MenuItem value="2023-24">2025-26</MenuItem>
+              <MenuItem value="2022-23">2024-25</MenuItem>
+              <MenuItem value="2021-22">2023-24</MenuItem>
             </Select>
           </Box>
         </Grid>
@@ -323,9 +323,9 @@ const GenerateForm16 = () => {
               onChange={(e) => handleInputChange("assessmentYear", String(e.target.value))}
               sx={fieldSx}
             >
-              <MenuItem value="2024-25">2024-25</MenuItem>
-              <MenuItem value="2023-24">2023-24</MenuItem>
-              <MenuItem value="2022-23">2022-23</MenuItem>
+              <MenuItem value="2024-25">2025-26</MenuItem>
+              <MenuItem value="2023-24">2024-25</MenuItem>
+              <MenuItem value="2022-23">2023-24</MenuItem>
             </Select>
           </Box>
         </Grid>
@@ -532,77 +532,60 @@ const GenerateForm16 = () => {
           <Typography>for tax deducted at source from salary</Typography>
         </Box>
 
-        <Box sx={{ mb: 4 }}>
-          <Typography sx={{ fontWeight: 800, bgcolor: "#F1F5F9", p: 1, mb: 2 }}>PART A</Typography>
+<Box sx={{ mb: 4 }}>
+  <Typography
+    sx={{
+      fontWeight: 800,
+      bgcolor: "#F1F5F9",
+      p: 1,
+      mb: 2,
+      textAlign: "center",
+    }}
+  >
+    PART A
+  </Typography>
 
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
-              <Box sx={{ border: "1px solid #0F172A", p: 2 }}>
-                <Typography sx={{ fontWeight: 800, textDecoration: "underline", mb: 1.5 }}>
-                  Details of the Employer
-                </Typography>
-                <Box sx={{ lineHeight: 1.8 }}>
-                  <Typography>
-                    <b>Name and address of the Employer:</b>
-                  </Typography>
-                  <Typography sx={{ pl: 1 }}>
-                    {formData.employerName || "[Employer Name]"}
-                  </Typography>
-                  <Typography sx={{ pl: 1 }}>
-                    {formData.employerAddress || "[Employer Address]"}
-                  </Typography>
-                  <Typography sx={{ mt: 1.5 }}>
-                    <b>PAN of the Employer:</b> {formData.employerPAN || "[PAN]"}
-                  </Typography>
-                  <Typography>
-                    <b>TAN of the Employer:</b> {formData.employerTAN || "[TAN]"}
-                  </Typography>
-                </Box>
-              </Box>
-            </Grid>
+  <Grid container spacing={2} justifyContent="center">
+    <Grid item xs={12} md={5}>
+      <Box className="doc-box">
+        <Typography className="doc-title">Details of the Employer</Typography>
+        <Box className="doc-content">
+          <Typography><b>Name and address of the Employer:</b></Typography>
+          <Typography>{formData.employerName || "[Employer Name]"}</Typography>
+          <Typography>{formData.employerAddress || "[Employer Address]"}</Typography>
+          <Typography><b>PAN:</b> {formData.employerPAN || "[PAN]"}</Typography>
+          <Typography><b>TAN:</b> {formData.employerTAN || "[TAN]"}</Typography>
+        </Box>
+      </Box>
+    </Grid>
 
-            <Grid item xs={12} md={6}>
-              <Box sx={{ border: "1px solid #0F172A", p: 2 }}>
-                <Typography sx={{ fontWeight: 800, textDecoration: "underline", mb: 1.5 }}>
-                  Details of the Employee
-                </Typography>
-                <Box sx={{ lineHeight: 1.8 }}>
-                  <Typography>
-                    <b>Name and address of the Employee:</b>
-                  </Typography>
-                  <Typography sx={{ pl: 1 }}>
-                    {formData.employeeName || "[Employee Name]"}
-                  </Typography>
-                  <Typography sx={{ pl: 1 }}>
-                    {formData.employeeAddress || "[Employee Address]"}
-                  </Typography>
-                  <Typography sx={{ mt: 1.5 }}>
-                    <b>PAN of the Employee:</b> {formData.employeePAN || "[PAN]"}
-                  </Typography>
-                  <Typography>
-                    <b>Designation:</b> {formData.employeeDesignation || "[Designation]"}
-                  </Typography>
-                </Box>
-              </Box>
-            </Grid>
-          </Grid>
+    <Grid item xs={12} md={5}>
+      <Box className="doc-box">
+        <Typography className="doc-title">Details of the Employee</Typography>
+        <Box className="doc-content">
+          <Typography><b>Name and address of the Employee:</b></Typography>
+          <Typography>{formData.employeeName || "[Employee Name]"}</Typography>
+          <Typography>{formData.employeeAddress || "[Employee Address]"}</Typography>
+          <Typography><b>PAN:</b> {formData.employeePAN || "[PAN]"}</Typography>
+          <Typography><b>Designation:</b> {formData.employeeDesignation || "[Designation]"}</Typography>
+        </Box>
+      </Box>
+    </Grid>
+  </Grid>
 
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={12} md={6}>
-              <Box sx={{ border: "1px solid #0F172A", p: 2 }}>
-                <Typography>
-                  <b>Period:</b> {formData.periodFrom} to {formData.periodTo}
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Box sx={{ border: "1px solid #0F172A", p: 2 }}>
-                <Typography>
-                  <b>Assessment Year:</b> {formData.assessmentYear}
-                </Typography>
-              </Box>
-            </Grid>
-          </Grid>
+  <Grid container spacing={2} justifyContent="center" sx={{ mt: 2 }}>
+    <Grid item xs={12} md={5}>
+      <Box className="doc-box small">
+        <Typography><b>Period:</b> {formData.periodFrom} to {formData.periodTo}</Typography>
+      </Box>
+    </Grid>
+    <Grid item xs={12} md={5}>
+      <Box className="doc-box small">
+        <Typography><b>Assessment Year:</b> {formData.assessmentYear}</Typography>
+      </Box>
+    </Grid>
+  </Grid>
+</Box>
 
           <Box sx={{ mt: 2 }}>
             <Typography sx={{ fontWeight: 800, mb: 1.25 }}>
@@ -641,10 +624,11 @@ const GenerateForm16 = () => {
               </tbody>
             </Box>
           </Box>
-        </Box>
 
         <Box sx={{ mb: 4 }}>
-          <Typography sx={{ fontWeight: 800, bgcolor: "#F1F5F9", p: 1, mb: 2 }}>PART B</Typography>
+           <Typography sx={{ fontWeight: 800, bgcolor: "#F1F5F9", p: 1, mb: 2, textAlign: "center" }}>
+    PART B
+  </Typography>
 
           <Box sx={{ mb: 2 }}>
             <Typography sx={{ fontWeight: 800, mb: 1.25 }}>1. GROSS SALARY</Typography>
@@ -953,23 +937,59 @@ const GenerateForm16 = () => {
               </Stack>
             </CardContent>
           </Card>
-
-          {/* Document */}
-          <Form16Preview />
+{/* Document */}
+<div id="form16-print">
+  <Form16Preview />
+</div>
         </Box>
       )}
 
       {/* Print-only tweaks */}
-      <Box
-        sx={{
-          "@media print": {
-            "&": { p: 0, background: "#fff", color: "#000" },
-            "button, [role='button']": { display: "none !important" },
-          },
-        }}
-      />
+            {/* Print-only tweaks */}
+      <style>{`
+        @media print {
+          /* Hide everything */
+          body * { visibility: hidden !important; }
+
+          /* Show only Form16 content */
+          #form16-print, #form16-print * { visibility: visible !important; }
+
+          /* Position correctly */
+          #form16-print {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+          }
+
+          /* Page settings */
+          @page { size: A4 portrait; margin: 12mm; }
+        }
+          .doc-box {
+  border: 1px solid #0F172A;
+  border-radius: 6px;
+  padding: 14px;
+  background: #fff;
+}
+
+.doc-title {
+  font-weight: 800;
+  text-decoration: underline;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.doc-content {
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.doc-box.small {
+  text-align: center;
+}
+
+      `}</style>
     </Box>
- 
   );
 };
 

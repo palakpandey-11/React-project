@@ -44,8 +44,23 @@ function Signup() {
       // ✅ Store user data with managerId
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("directory",JSON.stringify(employees.map(({ password, ...rest }) => rest)));
-      triggerToast("Signed in successfully!", "success");
+            // 1. Leave balances ko local storage mein save karein
+            const defaultLeaveBalances = [
+                { code: 'Annual Leave', type: 'Annual', value: 0.75 },
+                { code: 'Restricted Holiday', type: 'RH', value: 8 },
+                { code: 'LOP', type: 'LOP', value: 5 },
+                { code: 'Privilege Leave', type: 'PL', value: 5 },
+                { code: 'Maternity Leave', type: 'ML', value: 7 },
+                { code: 'Sick Leave', type: 'SL', value: 10 }
+            ];
+            
+            // Check karein ki balances pehle se exist karte hain ya nahi.
+            // Agar nahi, toh set karein.
+            if (!localStorage.getItem(`leaveBalances_${user.empId}`)) {
+                localStorage.setItem(`leaveBalances_${user.empId}`, JSON.stringify(defaultLeaveBalances));
+            }
 
+            triggerToast("Signed in successfully!", "success");
 
       setIsLoading(true);
       setTimeout(() => {
@@ -59,7 +74,7 @@ function Signup() {
     setToastState({ show: true, message, type });
     setTimeout(() => {
       setToastState({ show: false, message: "", type: "" });
-    }, 2500);
+    }, 1000);
   };
 
   return (
@@ -138,7 +153,7 @@ function Signup() {
 
       <Snackbar
         open={toastState.show}
-        autoHideDuration={3000}
+        autoHideDuration={1000}
         onClose={() => setToastState({ show: false, message: "", type: "" })}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
@@ -146,7 +161,7 @@ function Signup() {
           onClose={() => setToastState({ show: false, message: "", type: "" })}
           severity={toastState.type}
           variant="filled"
-          sx={{ width: "100%" }}
+          sx={{ width: "90%" }}
         >
           {toastState.message}
         </Alert>
