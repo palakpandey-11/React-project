@@ -1,48 +1,72 @@
 import React, { Component } from "react";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import { useNavigate } from 'react-router-dom';
-import { Box, TextField,InputLabel,
+import { useNavigate, useLocation } from "react-router-dom";
+import {
+  Box,
+  InputLabel,
   OutlinedInput,
   InputAdornment,
   IconButton,
-FormControl } from "@mui/material";
+  FormControl,
+} from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
-
 export class Reset extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      alertMessage: "",
-      alertSeverity: "",       // 'success' | 'error'
-      openSnackbar: false,
-      showCurrentPassword: false,
-      showNewPassword: false,
-    };
+  state = {
+    alertMessage: "",
+    alertSeverity: "",
+    openSnackbar: false,
+    showPassword: false,
+  };
+componentDidMount() {
+  const successMessage = this.props.location?.state?.successMessage;
+
+  if (successMessage) {
+    this.showAlert(successMessage, "success");
   }
+}
 
-  // Toggle handlers for each field
-  handleClickShowCurrent = () =>
-    this.setState((s) => ({ showCurrentPassword: !s.showCurrentPassword }));
-  handleClickShowNew = () =>
-    this.setState((s) => ({ showNewPassword: !s.showNewPassword }));
-  handleMouseDownPassword = (e) => e.preventDefault();
-
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
-    const current = this.currentPassword;
-    const next = this.newPassword;
 
-    if (!current || !next) {
-      this.showAlert("Please fill in all fields", "error");
-    } else if (next.length < 6) {
-      this.showAlert("Password must be at least 6 characters", "error");
-    } else if (current !== next) {
+    const email = this.props.location?.state?.email;
+    const newPassword = this.newPassword;
+    const confirmPassword = this.confirmPassword;
+
+
+    if (!newPassword || !confirmPassword) {
+      this.showAlert("All fields are required", "error");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
       this.showAlert("Passwords do not match", "error");
-    } else {
-      this.showAlert("Password reset successful!", "success"); setTimeout(() => { this.props.navigate("/"); }, 1500);
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        "http://localhost:8080/api/auth/reset-password",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, newPassword, confirmPassword }),
+        }
+      );
+
+      const msg = await res.text();
+
+      if (!res.ok) {
+        this.showAlert(msg, "error");
+        return;
+      }
+
+      this.showAlert("Password reset successful!", "success");
+      setTimeout(() => this.props.navigate("/"), 1500);
+    } catch {
+      this.showAlert("Server error", "error");
     }
   };
 
@@ -58,86 +82,44 @@ export class Reset extends Component {
     this.setState({ openSnackbar: false });
   };
 
+  togglePassword = () => {
+    this.setState((prev) => ({ showPassword: !prev.showPassword }));
+  };
+
   render() {
-    const {
-      alertMessage,
-      alertSeverity,
-      openSnackbar,
-      showCurrentPassword,
-      showNewPassword,
-    } = this.state;
+    const { openSnackbar, alertMessage, alertSeverity, showPassword } =
+      this.state;
 
     return (
       <div className="forgot-pass-wrapper">
         <form className="forgot-pass-form" onSubmit={this.handleSubmit}>
           <h3>Reset Password</h3>
 
-          {/* Current Password Field */}
-          <Box sx={{ width: 600, maxWidth: "100%", mb: 2 }}>
-            <FormControl fullWidth variant="outlined">
-              <InputLabel htmlFor="current-password">
-                Current Password
-              </InputLabel>
+          <Box sx={{ mb: 2 }}>
+            <FormControl fullWidth>
+              <InputLabel>New Password</InputLabel>
               <OutlinedInput
-                id="current-password"
-                type={showCurrentPassword ? "text" : "password"}
-                autoComplete="current-password"
-                onChange={(e) => (this.currentPassword = e.target.value)}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label={
-                        showCurrentPassword
-                          ? "Hide current password"
-                          : "Show current password"
-                      }
-                      onClick={this.handleClickShowCurrent}
-                      onMouseDown={this.handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {showCurrentPassword ? (
-                        <VisibilityOff />
-                      ) : (
-                        <Visibility />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="Current Password"
-              />
-            </FormControl>
-          </Box>
-
-          {/* New Password Field */}
-          <Box sx={{ width: 600, maxWidth: "100%", mb: 2 }}>
-            <FormControl fullWidth variant="outlined">
-              <InputLabel htmlFor="new-password">New Password</InputLabel>
-              <OutlinedInput
-                id="new-password"
-                type={showNewPassword ? "text" : "password"}
-                autoComplete="new-password"
+                type={showPassword ? "text" : "password"}
                 onChange={(e) => (this.newPassword = e.target.value)}
                 endAdornment={
                   <InputAdornment position="end">
-                    <IconButton
-                      aria-label={
-                        showNewPassword
-                          ? "Hide new password"
-                          : "Show new password"
-                      }
-                      onClick={this.handleClickShowNew}
-                      onMouseDown={this.handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {showNewPassword ? (
-                        <VisibilityOff />
-                      ) : (
-                        <Visibility />
-                      )}
+                    <IconButton onClick={this.togglePassword}>
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
                 }
                 label="New Password"
+              />
+            </FormControl>
+          </Box>
+
+          <Box sx={{ mb: 2 }}>
+            <FormControl fullWidth>
+              <InputLabel>Confirm Password</InputLabel>
+              <OutlinedInput
+                type={showPassword ? "text" : "password"}
+                onChange={(e) => (this.confirmPassword = e.target.value)}
+                label="Confirm Password"
               />
             </FormControl>
           </Box>
@@ -147,16 +129,11 @@ export class Reset extends Component {
 
         <Snackbar
           open={openSnackbar}
-          autoHideDuration={3000}
+          autoHideDuration={1500}
           onClose={this.handleClose}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          anchorOrigin={{vertical:"top", horizontal:"right"}}
         >
-          <Alert
-            onClose={this.handleClose}
-            severity={alertSeverity}
-            variant="filled"
-            sx={{ width: "100%" }}
-          >
+          <Alert severity={alertSeverity} variant="filled"  onClose={this.handleClose}>
             {alertMessage}
           </Alert>
         </Snackbar>
@@ -164,10 +141,11 @@ export class Reset extends Component {
     );
   }
 }
+
 function ResetWrapper() {
   const navigate = useNavigate();
-  return <Reset navigate={navigate} />;
+  const location = useLocation();
+  return <Reset navigate={navigate} location={location} />;
 }
-
 
 export default ResetWrapper;

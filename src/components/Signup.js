@@ -11,7 +11,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 
-function Signin() {
+function Signup() {
   const [empId, setEmpId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -19,37 +19,49 @@ function Signin() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const employees = [
-    { empId: "hr000", password: "pass000", name: "HR", role: "hr", gender: "male" },
-    { empId: "man001", password: "pass001", name: "Pankaj Sir", role: "manager", gender: "male" },
-    { empId: "emp002", password: "pass002", name: "Pranali Bagul", role: "employee", gender: "female" },
-    { empId: "emp003", password: "pass003", name: "Palak Pandey", role: "employee", gender: "female" },
-  ];
+  const handleSignup = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
 
-  const handleSignup = (e) => {
-    e.preventDefault();
-    const user = employees.find(emp => emp.empId === empId);
+  try {
+    const response = await fetch("http://localhost:8080/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        employeeId: empId,
+        password: password,
+      }),
+    });
 
-    if (!user) {
-      triggerToast("Employee ID not found", "error");
-    } else if (user.password !== password) {
-      triggerToast("Incorrect password", "error");
-    } else {
-      localStorage.setItem("user", JSON.stringify(user));
-      triggerToast("Signed in successfully!", "success");
-      setIsLoading(true);
-      setTimeout(() => {
-        setIsLoading(false);
-        navigate("/dashboard");
-      }, 2500);
+    const data = await response.json();
+
+    if (!response.ok) {
+      triggerToast(data.message || "Wrong Password", "error");
+      setIsLoading(false);
+      return;
     }
-  };
+
+    localStorage.setItem("user", JSON.stringify(data));
+    triggerToast("Signed in successfully!", "success");
+
+    setTimeout(() => {
+      navigate("/dashboard");
+    }, 1000);
+
+  } catch (err) {
+    triggerToast("Server not reachable", "error");
+    setIsLoading(false);
+  }
+};
+
 
   const triggerToast = (message, type) => {
     setToastState({ show: true, message, type });
     setTimeout(() => {
       setToastState({ show: false, message: "", type: "" });
-    }, 2500);
+    }, 1000);
   };
 
   return (
@@ -63,8 +75,8 @@ function Signin() {
               left: 0,
               width: "100%",
               height: "100%",
-              background: "rgba(255,255,255,0.4)",
-              backdropFilter: "blur(8px)",
+              background: "rgba(255, 255, 255, 0.11)",
+              backdropFilter: "blur(5px)",
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
@@ -72,7 +84,7 @@ function Signin() {
               zIndex: 10,
             }}
           >
-            <CircularProgress size={60} thickness={4.5} />
+            <CircularProgress size={60} thickness={4.0} />
             <p style={{ marginTop: "12px", fontWeight: "500", color: "#333" }}>Redirecting to Dashboard...</p>
           </div>
         )}
@@ -128,7 +140,7 @@ function Signin() {
 
       <Snackbar
         open={toastState.show}
-        autoHideDuration={3000}
+        autoHideDuration={1000}
         onClose={() => setToastState({ show: false, message: "", type: "" })}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
@@ -136,7 +148,7 @@ function Signin() {
           onClose={() => setToastState({ show: false, message: "", type: "" })}
           severity={toastState.type}
           variant="filled"
-          sx={{ width: "100%" }}
+          sx={{ width: "90%" }}
         >
           {toastState.message}
         </Alert>
@@ -144,4 +156,5 @@ function Signin() {
     </>
   );
 }
-export default Signin;
+
+export default Signup;

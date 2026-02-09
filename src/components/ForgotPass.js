@@ -5,53 +5,66 @@ import "./../style/ForgotPass.css";
 
 class ForgotPass extends Component {
 
- state = {
+  state = {
     showError: false,
   };
-  handleSubmit = (e) => {
+
+  handleSubmit = async (e) => {
     e.preventDefault();
- const email = this.emailInput?.value;
+    const email = this.emailInput?.value;
+
     if (!email || !email.includes("@")) {
       this.setState({ showError: true });
+      return;
+    }
 
-     
-      setTimeout(() => {
-        this.setState({ showError: false });
-      }, 1500);
+    try {
+      const res = await fetch(
+        `http://localhost:8080/api/auth/forgot-password?email=${email}`,
+        { method: "POST" }
+      );
 
-    return;
-  }
-      this.props.navigate("/reset");
+      if (!res.ok) {
+        throw new Error("Email not found");
+      }
+
+      this.props.navigate("/reset", { state: { email , successMessage:"Email verified successfully.",}, });
+
+    } catch (err) {
+      this.setState({ showError: true });
+    }
   };
+
   render() {
     return (
       <div className="forgot-pass-wrapper">
-
         <Snackbar
           open={this.state.showError}
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          autoHideDuration={2000}
+          onClose={() => this.setState({ showError: false })}
         >
           <Alert severity="error" variant="filled">
-            Please enter a valid email address.
+            Email not found or invalid
           </Alert>
         </Snackbar>
 
         <form className="forgot-pass-form" onSubmit={this.handleSubmit}>
           <h3>Forgot Password</h3>
-            <Box sx={{ width: 500, maxWidth: '100%',  mb: 2 }}>
-      <TextField fullWidth 
-      label="Email" 
-      id="email"
-      inputRef={(ref) => this.emailInput = ref}
-       />
-    </Box>
- 
-          <button className="submit-btn" >Submit</button>
+          <Box sx={{ width: 500, maxWidth: "100%", mb: 2 }}>
+            <TextField
+              fullWidth
+              label="Email"
+              inputRef={(ref) => (this.emailInput = ref)}
+            />
+          </Box>
+          <button className="submit-btn">Submit</button>
         </form>
       </div>
     );
   }
 }
+
 function ForgotPassWrapper() {
   const navigate = useNavigate();
   return <ForgotPass navigate={navigate} />;
