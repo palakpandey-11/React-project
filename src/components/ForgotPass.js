@@ -28,7 +28,7 @@ class ForgotPass extends Component {
         throw new Error("Email not found");
       }
 
-      this.props.navigate("/reset", { state: { email , successMessage:"Email verified successfully.",}, });
+      this.props.navigate("/reset", { state: { email , successMessage:"OTP sent to your registered email",}, });
 
     } catch (err) {
       this.setState({ showError: true });

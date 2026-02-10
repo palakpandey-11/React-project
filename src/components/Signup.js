@@ -137,7 +137,7 @@ function Signup() {
           </form>
         </div>
       </div>
-
++
       <Snackbar
         open={toastState.show}
         autoHideDuration={1000}

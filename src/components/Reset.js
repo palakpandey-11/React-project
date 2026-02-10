@@ -15,10 +15,13 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 export class Reset extends Component {
   state = {
+    step: "OTP", // OTP | PASSWORD
+    otp: "",
     alertMessage: "",
     alertSeverity: "",
     openSnackbar: false,
     showPassword: false,
+    loading: false,
   };
 componentDidMount() {
   const successMessage = this.props.location?.state?.successMessage;
@@ -27,6 +30,79 @@ componentDidMount() {
     this.showAlert(successMessage, "success");
   }
 }
+
+showAlert = (message, severity) => {
+    this.setState({
+      alertMessage: message,
+      alertSeverity: severity,
+      openSnackbar: true,
+    });
+  };
+
+  handleOtpVerify = async (e) => {
+    e.preventDefault();
+    const { otp } = this.state;
+    const email = this.props.location?.state?.email;
+
+    if (otp.length !== 6) {
+      this.showAlert("Enter valid 6 digit OTP", "error");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        "http://localhost:8080/api/auth/verify-otp",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, otp }),
+        }
+      );
+
+      if (!res.ok) throw new Error();
+
+      this.showAlert("OTP verified successfully", "success");
+      this.setState({ step: "PASSWORD" });
+
+    } catch {
+      this.showAlert("Invalid OTP", "error");
+    }
+  };
+
+  handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    const email = this.props.location?.state?.email;
+    const { newPassword, confirmPassword } = this;
+
+    if (!newPassword || !confirmPassword) {
+      this.showAlert("All fields required", "error");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      this.showAlert("Passwords do not match", "error");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        "http://localhost:8080/api/auth/reset-password",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, newPassword }),
+        }
+      );
+
+      if (!res.ok) throw new Error();
+
+      this.showAlert("Password reset successful", "success");
+      setTimeout(() => this.props.navigate("/"), 1500);
+
+    } catch {
+      this.showAlert("Server error", "error");
+    }
+  };
 
   handleSubmit = async (e) => {
     e.preventDefault();
@@ -86,60 +162,64 @@ componentDidMount() {
     this.setState((prev) => ({ showPassword: !prev.showPassword }));
   };
 
-  render() {
-    const { openSnackbar, alertMessage, alertSeverity, showPassword } =
-      this.state;
+render() {
+  const { step, showPassword, openSnackbar, alertMessage, alertSeverity } = this.state;
 
-    return (
-      <div className="forgot-pass-wrapper">
-        <form className="forgot-pass-form" onSubmit={this.handleSubmit}>
+  return (
+    <div className="forgot-pass-wrapper">
+      
+      {step === "OTP" && (
+        <form className="forgot-pass-form" onSubmit={this.handleOtpVerify}>
+          <h3>Enter OTP</h3>
+
+          <Box sx={{ mb: 2 }}>
+            <OutlinedInput
+              placeholder="Enter 6 digit OTP"
+              inputProps={{ maxLength: 6 }}
+              onChange={(e) => this.setState({ otp: e.target.value })}
+            />
+          </Box>
+
+          <button className="submit-btn">Verify OTP</button>
+        </form>
+      )}
+
+      {step === "PASSWORD" && (
+        <form className="forgot-pass-form" onSubmit={this.handlePasswordSubmit}>
           <h3>Reset Password</h3>
 
           <Box sx={{ mb: 2 }}>
-            <FormControl fullWidth>
-              <InputLabel>New Password</InputLabel>
-              <OutlinedInput
-                type={showPassword ? "text" : "password"}
-                onChange={(e) => (this.newPassword = e.target.value)}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton onClick={this.togglePassword}>
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                label="New Password"
-              />
-            </FormControl>
+            <OutlinedInput
+              type={showPassword ? "text" : "password"}
+              placeholder="New Password"
+              onChange={(e) => (this.newPassword = e.target.value)}
+            />
           </Box>
 
           <Box sx={{ mb: 2 }}>
-            <FormControl fullWidth>
-              <InputLabel>Confirm Password</InputLabel>
-              <OutlinedInput
-                type={showPassword ? "text" : "password"}
-                onChange={(e) => (this.confirmPassword = e.target.value)}
-                label="Confirm Password"
-              />
-            </FormControl>
+            <OutlinedInput
+              type={showPassword ? "text" : "password"}
+              placeholder="Confirm Password"
+              onChange={(e) => (this.confirmPassword = e.target.value)}
+            />
           </Box>
 
           <button className="submit-btn">Submit</button>
         </form>
+      )}
 
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={1500}
-          onClose={this.handleClose}
-          anchorOrigin={{vertical:"top", horizontal:"right"}}
-        >
-          <Alert severity={alertSeverity} variant="filled"  onClose={this.handleClose}>
-            {alertMessage}
-          </Alert>
-        </Snackbar>
-      </div>
-    );
-  }
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={2000}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert severity={alertSeverity} variant="filled">
+          {alertMessage}
+        </Alert>
+      </Snackbar>
+    </div>
+  );
+}
 }
 
 function ResetWrapper() {
