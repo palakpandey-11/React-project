@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import { useNavigate } from 'react-router-dom';
-import { Box, TextField , Snackbar, Alert} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { Box, TextField, Snackbar, Alert } from "@mui/material";
 import "./../style/ForgotPass.css";
 
 class ForgotPass extends Component {
-
   state = {
     showError: false,
   };
@@ -20,16 +19,26 @@ class ForgotPass extends Component {
 
     try {
       const res = await fetch(
-        `http://localhost:8080/api/auth/forgot-password?email=${email}`,
-        { method: "POST" }
+        "http://localhost:8080/api/auth/forgot-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        },
       );
 
       if (!res.ok) {
         throw new Error("Email not found");
       }
 
-      this.props.navigate("/reset", { state: { email , successMessage:"OTP sent to your registered email",}, });
-
+      this.props.navigate("/reset", {
+        state: {
+          email,
+          successMessage: "OTP sent to your registered email",
+        },
+      });
     } catch (err) {
       this.setState({ showError: true });
     }
