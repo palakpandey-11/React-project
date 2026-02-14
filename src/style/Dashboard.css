@@ -150,15 +150,21 @@ body {
 .logout-icon:hover {
   color: #ff5c5c;
 }
+.empId{
+  margin-top: 5px;
+}
 
 .img {
     border-radius:50%;
     border: 2px solid white;
     border-radius: 50%;
     display: inline-block;
-    background-color: #ccc;
+    /* background-color: #ccc; */
     width:40px;
     height:40px;
+    object-fit: cover;
+
+
 }
 
 .image-modal {

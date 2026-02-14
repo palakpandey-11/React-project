@@ -2,60 +2,64 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./../style/Signup.css";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import Box from '@mui/material/Box';
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
-import CircularProgress from '@mui/material/CircularProgress';
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function Signup() {
   const [empId, setEmpId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [toastState, setToastState] = useState({ show: false, message: "", type: "" });
+  const [toastState, setToastState] = useState({
+    show: false,
+    message: "",
+    type: "",
+  });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
-  e.preventDefault();
-  setIsLoading(true);
+    e.preventDefault();
+    setIsLoading(true);
 
-  try {
-    const response = await fetch("http://localhost:8080/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        employeeId: empId,
-        password: password,
-      }),
-    });
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          employeeId: empId,
+          password: password,
+        }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
+     
+      if (!response.ok) {
+        triggerToast(data.message || "Wrong Password", "error");
+        setIsLoading(false);
+        return;
+      }
 
-    if (!response.ok) {
-      triggerToast(data.message || "Wrong Password", "error");
+      localStorage.setItem("user", JSON.stringify(data));
+      triggerToast("Signed in successfully!", "success");
+
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1000);
+    } catch (err) {
+      triggerToast("Server not reachable", "error");
       setIsLoading(false);
-      return;
     }
-
-    localStorage.setItem("user", JSON.stringify(data));
-    triggerToast("Signed in successfully!", "success");
-
-    setTimeout(() => {
-      navigate("/dashboard");
-    }, 1000);
-
-  } catch (err) {
-    triggerToast("Server not reachable", "error");
-    setIsLoading(false);
-  }
-};
-
+    
+  };
+  
 
   const triggerToast = (message, type) => {
     setToastState({ show: true, message, type });
@@ -85,7 +89,9 @@ function Signup() {
             }}
           >
             <CircularProgress size={60} thickness={4.0} />
-            <p style={{ marginTop: "12px", fontWeight: "500", color: "#333" }}>Redirecting to Dashboard...</p>
+            <p style={{ marginTop: "12px", fontWeight: "500", color: "#333" }}>
+              Redirecting to Dashboard...
+            </p>
           </div>
         )}
 
@@ -127,17 +133,26 @@ function Signup() {
               />
             </Box>
             <div className="button-group">
-              <button type="button" className="cancel" onClick={() => navigate("/")}>
+              <button
+                type="button"
+                className="cancel"
+                onClick={() => navigate("/")}
+              >
                 Cancel
               </button>
-              <button type="submit" className="submit">Submit</button>
+              <button type="submit" className="submit">
+                Submit
+              </button>
             </div>
 
-            <p className="reset-link"> <Link to="/forgotpass">Reset Password?</Link></p>
+            <p className="reset-link">
+              {" "}
+              <Link to="/forgotpass">Reset Password?</Link>
+            </p>
           </form>
         </div>
       </div>
-+
+      +
       <Snackbar
         open={toastState.show}
         autoHideDuration={1000}
